@@ -2,12 +2,17 @@ import express from 'express';
 import cors from 'cors';
 import allRouter from './allRouter.js';
 import dotenv from 'dotenv';
+import options from './swagger.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config();
-
+const specs = swaggerJSDoc(options);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// swagger section (place it before other routes and middleware)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Middleware
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies

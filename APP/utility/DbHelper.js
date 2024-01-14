@@ -496,6 +496,10 @@ const UserRole = sequelize.define('UserRole', {
   tableName: 'user_role',
   timestamps: false,
 });
+
+
+User.belongsTo(UserRole, { foreignKey: 'role_id', as: 'userRole' });
+
 export {
   sequelize as SequelizeInstance,
   Payment,

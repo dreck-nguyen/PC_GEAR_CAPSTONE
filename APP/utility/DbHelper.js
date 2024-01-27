@@ -47,6 +47,14 @@ const sequelize = new Sequelize({
   database: DB_DATABASE,
   sync: false,
 });
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
 // tbl.Category
 const Category = sequelize.define(
   'Category',
@@ -222,284 +230,345 @@ const Review = sequelize.define(
   },
 );
 // tbl.product
-const Product = sequelize.define('Product', {
-  product_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const Product = sequelize.define(
+  'Product',
+  {
+    product_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    category_id: {
+      type: DataTypes.UUID,
+    },
+    name: {
+      type: DataTypes.STRING(255),
+    },
+    description: {
+      type: DataTypes.TEXT,
+    },
+    price: {
+      type: DataTypes.DECIMAL(18, 2),
+    },
+    discount: {
+      type: DataTypes.DECIMAL(18, 2),
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+    },
+    sold: {
+      type: DataTypes.INTEGER,
+    },
+    product_brand_id: {
+      type: DataTypes.UUID,
+    },
   },
-  category_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'product',
+    timestamps: false,
   },
-  name: {
-    type: DataTypes.STRING(255),
-  },
-  description: {
-    type: DataTypes.TEXT,
-  },
-  price: {
-    type: DataTypes.DECIMAL(18, 2),
-  },
-  discount: {
-    type: DataTypes.DECIMAL(18, 2),
-  },
-  quantity: {
-    type: DataTypes.INTEGER,
-  },
-  sold: {
-    type: DataTypes.INTEGER,
-  },
-  product_brand_id: {
-    type: DataTypes.UUID,
-  },
-}, {
-  tableName: 'product', 
-  timestamps: false, 
-});
+);
 // tbl.product_brand
-const ProductBrand = sequelize.define('ProductBrand', {
-  product_brand_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const ProductBrand = sequelize.define(
+  'ProductBrand',
+  {
+    product_brand_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    product_brand_name: {
+      type: DataTypes.STRING(255),
+    },
   },
-  product_brand_name: {
-    type: DataTypes.STRING(255),
+  {
+    tableName: 'product_brand',
+    timestamps: false,
   },
-}, {
-  tableName: 'product_brand',
-  timestamps: false,
-});
+);
 // tbl.product_specification
-const ProductSpecification = sequelize.define('ProductSpecification', {
-  product_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const ProductSpecification = sequelize.define(
+  'ProductSpecification',
+  {
+    product_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    technical_specification: {
+      type: DataTypes.JSON,
+    },
   },
-  technical_specification: {
-    type: DataTypes.JSON,
+  {
+    tableName: 'product_specification',
+    timestamps: false,
   },
-}, {
-  tableName: 'product_specification',
-  timestamps: false,
-});
+);
 // tbl.order_detail
-const OrderDetail = sequelize.define('OrderDetail', {
-  order_detail_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const OrderDetail = sequelize.define(
+  'OrderDetail',
+  {
+    order_detail_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    order_id: {
+      type: DataTypes.UUID,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
   },
-  order_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'order_detail',
+    timestamps: false,
   },
-  product_id: {
-    type: DataTypes.UUID,
-  },
-  quantity: {
-    type: DataTypes.INTEGER,
-  },
-  price: {
-    type: DataTypes.DECIMAL(10, 2),
-  },
-}, {
-  tableName: 'order_detail',
-  timestamps: false,
-});
+);
 // tbl.payment
 
-const Payment = sequelize.define('Payment', {
-  payment_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const Payment = sequelize.define(
+  'Payment',
+  {
+    payment_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    payment_method: {
+      type: DataTypes.TEXT,
+    },
   },
-  payment_method: {
-    type: DataTypes.TEXT,
+  {
+    tableName: 'payment',
+    timestamps: false,
   },
-}, {
-  tableName: 'payment',
-  timestamps: false,
-});
+);
 // tbl.user
 
-const User = sequelize.define('User', {
-  user_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const User = sequelize.define(
+  'User',
+  {
+    user_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    first_name: {
+      type: DataTypes.STRING(255),
+    },
+    last_name: {
+      type: DataTypes.STRING(255),
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING(255),
+    },
+    phone_number: {
+      type: DataTypes.STRING(20),
+    },
+    role_id: {
+      type: DataTypes.UUID,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+    },
   },
-  first_name: {
-    type: DataTypes.STRING(255),
+  {
+    tableName: 'user',
+    timestamps: false,
   },
-  last_name: {
-    type: DataTypes.STRING(255),
-  },
-  email: {
-    type: DataTypes.STRING(255),
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING(255),
-  },
-  phone_number: {
-    type: DataTypes.STRING(20),
-  },
-  role_id: {
-    type: DataTypes.UUID,
-  },
-  created_at: {
-    type: DataTypes.DATE,
-  },
-}, {
-  tableName: 'user',
-  timestamps: false,
-});
+);
 // tbl.product_gallery
-const ProductGallery = sequelize.define('ProductGallery', {
-  product_gallery_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const ProductGallery = sequelize.define(
+  'ProductGallery',
+  {
+    product_gallery_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+    },
+    image: {
+      type: DataTypes.TEXT,
+    },
   },
-  product_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'product_gallery',
+    timestamps: false,
   },
-  image: {
-    type: DataTypes.TEXT,
-  },
-}, {
-  tableName: 'product_gallery',
-  timestamps: false,
-});
+);
 // tbl.cart
-const Cart = sequelize.define('Cart', {
-  cart_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const Cart = sequelize.define(
+  'Cart',
+  {
+    cart_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    user_id: {
+      type: DataTypes.UUID,
+    },
+    create_at: {
+      type: DataTypes.DATE,
+    },
+    status: {
+      type: DataTypes.STRING(20),
+    },
   },
-  user_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'cart',
+    timestamps: false,
   },
-  create_at: {
-    type: DataTypes.DATE,
-  },
-  status: {
-    type: DataTypes.STRING(20),
-  },
-}, {
-  tableName: 'cart',
-  timestamps: false,
-});
+);
 // tbl.cart_items
-const CartItem = sequelize.define('CartItem', {
-  cart_item_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const CartItem = sequelize.define(
+  'CartItem',
+  {
+    cart_item_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    cart_id: {
+      type: DataTypes.UUID,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+    },
+    unit_price: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
   },
-  cart_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'cart_items',
+    timestamps: false,
   },
-  product_id: {
-    type: DataTypes.UUID,
-  },
-  quantity: {
-    type: DataTypes.INTEGER,
-  },
-  unit_price: {
-    type: DataTypes.DECIMAL(10, 2),
-  },
-}, {
-  tableName: 'cart_items',
-  timestamps: false,
-});
+);
 // tbl.warehouse
-const Warehouse = sequelize.define('Warehouse', {
-  warehouse_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const Warehouse = sequelize.define(
+  'Warehouse',
+  {
+    warehouse_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+    },
+    stock_quantity: {
+      type: DataTypes.INTEGER,
+    },
   },
-  product_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'warehouse',
+    timestamps: false,
   },
-  stock_quantity: {
-    type: DataTypes.INTEGER,
-  },
-}, {
-  tableName: 'warehouse',
-  timestamps: false,
-});
+);
 // tbl.shipping_addresses
-const ShippingAddress = sequelize.define('ShippingAddress', {
-  AddressID: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const ShippingAddress = sequelize.define(
+  'ShippingAddress',
+  {
+    AddressID: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    user_id: {
+      type: DataTypes.UUID,
+    },
+    recipient_name: {
+      type: DataTypes.STRING(255),
+    },
+    street_address: {
+      type: DataTypes.STRING(255),
+    },
+    city: {
+      type: DataTypes.STRING(255),
+    },
+    country: {
+      type: DataTypes.STRING(255),
+    },
   },
-  user_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'shipping_addresses',
+    timestamps: false,
   },
-  recipient_name: {
-    type: DataTypes.STRING(255),
-  },
-  street_address: {
-    type: DataTypes.STRING(255),
-  },
-  city: {
-    type: DataTypes.STRING(255),
-  },
-  country: {
-    type: DataTypes.STRING(255),
-  },
-}, {
-  tableName: 'shipping_addresses',
-  timestamps: false,
-});
+);
 // tbl.messages
-const Message = sequelize.define('Message', {
-  message_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const Message = sequelize.define(
+  'Message',
+  {
+    message_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    sender_id: {
+      type: DataTypes.UUID,
+    },
+    receiver_id: {
+      type: DataTypes.UUID,
+    },
+    content: {
+      type: DataTypes.TEXT,
+    },
+    create_at: {
+      type: DataTypes.DATE,
+    },
   },
-  sender_id: {
-    type: DataTypes.UUID,
+  {
+    tableName: 'messages',
+    timestamps: false,
   },
-  receiver_id: {
-    type: DataTypes.UUID,
-  },
-  content: {
-    type: DataTypes.TEXT,
-  },
-  create_at: {
-    type: DataTypes.DATE,
-  },
-}, {
-  tableName: 'messages',
-  timestamps: false,
-});
+);
 // tbl.user_role
-const UserRole = sequelize.define('UserRole', {
-  role_id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+const UserRole = sequelize.define(
+  'UserRole',
+  {
+    role_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    role: {
+      type: DataTypes.STRING(50),
+    },
   },
-  role: {
-    type: DataTypes.STRING(50),
+  {
+    tableName: 'user_role',
+    timestamps: false,
   },
-}, {
-  tableName: 'user_role',
-  timestamps: false,
-});
-
+);
 
 User.belongsTo(UserRole, { foreignKey: 'role_id', as: 'userRole' });
+Product.belongsTo(Category, { foreignKey: 'category_id' });
+Category.hasMany(Product, { foreignKey: 'category_id' });
 
+Product.belongsTo(ProductBrand, { foreignKey: 'product_brand_id' });
+ProductBrand.hasMany(Product, { foreignKey: 'product_brand_id' });
+
+Product.hasMany(ProductGallery, { foreignKey: 'product_id' });
+ProductGallery.belongsTo(Product, { foreignKey: 'product_id' });
+
+Product.hasOne(ProductSpecification, { foreignKey: 'product_id' });
+ProductSpecification.belongsTo(Product, { foreignKey: 'product_id' });
 export {
   sequelize as SequelizeInstance,
   Payment,
@@ -519,5 +588,5 @@ export {
   Review,
   Product,
   ProductBrand,
-  ProductSpecification
+  ProductSpecification,
 };

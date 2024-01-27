@@ -22,6 +22,8 @@ router.post('/api/admin/login', admController.loginAdmin);
  *   get:
  *     summary: Get all products
  *     description: Retrieve a list of all products.
+ *     tags:
+ *       - product
  *     responses:
  *       200:
  *         description: Successful response

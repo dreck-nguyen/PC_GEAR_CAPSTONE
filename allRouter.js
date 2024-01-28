@@ -76,6 +76,30 @@ router.get('/api/product/:categoryId', shopController.getProductsByCategory);
  *
  * /api/category:
  *   get:
+ *     summary: Get breadcrumb categories
+ *     description: Retrieve a list of all categories.
+ *     tags:
+ *       - category
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Success
+ *               data:
+ *                 categories: [...]
+ *       500:
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * tags:
+ *   - name: category
+ *     description: Operations related to categories
+ *
+ * /api/categories:
+ *   get:
  *     summary: Get all categories
  *     description: Retrieve a list of all categories.
  *     tags:
@@ -92,6 +116,7 @@ router.get('/api/product/:categoryId', shopController.getProductsByCategory);
  *       500:
  *         description: Internal server error
  */
-router.get('/api/category', categoryController.getAllCategory);
+router.get('/api/category', categoryController.getCategoryBreadcrumb);
+router.get('/api/categories', categoryController.getAllCategory);
 
 export default router;

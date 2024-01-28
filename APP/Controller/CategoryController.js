@@ -14,3 +14,13 @@ export async function getAllCategory(req, res) {
     res.status(404).send(error);
   }
 }
+
+export async function getCategoryBreadcrumb(req, res) {
+  try {
+    const categories = await categoryService.getCategoryBreadcrumb();
+    res.send(categories);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+}

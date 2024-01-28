@@ -17,3 +17,15 @@ export async function getAllCategory() {
   console.log(categories);
   return categories;
 }
+
+export async function getAllCategory() {
+  const sqlQuery = `
+    select * from category`;
+  const categories = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  console.log(categories);
+  return categories;
+}

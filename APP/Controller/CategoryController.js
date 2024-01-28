@@ -5,9 +5,10 @@ dotenv.config();
 
 const router = express.Router();
 // const secret_key = process.env.SECRET_KEY;
-export async function getAllCategory(req, res) {
+
+export async function getCategoryBreadcrumb(req, res) {
   try {
-    const categories = await categoryService.getAllCategory();
+    const categories = await categoryService.getCategoryBreadcrumb();
     res.send(categories);
   } catch (error) {
     console.log(error);
@@ -15,9 +16,9 @@ export async function getAllCategory(req, res) {
   }
 }
 
-export async function getCategoryBreadcrumb(req, res) {
+export async function getAllCategory(req, res) {
   try {
-    const categories = await categoryService.getCategoryBreadcrumb();
+    const categories = await categoryService.getAllCategory();
     res.send(categories);
   } catch (error) {
     console.log(error);

@@ -18,7 +18,7 @@ export async function getAllCategory() {
   return categories;
 }
 
-export async function getAllCategory() {
+export async function getCategoryBreadcrumb() {
   const sqlQuery = `
     select * from category`;
   const categories = await SequelizeInstance.query(sqlQuery, {

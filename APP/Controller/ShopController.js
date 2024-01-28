@@ -15,3 +15,14 @@ export async function getAllProduct(req, res) {
     res.status(404).send(error);
   }
 }
+
+export async function getProductsByCategory(req, res) {
+  try {
+    const categoryId = req.params.categoryId;
+    const products = await shopService.getProductsByCategory(categoryId);
+    res.send(products);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+}

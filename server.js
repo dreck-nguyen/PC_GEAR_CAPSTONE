@@ -11,7 +11,6 @@ const specs = swaggerJSDoc(options);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// swagger section (place it before other routes and middleware)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Middleware
 app.use(cors()); // Enable CORS

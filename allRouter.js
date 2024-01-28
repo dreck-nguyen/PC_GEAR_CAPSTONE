@@ -37,6 +37,35 @@ router.post('/api/admin/login', admController.loginAdmin);
  *         description: Internal server error
  */
 router.get('/api/product', shopController.getAllProduct);
+/**
+ * @swagger
+ * tags:
+ *   name: Shop
+ *   description: Shop-related routes
+ * /api/product/{categoryId}:
+ *   get:
+ *     summary: Get products by category
+ *     description: Retrieve a list of products for a specific category.
+ *     tags:
+ *       - product
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example : 6f5acf44-4542-4c5c-be43-6a71b150f752
+ *         required: true
+ *         description: The ID of the category.
+ *     responses:
+ *       200:
+ *         description: Successful response with the list of products.
+ *       404:
+ *         description: Category not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get('/api/product/:categoryId', shopController.getProductsByCategory);
 
 //CATEGORY SECTION
 /**

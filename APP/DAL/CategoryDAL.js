@@ -1,6 +1,6 @@
 import { Category, SequelizeInstance } from '../utility/DbHelper.js';
 
-export async function getAllCategory() {
+export async function getCategoryBreadcrumb() {
   const sqlQuery = `
     select * from category
       inner join 
@@ -18,7 +18,7 @@ export async function getAllCategory() {
   return categories;
 }
 
-export async function getCategoryBreadcrumb() {
+export async function getAllCategory() {
   const sqlQuery = `
     select * from category`;
   const categories = await SequelizeInstance.query(sqlQuery, {

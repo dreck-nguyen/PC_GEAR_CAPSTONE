@@ -42,12 +42,12 @@ export async function getProductsByCategory(categoryId) {
    , p.price 
    , p.discount 
    , p.sold 
-   ,c."name"  as category_name
+   , c."name"  as category_name
    , pb.product_brand_name as brand_name
    , STRING_AGG(pg.image, ',') AS image_links
    , ps.technical_specification 
    from product p
-left outer join category c 
+inner join category c 
 on c.category_id  = p.category_id 
 and c.category_id = '${categoryId}'
 left outer join product_brand pb 

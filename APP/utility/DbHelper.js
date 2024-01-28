@@ -569,6 +569,10 @@ ProductGallery.belongsTo(Product, { foreignKey: 'product_id' });
 
 Product.hasOne(ProductSpecification, { foreignKey: 'product_id' });
 ProductSpecification.belongsTo(Product, { foreignKey: 'product_id' });
+
+Category.hasMany(Category, { foreignKey: 'parent_id', as: 'Children' });
+Category.belongsTo(Category, { foreignKey: 'parent_id', as: 'Parent' });
+
 export {
   sequelize as SequelizeInstance,
   Payment,

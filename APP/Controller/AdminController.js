@@ -11,9 +11,13 @@ export async function loginAdmin(req, res) {
     const { email, password } = req.body;
     const userDetails = await admService.getAdmDetails(email, password);
     if (userDetails) {
-      const accessToken = jwt.sign({ email: userDetails.email }, secret_key, {
-        expiresIn: '30d',
-      });
+      const accessToken = jwt.sign(
+        { user_id: userDetails.user_id },
+        secret_key,
+        {
+          expiresIn: '30d',
+        },
+      );
       res.header('Authorization', `Bearer ${accessToken}`);
       userDetails.accessToken = `Bearer ${accessToken}`;
       res.send(userDetails);

@@ -5,6 +5,7 @@ import uploadCloud from './APP/middleware/uploadCloudImg.js';
 import * as admController from './APP/Controller/AdminController.js';
 import * as shopController from './APP/Controller/ShopController.js';
 import * as categoryController from './APP/Controller/CategoryController.js';
+import * as userController from './APP/Controller/UserController.js';
 
 const router = express.Router();
 // ADMIN SECTION
@@ -118,5 +119,8 @@ router.get('/api/product/:categoryId', shopController.getProductsByCategory);
  */
 router.get('/api/category', categoryController.getCategoryBreadcrumb);
 router.get('/api/categories', categoryController.getAllCategory);
+
+// User Authentication
+router.get('/api/user/login', userController.loginUser);
 
 export default router;

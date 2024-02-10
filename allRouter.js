@@ -121,6 +121,39 @@ router.get('/api/category', categoryController.getCategoryBreadcrumb);
 router.get('/api/categories', categoryController.getAllCategory);
 
 // User Authentication
-router.get('/api/user/login', userController.loginUser);
+/**
+ * @swagger
+ * tags:
+ *   - name: user
+ *     description: Operations related to categories
+ *
+ * /api/user/login:
+ *   post:
+ *     summary: User login
+ *     description: Log in a user with email and password
+ *     tags:
+ *       - user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: janedoe@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: pass
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post('/api/user/login', userController.loginUser);
 
 export default router;

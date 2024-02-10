@@ -210,6 +210,54 @@ router.get('/api/categories', categoryController.getAllCategory);
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * definitions:
+ *   UserRegistration:
+ *     type: object
+ *     required:
+ *       - firstName
+ *       - lastName
+ *       - email
+ *       - password
+ *       - passwordReconfirmed
+ *       - phoneNumber
+ *     properties:
+ *       firstName:
+ *         type: string
+ *       lastName:
+ *         type: string
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
+ *       passwordReconfirmed:
+ *         type: string
+ *       phoneNumber:
+ *         type: string
+ */
+
+/**
+ * @swagger
+ * /api/user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags:
+ *       - user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/UserRegistration'
+ *     responses:
+ *       '201':
+ *         description: User registered successfully
+ *       '400':
+ *         description: Bad request, validation error, or passwords do not match
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.post('/api/user/login', userController.loginUser);
 router.post('/api/user/register', userController.registerUser);
 

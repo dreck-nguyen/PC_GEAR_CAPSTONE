@@ -26,7 +26,6 @@ export async function loginAdmin(req, res) {
       res.status(400).send({ message: 'Admin not found' });
     }
   } catch (error) {
-    console.log(error);
     res.status(404).send(error);
   }
 }

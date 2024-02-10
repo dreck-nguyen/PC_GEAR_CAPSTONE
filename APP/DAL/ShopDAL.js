@@ -30,7 +30,6 @@ group by p.product_id , c.category_id , pb.product_brand_id , pg.product_gallery
     raw: true,
   });
 
-  console.log(productsWithDetails);
   return productsWithDetails;
 }
 export async function getProductsByCategory(categoryId) {
@@ -64,6 +63,5 @@ group by p.product_id , c.category_id , pb.product_brand_id , pg.product_gallery
     raw: true,
   });
 
-  console.log(productsWithDetails);
   return productsWithDetails;
 }

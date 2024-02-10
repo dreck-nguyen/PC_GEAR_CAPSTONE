@@ -14,7 +14,6 @@ export async function getCategoryBreadcrumb() {
     raw: true,
   });
 
-  console.log(categories);
   return categories;
 }
 
@@ -26,6 +25,5 @@ export async function getAllCategory() {
     raw: true,
   });
 
-  console.log(categories);
   return categories;
 }

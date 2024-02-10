@@ -11,7 +11,6 @@ export async function getCategoryBreadcrumb(req, res) {
     const categories = await categoryService.getCategoryBreadcrumb();
     res.send(categories);
   } catch (error) {
-    console.log(error);
     res.status(404).send(error);
   }
 }
@@ -21,7 +20,6 @@ export async function getAllCategory(req, res) {
     const categories = await categoryService.getAllCategory();
     res.send(categories);
   } catch (error) {
-    console.log(error);
     res.status(404).send(error);
   }
 }

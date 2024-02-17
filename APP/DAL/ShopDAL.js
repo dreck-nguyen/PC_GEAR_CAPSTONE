@@ -6,7 +6,7 @@ export async function getAllProduct() {
   p.product_id
    , p."name" 
    , p.description 
-   , p.price 
+   , p.unit_price 
    , p.discount 
    , p.sold 
    ,c."name"  as category_name
@@ -38,7 +38,7 @@ export async function getProductsByCategory(categoryId) {
   p.product_id
    , p."name" 
    , p.description 
-   , p.price 
+   , p.unit_price 
    , p.discount 
    , p.sold 
    , c."name"  as category_name

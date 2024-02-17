@@ -247,7 +247,7 @@ const Product = sequelize.define(
     description: {
       type: DataTypes.TEXT,
     },
-    price: {
+    unit_price: {
       type: DataTypes.DECIMAL(18, 2),
     },
     discount: {
@@ -322,7 +322,7 @@ const OrderDetail = sequelize.define(
     quantity: {
       type: DataTypes.INTEGER,
     },
-    price: {
+    unit_price: {
       type: DataTypes.DECIMAL(10, 2),
     },
   },

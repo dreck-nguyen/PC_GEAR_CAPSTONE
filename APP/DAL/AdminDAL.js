@@ -1,10 +1,9 @@
 import { User, UserRole } from '../utility/DbHelper.js';
 
-export async function getAdmDetails(email, password) {
+export async function getAdmDetails(email) {
   const adminDetails = await User.findOne({
     where: {
       email,
-      password,
     },
     include: [
       {
@@ -16,6 +15,5 @@ export async function getAdmDetails(email, password) {
       },
     ],
   });
-  if (!adminDetails) throw Error('ADMIN NOT FOUND');
   return adminDetails;
 }

@@ -1,10 +1,9 @@
 import { User, UserRole } from '../utility/DbHelper.js';
 
-export async function getUserDetails(email, password) {
+export async function getUserDetails(email) {
   const userDetails = await User.findOne({
     where: {
       email,
-      password,
     },
     include: [
       {

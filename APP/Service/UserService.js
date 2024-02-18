@@ -4,7 +4,19 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 export async function loginUser(email, password) {
-  return await userDAL.getUserDetails(email, password);
+  const user = await userDAL.getUserDetails(email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const isPasswordValid = await comparePasswordWithSalt(
+    password,
+    user.password,
+  );
+
+  if (!isPasswordValid) {
+    throw new Error('Invalid password');
+  }
+  return user;
 }
 
 export async function registerUser(userDetails) {
@@ -30,4 +42,14 @@ export async function registerUser(userDetails) {
   userDetails.hashedPassword = hashedPassword;
   await userDAL.registerUser(userDetails);
   return userID;
+}
+async function comparePasswordWithSalt(password, hashedPasswordWithSalt) {
+  try {
+    const [hashedPassword, salt] = hashedPasswordWithSalt.split('$');
+    const hash = await bcrypt.compare(password, salt);
+    return hash === hashedPassword;
+  } catch (error) {
+    console.error('Error comparing password with salt:', error);
+    return false;
+  }
 }

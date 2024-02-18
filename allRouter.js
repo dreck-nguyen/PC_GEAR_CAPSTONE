@@ -220,7 +220,6 @@ router.get('/api/categories', categoryController.getAllCategory);
  *       - lastName
  *       - email
  *       - password
- *       - passwordReconfirmed
  *       - phoneNumber
  *     properties:
  *       firstName:
@@ -230,8 +229,6 @@ router.get('/api/categories', categoryController.getAllCategory);
  *       email:
  *         type: string
  *       password:
- *         type: string
- *       passwordReconfirmed:
  *         type: string
  *       phoneNumber:
  *         type: string

@@ -9,6 +9,39 @@ import * as userController from './APP/Controller/UserController.js';
 
 const router = express.Router();
 // ADMIN SECTION
+/**
+ * @swagger
+ * tags:
+ *   - name: Admin
+ *     description: Operations related to categories
+ *
+ * /api/admin/login:
+ *   post:
+ *     summary: Admin login
+ *     description: Log in a admin with email and password
+ *     tags:
+ *       - Admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: duchnh@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: pass
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
 
 // PRODUCT SECTION

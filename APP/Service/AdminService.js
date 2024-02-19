@@ -1,7 +1,10 @@
 import * as adminDAL from '../DAL/AdminDAL.js';
 import bcrypt from 'bcrypt';
+import { comparePasswordWithSalt } from './UserService.js';
 export async function getAdmDetails(email, password) {
-  const admin = await adminDAL.getAdmDetails(email);
+  const result = await adminDAL.getAdmDetails(email);
+  console.log(result.dataValues);
+  const admin = result.dataValues;
   if (!admin) {
     throw new Error('Admin not found');
   }
@@ -9,19 +12,8 @@ export async function getAdmDetails(email, password) {
     password,
     admin.password,
   );
-
   if (!isPasswordValid) {
     throw new Error('Invalid password');
   }
   return admin;
-}
-async function comparePasswordWithSalt(password, hashedPasswordWithSalt) {
-  try {
-    const [hashedPassword, salt] = hashedPasswordWithSalt.split('$');
-    const hash = await bcrypt.compare(password, salt);
-    return hash === hashedPassword;
-  } catch (error) {
-    console.error('Error comparing password with salt:', error);
-    return false;
-  }
 }

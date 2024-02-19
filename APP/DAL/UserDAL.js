@@ -41,7 +41,7 @@ export async function registerUser(userDetails) {
     last_name: userDetails.last_name,
     email: userDetails.email,
     password: userDetails.hashed_password,
-    phone_number: userDetails.phoneNumber,
+    phone_number: userDetails.phone_number,
     role_id: userDetails.role_id,
   });
 }

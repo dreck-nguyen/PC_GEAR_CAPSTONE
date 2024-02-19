@@ -11,7 +11,7 @@ export async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
     const result = await userService.loginUser(email, password);
-    const userDetails = result.dataValues;
+    const userDetails = result;
     if (userDetails) {
       const accessToken = jwt.sign(
         { user_id: userDetails.user_id },
@@ -24,7 +24,7 @@ export async function loginUser(req, res) {
       userDetails.accessToken = `Bearer ${accessToken}`;
       res.send(userDetails);
     } else {
-      res.status(400).send({ message: 'Admin not found' });
+      res.status(400).send({ message: 'User not found' });
     }
   } catch (error) {
     res.status(404).send(error);

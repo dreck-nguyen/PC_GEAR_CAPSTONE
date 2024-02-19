@@ -10,7 +10,7 @@ export async function loginAdmin(req, res) {
   try {
     const { email, password } = req.body;
     const result = await admService.getAdmDetails(email, password);
-    const userDetails = result.dataValues;
+    const userDetails = result;
     if (userDetails) {
       const accessToken = jwt.sign(
         { user_id: userDetails.user_id },

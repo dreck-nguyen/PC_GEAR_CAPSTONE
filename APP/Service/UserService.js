@@ -21,21 +21,20 @@ export async function loginUser(email, password) {
 
 export async function registerUser(userDetails) {
   if (
-    !userDetails.firstName ||
-    !userDetails.lastName ||
+    !userDetails.first_name ||
+    !userDetails.last_name ||
     !userDetails.email ||
     !userDetails.password ||
-    !userDetails.phoneNumber
+    !userDetails.phone_number
   ) {
     return res.status(400).json({ error: 'All fields are required' });
   }
-
   const userByEmail = await userDAL.getUserByEmail(userDetails.email);
   if (userByEmail) throw new Error('Email Duplicated');
   const userID = uuidv4();
-  userDetails.userId = userID;
+  userDetails.user_id = userID;
   const userRole = await userDAL.getUserRole();
-  userDetails.roleId = userRole.role_id;
+  userDetails.role_id = userRole.role_id;
   const saltRounds = Number(process.env.SALT_KEY);
   const salt = bcrypt.genSaltSync(saltRounds);
   const hashedPassword = await bcrypt.hash(userDetails.password, salt);

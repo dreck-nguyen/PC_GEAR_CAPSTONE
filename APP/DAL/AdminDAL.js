@@ -17,3 +17,18 @@ export async function getAdmDetails(email) {
   });
   return adminDetails;
 }
+
+export async function getUsers() {
+  const userList = await User.findAll({
+    include: [
+      {
+        model: UserRole,
+        as: 'userRole',
+        where: {
+          role: 'USER',
+        },
+      },
+    ],
+  });
+  return userList;
+}

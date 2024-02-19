@@ -29,3 +29,13 @@ export async function loginAdmin(req, res) {
     res.status(404).send(error);
   }
 }
+
+export async function getUsers(req, res) {
+  try {
+    const users = await admService.getUser();
+    res.status(200).send(users);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}

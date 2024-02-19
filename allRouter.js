@@ -42,8 +42,36 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/admin/list/user:
+ *   get:
+ *     summary: Get a list of users
+ *     description: Retrieve a list of users for administration purposes.
+ *     tags:
+ *       - Admin
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               users:
+ *                 - id: 1
+ *                   username: user1
+ *                   email: user1@example.com
+ *                 - id: 2
+ *                   username: user2
+ *                   email: user2@example.com
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal Server Error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
-
+router.get('/api/admin/list/user', admController.getUsers);
 // PRODUCT SECTION
 /**
  * @swagger
@@ -249,21 +277,21 @@ router.get('/api/categories', categoryController.getAllCategory);
  *   UserRegistration:
  *     type: object
  *     required:
- *       - firstName
- *       - lastName
+ *       - first_name
+ *       - last_name
  *       - email
  *       - password
- *       - phoneNumber
+ *       - phone_number
  *     properties:
- *       firstName:
+ *       first_name:
  *         type: string
- *       lastName:
+ *       last_name:
  *         type: string
  *       email:
  *         type: string
  *       password:
  *         type: string
- *       phoneNumber:
+ *       phone_number:
  *         type: string
  */
 

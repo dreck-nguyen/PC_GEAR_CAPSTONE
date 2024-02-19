@@ -16,3 +16,8 @@ export async function getAdmDetails(email, password) {
   }
   return admin;
 }
+
+export async function getUser() {
+  const result = await adminDAL.getUsers();
+  return result;
+}

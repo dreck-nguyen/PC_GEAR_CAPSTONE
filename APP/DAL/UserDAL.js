@@ -36,12 +36,12 @@ export async function getUserByEmail(email) {
 }
 export async function registerUser(userDetails) {
   await User.create({
-    user_id: userDetails.userId,
-    first_name: userDetails.firstName,
-    last_name: userDetails.lastName,
+    user_id: userDetails.user_id,
+    first_name: userDetails.first_name,
+    last_name: userDetails.last_name,
     email: userDetails.email,
-    password: userDetails.hashedPassword,
+    password: userDetails.hashed_password,
     phone_number: userDetails.phoneNumber,
-    role_id: userDetails.roleId,
+    role_id: userDetails.role_id,
   });
 }

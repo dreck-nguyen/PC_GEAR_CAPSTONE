@@ -9,6 +9,7 @@ export async function loginUser(email, password) {
   if (!user) {
     throw new Error('User not found');
   }
+  console.log(user);
   const isPasswordValid = await comparePasswordWithSalt(
     password,
     user.password,
@@ -38,7 +39,7 @@ export async function registerUser(userDetails) {
   const saltRounds = Number(process.env.SALT_KEY);
   const salt = bcrypt.genSaltSync(saltRounds);
   const hashedPassword = await bcrypt.hash(userDetails.password, salt);
-  userDetails.hashedPassword = hashedPassword;
+  userDetails.hashed_password = hashedPassword;
   await userDAL.registerUser(userDetails);
   return userID;
 }

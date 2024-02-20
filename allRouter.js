@@ -127,7 +127,7 @@ router.get('/api/product', productController.getAllProduct);
  *       500:
  *         description: Internal Server Error.
  */
-router.get('/api/product/:categoryId', shopController.getProductsByCategory);
+router.get('/api/product/:categoryId', productController.getProductsByCategory);
 
 //CATEGORY SECTION
 /**

@@ -1,10 +1,9 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import * as productService from '../Service/ProductService.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const router = express.Router();
+// const router = express.Router();
 // const secret_key = process.env.SECRET_KEY;
 export async function getAllProduct(req, res) {
   try {
@@ -18,7 +17,7 @@ export async function getAllProduct(req, res) {
 export async function getProductsByCategory(req, res) {
   try {
     const categoryId = req.params.categoryId;
-    const products = await shopService.getProductsByCategory(categoryId);
+    const products = await productService.getProductsByCategory(categoryId);
     res.send(products);
   } catch (error) {
     res.status(404).send(error);

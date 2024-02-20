@@ -3,7 +3,7 @@ import express from 'express';
 import uploadCloud from './APP/middleware/uploadCloudImg.js';
 
 import * as admController from './APP/Controller/AdminController.js';
-import * as shopController from './APP/Controller/ShopController.js';
+import * as productController from './APP/Controller/ProductController.js';
 import * as categoryController from './APP/Controller/CategoryController.js';
 import * as userController from './APP/Controller/UserController.js';
 
@@ -98,7 +98,7 @@ router.get('/api/admin/list/user', admController.getUsers);
  *       500:
  *         description: Internal server error
  */
-router.get('/api/product', shopController.getAllProduct);
+router.get('/api/product', productController.getAllProduct);
 /**
  * @swagger
  * tags:

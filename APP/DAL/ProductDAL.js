@@ -1,4 +1,4 @@
-import { SequelizeInstance } from '../utility/DbHelper.js';
+import { Product, SequelizeInstance } from '../utility/DbHelper.js';
 
 export async function getAllProduct() {
   const sqlQuery = `
@@ -60,4 +60,18 @@ GROUP BY
   });
 
   return productsWithDetails;
+}
+export async function createProduct(product) {
+  const result = await Product.create({
+    product_id: product.product_id,
+    category_id: product.category_id,
+    name: product.name,
+    description: product.description,
+    unit_price: product.unit_price,
+    discount: product.discount,
+    quantity: product.quantity,
+    sold: product.sold,
+    product_brand_id: product.product_brand_id,
+  });
+  return result;
 }

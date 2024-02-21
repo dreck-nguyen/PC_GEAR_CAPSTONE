@@ -79,6 +79,10 @@ const Category = sequelize.define(
     image: {
       type: DataTypes.STRING(255),
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
+    },
   },
   {
     tableName: 'category',
@@ -261,6 +265,10 @@ const Product = sequelize.define(
     },
     product_brand_id: {
       type: DataTypes.UUID,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
     },
   },
   {

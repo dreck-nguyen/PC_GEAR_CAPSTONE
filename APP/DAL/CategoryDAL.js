@@ -27,3 +27,16 @@ export async function getAllCategory() {
 
   return categories;
 }
+
+export async function createCategory(category) {
+  const result = await Category.create({
+    parent_id: category.parent_id,
+    name: category.name,
+    status: category.status,
+    description: category.description,
+    image: category.image,
+    category_id: category.category_id,
+  });
+  console.log(category);
+  return result;
+}

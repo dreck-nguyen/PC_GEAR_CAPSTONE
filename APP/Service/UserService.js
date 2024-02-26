@@ -55,3 +55,11 @@ export async function comparePasswordWithSalt(
     return false;
   }
 }
+export async function getUserInfoById(userId) {
+  const result = await userDAL.getUserDetailsById(userId);
+  return result;
+}
+export async function checkAuth(email, password) {
+  const result = await userDAL.checkAuth(email, password);
+  return result;
+}

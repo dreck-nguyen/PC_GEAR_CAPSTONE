@@ -193,7 +193,7 @@ const CustomerConfigurationProfileDetails = sequelize.define(
     },
   },
   {
-    tableName: 'customer_configuration_profile_details',
+    tableName: 'customer_configuration_profile_detail',
     timestamps: false,
   },
 );
@@ -433,6 +433,8 @@ const Cart = sequelize.define(
     },
     create_at: {
       type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     status: {
       type: DataTypes.STRING(20),
@@ -464,9 +466,14 @@ const CartItem = sequelize.define(
     unit_price: {
       type: DataTypes.DECIMAL(10, 2),
     },
+    create_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   },
   {
-    tableName: 'cart_items',
+    tableName: 'cart_item',
     timestamps: false,
   },
 );
@@ -517,7 +524,7 @@ const ShippingAddress = sequelize.define(
     },
   },
   {
-    tableName: 'shipping_addresses',
+    tableName: 'shipping_address',
     timestamps: false,
   },
 );
@@ -544,7 +551,7 @@ const Message = sequelize.define(
     },
   },
   {
-    tableName: 'messages',
+    tableName: 'message',
     timestamps: false,
   },
 );

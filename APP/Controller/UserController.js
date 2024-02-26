@@ -7,7 +7,7 @@ dotenv.config();
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
-export async function loginUser(req, res) {
+export async function loginUser(req, res, next) {
   try {
     const { email, password } = req.body;
     const result = await userService.loginUser(email, password);
@@ -30,7 +30,7 @@ export async function loginUser(req, res) {
     res.status(404).send(error);
   }
 }
-export async function registerUser(req, res) {
+export async function registerUser(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const userRegister = req.body;

@@ -7,7 +7,7 @@ dotenv.config();
 const router = express.Router();
 // const secret_key = process.env.SECRET_KEY;
 
-export async function getCategoryBreadcrumb(req, res) {
+export async function getCategoryBreadcrumb(req, res, next) {
   try {
     const categories = await categoryService.getCategoryBreadcrumb();
     res.send(categories);
@@ -16,7 +16,7 @@ export async function getCategoryBreadcrumb(req, res) {
   }
 }
 
-export async function getAllCategory(req, res) {
+export async function getAllCategory(req, res, next) {
   try {
     const categories = await categoryService.getAllCategory();
     res.send(categories);
@@ -25,7 +25,7 @@ export async function getAllCategory(req, res) {
   }
 }
 
-export async function createCategory(req, res) {
+export async function createCategory(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const category = req.body;

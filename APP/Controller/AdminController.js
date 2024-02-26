@@ -6,7 +6,7 @@ dotenv.config();
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
-export async function loginAdmin(req, res) {
+export async function loginAdmin(req, res, next) {
   try {
     const { email, password } = req.body;
     const result = await admService.getAdmDetails(email, password);
@@ -30,7 +30,7 @@ export async function loginAdmin(req, res) {
   }
 }
 
-export async function getUsers(req, res) {
+export async function getUsers(req, res, next) {
   try {
     const users = await admService.getUser();
     res.status(200).send(users);

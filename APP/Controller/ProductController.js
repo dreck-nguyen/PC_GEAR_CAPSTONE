@@ -6,8 +6,9 @@ dotenv.config();
 
 // const router = express.Router();
 // const secret_key = process.env.SECRET_KEY;
-export async function getAllProduct(req, res) {
+export async function getAllProduct(req, res, next) {
   try {
+    console.log(req.loginUser);
     const products = await productService.getAllProduct();
     res.send(products);
   } catch (error) {
@@ -15,7 +16,7 @@ export async function getAllProduct(req, res) {
   }
 }
 
-export async function getProductsByCategory(req, res) {
+export async function getProductsByCategory(req, res, next) {
   try {
     const categoryId = req.params.categoryId;
     const products = await productService.getProductsByCategory(categoryId);
@@ -24,7 +25,7 @@ export async function getProductsByCategory(req, res) {
     res.status(404).send(error);
   }
 }
-export async function createProduct(req, res) {
+export async function createProduct(req, res, next) {
   const t = await SequelizeInstance.transaction();
 
   try {

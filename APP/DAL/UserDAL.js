@@ -45,3 +45,24 @@ export async function registerUser(userDetails) {
     role_id: userDetails.role_id,
   });
 }
+
+export async function getUserDetailsById(userId) {
+  const userDetails = await User.findOne({
+    where: {
+      user_id: userId,
+    },
+  });
+  if (!userDetails) throw Error('USER NOT FOUND');
+  return userDetails;
+}
+
+export async function checkAuth(email, password) {
+  const userDetails = await User.findOne({
+    where: {
+      email: email,
+      password: password,
+    },
+  });
+  if (!userDetails) throw Error('USER NOT FOUND');
+  return userDetails;
+}

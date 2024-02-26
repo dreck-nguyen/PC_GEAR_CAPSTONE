@@ -6,6 +6,7 @@ import * as admController from './APP/Controller/AdminController.js';
 import * as productController from './APP/Controller/ProductController.js';
 import * as categoryController from './APP/Controller/CategoryController.js';
 import * as userController from './APP/Controller/UserController.js';
+import * as cartController from './APP/Controller/CartController.js';
 
 const router = express.Router();
 // ADMIN SECTION
@@ -419,4 +420,6 @@ router.get('/api/categories', categoryController.getAllCategory);
 router.post('/api/user/login', userController.loginUser);
 router.post('/api/user/register', userController.registerUser);
 
+// CART SECTION
+router.post('/api/cart', cartController.createCart);
 export default router;

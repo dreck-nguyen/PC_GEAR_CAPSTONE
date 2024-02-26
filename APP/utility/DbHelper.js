@@ -113,11 +113,9 @@ const Order = sequelize.define(
     shipping_fee: {
       type: DataTypes.DECIMAL(18, 2),
     },
-    payment_date: {
-      type: DataTypes.DATE,
-    },
     created_at: {
       type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
     },
   },
   {
@@ -160,6 +158,7 @@ const CustomerConfigurationProfile = sequelize.define(
     },
     created_at: {
       type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
     },
   },
   {
@@ -226,6 +225,7 @@ const Review = sequelize.define(
     },
     created_at: {
       type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
     },
   },
   {
@@ -337,6 +337,11 @@ const OrderDetail = sequelize.define(
     },
     unit_price: {
       type: DataTypes.DECIMAL(10, 2),
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
   },
   {
@@ -615,4 +620,5 @@ export {
   Product,
   ProductBrand,
   ProductSpecification,
+  OrderDetail,
 };

@@ -27,7 +27,6 @@ export async function getProductsByCategory(req, res, next) {
 }
 export async function createProduct(req, res, next) {
   const t = await SequelizeInstance.transaction();
-
   try {
     const product = req.body;
     const result = await productService.createProduct(product);

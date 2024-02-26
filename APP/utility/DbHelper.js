@@ -288,6 +288,11 @@ const ProductBrand = sequelize.define(
     product_brand_name: {
       type: DataTypes.STRING(255),
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   },
   {
     tableName: 'product_brand',
@@ -431,7 +436,7 @@ const Cart = sequelize.define(
     user_id: {
       type: DataTypes.UUID,
     },
-    create_at: {
+    created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -466,7 +471,7 @@ const CartItem = sequelize.define(
     unit_price: {
       type: DataTypes.DECIMAL(10, 2),
     },
-    create_at: {
+    created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),

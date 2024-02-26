@@ -48,8 +48,7 @@ const getUserInfoMiddleware = async (req, res, next) => {
 const authenticatedRoutes = [
   '/api/admin/login',
   '/api/user/login',
-  '/',
-  // Add more routes as needed
+  '/api/product-brand/*',
 ];
 
 // Apply the middleware selectively based on the array
@@ -57,7 +56,14 @@ app.use((req, res, next) => {
   const requestedRoute = req.path;
 
   // Check if the requested route is in the array
-  if (!authenticatedRoutes.includes(requestedRoute)) {
+  if (
+    !authenticatedRoutes.includes(requestedRoute) &&
+    req.method !== 'GET' &&
+    req.method !== 'POST' &&
+    req.method !== 'PUT' &&
+    req.method !== 'DELETE'
+  ) {
+    console.log(requestedRoute);
     getUserInfoMiddleware(req, res, next);
   } else {
     next();

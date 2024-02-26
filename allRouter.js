@@ -7,13 +7,14 @@ import * as productController from './APP/Controller/ProductController.js';
 import * as categoryController from './APP/Controller/CategoryController.js';
 import * as userController from './APP/Controller/UserController.js';
 import * as cartController from './APP/Controller/CartController.js';
-
+import * as brandController from './APP/Controller/BrandController.js';
+import * as cartItemController from './APP/Controller/CartItemController.js';
 const router = express.Router();
 // ADMIN SECTION
 /**
  * @swagger
  * tags:
- *   - name: Admin
+ *   - name:  ADMIN SECTION
  *     description: Operations related to categories
  *
  * /api/admin/login:
@@ -21,7 +22,7 @@ const router = express.Router();
  *     summary: Admin login
  *     description: Log in a admin with email and password
  *     tags:
- *       - Admin
+ *       -  ADMIN SECTION
  *     requestBody:
  *       required: true
  *       content:
@@ -50,7 +51,7 @@ const router = express.Router();
  *     summary: Get a list of users
  *     description: Retrieve a list of users for administration purposes.
  *     tags:
- *       - Admin
+ *       - ADMIN SECTION
  *     responses:
  *       200:
  *         description: Successful response
@@ -71,13 +72,46 @@ const router = express.Router();
  *             example:
  *               error: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/admin/cart:
+ *   get:
+ *     summary: Get users' cart details (admin)
+ *     description: Retrieve details of users' carts. This endpoint is for administrators.
+ *     tags:
+ *       - ADMIN SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the details of users' carts.
+ *         content:
+ *           application/json:
+ *             example:
+ *               carts:
+ *                 - userId: 123
+ *                   items: [...]
+ *                 - userId: 456
+ *                   items: [...]
+ *       '401':
+ *         description: Unauthorized. The request requires administrator privileges.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized access
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
 router.get('/api/admin/list/user', admController.getUsers);
+router.get('/api/admin/cart', cartController.getUsersCart);
 // PRODUCT SECTION
 /**
  * @swagger
  * tags:
- *   - name: product
+ *   - name: PRODUCT SECTION
  *     description: Operations related to categories
  *
  * @swagger
@@ -86,7 +120,7 @@ router.get('/api/admin/list/user', admController.getUsers);
  *     summary: Get all products
  *     description: Retrieve a list of all products.
  *     tags:
- *       - product
+ *       - PRODUCT SECTION
  *     responses:
  *       200:
  *         description: Successful response
@@ -102,14 +136,14 @@ router.get('/api/admin/list/user', admController.getUsers);
 /**
  * @swagger
  * tags:
- *   name: product
+ *   name: PRODUCT SECTION
  *   description: product-related routes
  * /api/product/{categoryId}:
  *   get:
  *     summary: Get products by category
  *     description: Retrieve a list of products for a specific category.
  *     tags:
- *       - product
+ *       - PRODUCT SECTION
  *     parameters:
  *       - in: path
  *         name: categoryId
@@ -134,7 +168,7 @@ router.get('/api/admin/list/user', admController.getUsers);
  *     summary: Create a new product
  *     description: Creates a new product with the provided data.
  *     tags:
- *       - product
+ *       - PRODUCT SECTION
  *     requestBody:
  *       description: Product data to create
  *       required: true
@@ -188,7 +222,7 @@ router.get('/api/product/:categoryId', productController.getProductsByCategory);
 /**
  * @swagger
  * tags:
- *   - name: category
+ *   - name: CATEGORY SECTION
  *     description: Operations related to categories
  *
  * /api/category:
@@ -196,7 +230,7 @@ router.get('/api/product/:categoryId', productController.getProductsByCategory);
  *     summary: Get breadcrumb categories
  *     description: Retrieve a list of all categories.
  *     tags:
- *       - category
+ *       - CATEGORY SECTION
  *     responses:
  *       200:
  *         description: Successful response
@@ -212,7 +246,7 @@ router.get('/api/product/:categoryId', productController.getProductsByCategory);
 /**
  * @swagger
  * tags:
- *   - name: category
+ *   - name: CATEGORY SECTION
  *     description: Operations related to categories
  *
  * /api/categories:
@@ -220,7 +254,7 @@ router.get('/api/product/:categoryId', productController.getProductsByCategory);
  *     summary: Get all categories
  *     description: Retrieve a list of all categories.
  *     tags:
- *       - category
+ *       - CATEGORY SECTION
  *     responses:
  *       200:
  *         description: Successful response
@@ -240,7 +274,7 @@ router.get('/api/product/:categoryId', productController.getProductsByCategory);
  *     summary: Create a new category
  *     description: Creates a new category with the provided data.
  *     tags:
- *       - category
+ *       - CATEGORY SECTION
  *     requestBody:
  *       description: Category data to create
  *       required: true
@@ -286,7 +320,7 @@ router.get('/api/categories', categoryController.getAllCategory);
 /**
  * @swagger
  * tags:
- *   - name: user
+ *   - name: USER SECTION
  *     description: Operations related to categories
  *
  * /api/user/login:
@@ -294,7 +328,7 @@ router.get('/api/categories', categoryController.getAllCategory);
  *     summary: User login
  *     description: Log in a user with email and password
  *     tags:
- *       - user
+ *       - USER SECTION
  *     requestBody:
  *       required: true
  *       content:
@@ -402,7 +436,7 @@ router.get('/api/categories', categoryController.getAllCategory);
  *   post:
  *     summary: Register a new user
  *     tags:
- *       - user
+ *       - USER SECTION
  *     requestBody:
  *       required: true
  *       content:
@@ -421,5 +455,343 @@ router.post('/api/user/login', userController.loginUser);
 router.post('/api/user/register', userController.registerUser);
 
 // CART SECTION
+/**
+ * @swagger
+ * /api/cart:
+ *   get:
+ *     summary: Get user's cart details
+ *     description: Retrieve details of the user's cart.
+ *     tags:
+ *      - CART SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the details of the user's cart.
+ *         content:
+ *           application/json:
+ *             example:
+ *               userId: 123
+ *               items: [...]
+ *       '401':
+ *         description: Unauthorized. The request requires user authentication.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized access
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+/**
+ * @swagger
+ * /api/cart:
+ *   post:
+ *     summary: Create a new cart
+ *     description: Create a new cart with the specified status and a list of products.
+ *     tags:
+ *       - CART SECTION
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 description: The status of the cart.
+ *                 example :
+ *               product_list:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     quantity:
+ *                       type: integer
+ *                       description: The quantity of the product.
+ *                       example: 2
+ *                     product_id:
+ *                       type: string
+ *                       format: uuid
+ *                       description: The ID of the product.
+ *                       example: 6313edd7-5ad3-4014-930b-eb6e638be805
+ *                     unit_price:
+ *                       type: number
+ *                       description: The unit price of the product.
+ *                       example: 34900000
+ *             required:
+ *               - status
+ *               - product_list
+ *     responses:
+ *       '201':
+ *         description: A successful response indicating the cart has been created.
+ *         content:
+ *           application/json:
+ *             example:
+ *               cart_id: 123
+ *               status: "open"
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+router.get('/api/cart', cartController.getUserCart);
 router.post('/api/cart', cartController.createCart);
+
+// CART ITEM SECTION
+/**
+ * @swagger
+ * /api/cart-item/{cartItemId}:
+ *   put:
+ *     summary: Update cart item quantity
+ *     description: Update the quantity of a cart item by providing the cartItemId in the path and the new quantity in the request body.
+ *     tags:
+ *       - CART ITEM SECTION
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         description: The ID of the cart item to update.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *                 description: The new quantity of the cart item.
+ *             required:
+ *               - quantity
+ *     responses:
+ *       '200':
+ *         description: A successful response indicating the cart item quantity has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               cartItemId: 3997ec61-d1d7-4e91-b484-78a464b83c52
+ *               quantity: 5
+ *       '404':
+ *         description: The specified cart item ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Cart item not found
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+router.put(
+  '/api/cart-item/:cartItemId',
+  cartItemController.updateCartItemQuantity,
+);
+// BRANCH SECTION
+/**
+ * @swagger
+ * /api/product-brand:
+ *   get:
+ *     summary: Get all product brands
+ *     description: Retrieve a list of all product brands.
+ *     tags:
+ *       - BRAND SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the list of product brands.
+ */
+/**
+ * @swagger
+ * /api/product-brand/{productBrandId}:
+ *   get:
+ *     summary: Get a product brand by ID
+ *     description: Retrieve a product brand based on its ID.
+ *     tags:
+ *       - BRAND SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productBrandId
+ *         required: true
+ *         description: The ID of the product brand to retrieve.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 91dcfc85-5f39-44ae-9cea-535a9565d2e1
+ *     responses:
+ *       '200':
+ *         description: A successful response with the details of the product brand.
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 91dcfc85-5f39-44ae-9cea-535a9565d2e1
+ *               name: Sample Brand
+ *       '404':
+ *         description: The specified product brand ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Product brand not found
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+/**
+ * @swagger
+ * /api/product-brand:
+ *   post:
+ *     summary: Create a new product brand
+ *     description: Create a new product brand with the specified name.
+ *     tags:
+ *       - BRAND SECTION
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_brand_name:
+ *                 type: string
+ *                 description: The name of the product brand.
+ *                 example: Custom v1
+ *             required:
+ *               - product_brand_name
+ *     responses:
+ *       '201':
+ *         description: A successful response indicating the brand has been created.
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               product_brand_name: Custom
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+/**
+ * @swagger
+ * /api/product-brand/{productBrandId}:
+ *   put:
+ *     summary: Update a product brand by ID
+ *     description: Update a product brand based on its ID.
+ *     tags:
+ *       - BRAND SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productBrandId
+ *         required: true
+ *         description: The ID of the product brand to update.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 91dcfc85-5f39-44ae-9cea-535a9565d2e1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_brand_name:
+ *                 type: string
+ *                 description: The updated name of the product brand.
+ *                 example: Custom V4
+ *             required:
+ *               - product_brand_name
+ *     responses:
+ *       '200':
+ *         description: A successful response indicating the brand has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 91dcfc85-5f39-44ae-9cea-535a9565d2e1
+ *               product_brand_name: Custom v3
+ *       '404':
+ *         description: The specified product brand ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Product brand not found
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+/**
+ * @swagger
+ * /api/product-brand/{productBrandId}:
+ *   delete:
+ *     summary: Delete a product brand
+ *     description: Delete a product brand by providing the productBrandId in the path.
+ *     tags:
+ *       - BRAND SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productBrandId
+ *         required: true
+ *         description: The ID of the product brand to delete.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 91dcfc85-5f39-44ae-9cea-535a9565d2e1
+ *     responses:
+ *       '204':
+ *         description: No content, indicating successful deletion.
+ *       '404':
+ *         description: The specified product brand ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Product brand not found
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+router.get('/api/product-brand', brandController.getAllBrand);
+router.post('/api/product-brand', brandController.createBrand);
+router.get('/api/product-brand/:productBrandId', brandController.getBrand);
+router.put('/api/product-brand/:productBrandId', brandController.updateBrand);
+router.delete(
+  '/api/product-brand/:productBrandId',
+  brandController.deleteBrand,
+);
+
 export default router;

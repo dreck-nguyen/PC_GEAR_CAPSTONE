@@ -44,8 +44,9 @@ export async function createProductImage(req, res, next) {
     const images = req.file;
     console.log(images);
     const productId = req.params.productId;
-    await productService.createProductImage(productId, images.path);
     const result = await productService.getProductById(productId);
+    if (!result) throw new Error('NO PRODUCT FOUND');
+    await productService.createProductImage(productId, images.path);
     res.status(200).send(result);
     await t.commit();
   } catch (error) {

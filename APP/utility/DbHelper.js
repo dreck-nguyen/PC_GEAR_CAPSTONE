@@ -423,6 +423,11 @@ const ProductGallery = sequelize.define(
     image: {
       type: DataTypes.TEXT,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   },
   {
     tableName: 'product_gallery',

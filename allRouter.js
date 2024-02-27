@@ -326,6 +326,11 @@ router.get(
 router.get('/api/product', productController.getAllProduct);
 router.post('/api/product', productController.createProduct);
 router.get('/api/product/:categoryId', productController.getProductsByCategory);
+router.post(
+  '/api/product/image/:productId',
+  uploadCloud.single('image'),
+  productController.createProductImage,
+);
 
 //CATEGORY SECTION
 /**

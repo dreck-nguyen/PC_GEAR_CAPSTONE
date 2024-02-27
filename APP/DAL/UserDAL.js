@@ -1,4 +1,4 @@
-import { User, UserRole } from '../utility/DbHelper.js';
+import { SequelizeInstance, User, UserRole } from '../utility/DbHelper.js';
 
 export async function getUserDetails(email) {
   const userDetails = await User.findOne({
@@ -47,12 +47,23 @@ export async function registerUser(userDetails) {
 }
 
 export async function getUserDetailsById(userId) {
-  const userDetails = await User.findOne({
-    where: {
-      user_id: userId,
-    },
+  const sqlQuery = `
+    select 
+      user_id
+      , role 
+    from 
+      public."user" u 
+    inner join 
+      user_role ur 
+    on u.role_id = ur.role_id
+    where user_id = '${userId}'
+  `;
+
+  const userDetails = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
   });
-  if (!userDetails) throw Error('USER NOT FOUND');
+
   return userDetails;
 }
 

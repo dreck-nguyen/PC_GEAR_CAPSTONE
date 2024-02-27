@@ -50,10 +50,12 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/admin/list/user:
+ * /api/auth/admin/list/user:
  *   get:
  *     summary: Get a list of users
  *     description: Retrieve a list of users for administration purposes.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ADMIN SECTION
  *     responses:
@@ -78,10 +80,12 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/admin/cart:
+ * /api/auth/admin/cart:
  *   get:
  *     summary: Get users' cart details (admin)
  *     description: Retrieve details of users' carts. This endpoint is for administrators.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ADMIN SECTION
  *     responses:
@@ -110,10 +114,12 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/admin/order:
+ * /api/auth/admin/order:
  *   get:
  *     summary: Get Users Order
  *     description: Retrieve information about users' orders.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ADMIN SECTION
  *     produces:
@@ -130,10 +136,12 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/admin/payment:
+ * /api/auth/admin/payment:
  *   get:
  *     summary: Get payment details (admin)
  *     description: Retrieve details of payments. This endpoint is for administrators.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ADMIN SECTION
  *     responses:
@@ -164,10 +172,12 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/admin/order-status:
+ * /api/auth/admin/order-status:
  *   get:
  *     summary: Get order status details (admin)
  *     description: Retrieve details of order statuses. This endpoint is for administrators.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ADMIN SECTION
  *     responses:
@@ -197,11 +207,14 @@ const router = express.Router();
  *               error: Internal server error
  */
 router.post('/api/admin/login', admController.loginAdmin);
-router.get('/api/admin/list/user', admController.getUsers);
-router.get('/api/admin/cart', cartController.getUsersCart);
-router.get('/api/admin/order', orderController.getUsersOrder);
-router.get('/api/admin/payment', paymentController.getPayment);
-router.get('/api/admin/order-status', orderStatusController.getOrderStatus);
+router.get('/api/auth/admin/list/user', admController.getUsers);
+router.get('/api/auth/admin/cart', cartController.getUsersCart);
+router.get('/api/auth/admin/order', orderController.getUsersOrder);
+router.get('/api/auth/admin/payment', paymentController.getPayment);
+router.get(
+  '/api/auth/admin/order-status',
+  orderStatusController.getOrderStatus,
+);
 
 // PRODUCT SECTION
 /**
@@ -553,10 +566,12 @@ router.post('/api/user/register', userController.registerUser);
 // CART SECTION
 /**
  * @swagger
- * /api/cart:
+ * /api/auth/user/cart:
  *   get:
  *     summary: Get user's cart details
  *     description: Retrieve details of the user's cart.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *      - CART SECTION
  *     responses:
@@ -582,10 +597,12 @@ router.post('/api/user/register', userController.registerUser);
  */
 /**
  * @swagger
- * /api/cart:
+ * /api/auth/user/cart:
  *   post:
  *     summary: Create a new cart
  *     description: Create a new cart with the specified status and a list of products.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - CART SECTION
  *     requestBody:
@@ -641,8 +658,8 @@ router.post('/api/user/register', userController.registerUser);
  *             example:
  *               error: Internal server error
  */
-router.get('/api/cart', cartController.getUserCart);
-router.post('/api/cart', cartController.createCart);
+router.get('/api/auth/user/cart', cartController.getUserCart);
+router.post('/api/auth/user/cart', cartController.createCart);
 
 // CART ITEM SECTION
 /**
@@ -893,10 +910,12 @@ router.delete(
 // ORDER SECTION
 /**
  * @swagger
- * /api/order:
+ * /api/auth/user/order:
  *   get:
  *     summary: Get Order by User ID
  *     description: Retrieve information about orders based on user ID.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ORDER SECTION
  *     produces:
@@ -964,10 +983,12 @@ router.delete(
  */
 /**
  * @swagger
- * /api/order:
+ * /api/auth/user/order:
  *   post:
  *     summary: Create a new order by user
  *     description: Create a new order with the specified details, including shipping fee, status ID, payment ID, and order details.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ORDER SECTION
  *     requestBody:
@@ -1095,10 +1116,12 @@ router.delete(
  */
 /**
  * @swagger
- * /api/order/{orderId}:
+ * /api/auth/user/order/{orderId}:
  *   get:
  *     summary: Get order details by ID
  *     description: Retrieve details of a specific order by providing the orderId in the path.
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - ORDER SECTION
  *     parameters:
@@ -1132,9 +1155,9 @@ router.delete(
  *             example:
  *               error: Internal server error
  */
-router.get('/api/order', orderController.getOrderByUserId);
-router.post('/api/order', orderController.createOrderByUser);
+router.get('/api/auth/user/order', orderController.getOrderByUserId);
+router.post('/api/auth/user/order', orderController.createOrderByUser);
 router.put('/api/order/:orderId', orderController.updateOrderStatus);
-router.get('/api/order/:orderId', orderController.getOrderById);
+router.get('/api/auth/user/order/:orderId', orderController.getOrderById);
 
 export default router;

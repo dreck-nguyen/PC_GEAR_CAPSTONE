@@ -1,9 +1,15 @@
 import * as orderService from '../Service/OrderService.js';
 import { SequelizeInstance } from '../utility/DbHelper.js';
+import * as commonFunction from '../Common/CommonFunction.js';
+import * as commonEnums from '../Common/CommonEnums.js';
 export async function getUsersOrder(req, res, next) {
   try {
+    const loginUser = req.loginUser;
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+      throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const result = await orderService.getUsersOrder();
     res.status(200).send(result);
+    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -12,11 +18,12 @@ export async function getUsersOrder(req, res, next) {
 
 export async function getOrderByUserId(req, res, next) {
   try {
-    const loginUser = req.loginUser || {
-      user_id: '1dff5a51-91ab-469e-bcd7-79a3195cfbad',
-    };
+    const loginUser = req.loginUser;
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send(result);
+    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -24,9 +31,13 @@ export async function getOrderByUserId(req, res, next) {
 }
 export async function getOrderById(req, res, next) {
   try {
+    const loginUser = req.loginUser;
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
     res.status(200).send(result);
+    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -36,14 +47,15 @@ export async function getOrderById(req, res, next) {
 export async function createOrderByUser(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
-    const loginUser = req.loginUser || {
-      user_id: '1dff5a51-91ab-469e-bcd7-79a3195cfbad',
-    };
+    const loginUser = req.loginUser;
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     await orderService.createOrderByUser(loginUser, cartObject);
     const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send(result);
     t.commit();
+    next();
   } catch (error) {
     t.rollback();
     console.log(error);
@@ -59,6 +71,7 @@ export async function updateOrderStatus(req, res, next) {
     await orderService.updateOrderStatus(orderId, statusId);
     res.status(200).send({ message: 'UPDATE STATUS DONE' });
     t.commit();
+    next();
   } catch (error) {
     t.rollback();
     console.log(error);

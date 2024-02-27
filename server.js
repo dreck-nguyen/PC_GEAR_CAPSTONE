@@ -20,24 +20,21 @@ app.use(express.json()); // Parse JSON request bodies
 const getUserInfoMiddleware = async (req, res, next) => {
   const accessToken =
     req.headers.authorization && req.headers.authorization.split(' ')[1];
-  console.log(accessToken);
+
   if (!accessToken) {
     return res.status(401).json({
       error: 'Unauthorized - Access token missing',
       accessToken: accessToken,
     });
   }
-
   try {
     const decodedToken = jwt.verify(accessToken, SECRET_KEY);
     const userId = decodedToken.user_id;
-    const loginUser = await userService.getUserInfoById(userId);
-    if (!loginUser) throw new Error('Access Denied ! Access Token Invalid');
+    const [loginUser] = await userService.getUserInfoById(userId);
     req.loginUser = loginUser;
-
     next();
   } catch (error) {
-    return res.status(401).json({
+    res.status(401).json({
       error: 'Unauthorized - Invalid access token',
       message: error.message,
     });
@@ -45,26 +42,16 @@ const getUserInfoMiddleware = async (req, res, next) => {
 };
 
 // Define an array of routes that require authentication
-const authenticatedRoutes = [
-  '/api/admin/login',
-  '/api/user/login',
-  '/api/product-brand/*',
-];
+const authenticatedRoutes = ['/api/auth/'];
 
-// Apply the middleware selectively based on the array
-app.use((req, res, next) => {
+// Middleware for authentication
+app.use(async (req, res, next) => {
   const requestedRoute = req.path;
-
-  // Check if the requested route is in the array
-  if (
-    !authenticatedRoutes.includes(requestedRoute) &&
-    req.method !== 'GET' &&
-    req.method !== 'POST' &&
-    req.method !== 'PUT' &&
-    req.method !== 'DELETE'
-  ) {
-    console.log(requestedRoute);
-    getUserInfoMiddleware(req, res, next);
+  const authCheck = authenticatedRoutes.some((prefix) =>
+    requestedRoute.includes(prefix),
+  );
+  if (authCheck) {
+    await getUserInfoMiddleware(req, res, next);
   } else {
     next();
   }
@@ -85,6 +72,7 @@ app.use(function (err, req, res, next) {
       error: {},
     },
   });
+  next();
 });
 
 app.use(function (req, res, next) {

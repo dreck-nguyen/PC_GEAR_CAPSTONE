@@ -2,6 +2,8 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import * as admService from '../Service/AdminService.js';
 import dotenv from 'dotenv';
+import * as commonEnums from '../Common/CommonEnums.js';
+import * as commonFunction from '../Common/CommonFunction.js';
 dotenv.config();
 
 const router = express.Router();
@@ -32,6 +34,9 @@ export async function loginAdmin(req, res, next) {
 
 export async function getUsers(req, res, next) {
   try {
+    const loginUser = req.loginUser;
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+      throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const users = await admService.getUser();
     res.status(200).send(users);
   } catch (e) {

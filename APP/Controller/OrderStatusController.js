@@ -4,7 +4,7 @@ import * as commonEnums from '../Common/CommonEnums.js';
 export async function getOrderStatus(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const result = await orderStatusService.getOrderStatus();
     res.status(200).send(result);

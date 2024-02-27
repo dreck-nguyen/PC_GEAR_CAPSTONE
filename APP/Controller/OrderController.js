@@ -5,7 +5,7 @@ import * as commonEnums from '../Common/CommonEnums.js';
 export async function getUsersOrder(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const result = await orderService.getUsersOrder();
     res.status(200).send(result);
@@ -19,7 +19,7 @@ export async function getUsersOrder(req, res, next) {
 export async function getOrderByUserId(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send(result);
@@ -32,7 +32,7 @@ export async function getOrderByUserId(req, res, next) {
 export async function getOrderById(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
@@ -48,7 +48,7 @@ export async function createOrderByUser(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     await orderService.createOrderByUser(loginUser, cartObject);

@@ -6,7 +6,7 @@ export async function createCart(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     await cartService.createCart(loginUser, cartObject);
@@ -24,7 +24,7 @@ export async function createCart(req, res, next) {
 export async function getUserCart(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await cartService.getUserCart(loginUser.user_id);
     res.status(200).send(result);
@@ -38,7 +38,7 @@ export async function getUserCart(req, res, next) {
 export async function getUsersCart(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const result = await cartService.getUsersCart();
     res.status(200).send(result);

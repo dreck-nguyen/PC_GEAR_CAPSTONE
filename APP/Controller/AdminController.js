@@ -35,7 +35,7 @@ export async function loginAdmin(req, res, next) {
 export async function getUsers(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const users = await admService.getUser();
     res.status(200).send(users);

@@ -323,6 +323,33 @@ router.get(
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/product/image/{productId}:
+ *   post:
+ *     summary: Upload an image for a product
+ *     tags:
+ *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         description: ID of the product
+ *         schema:
+ *           type: string
+ *       - in: formData
+ *         name: image
+ *         required: true
+ *         description: The image file to upload
+ *         type: file
+ *     responses:
+ *       '200':
+ *         description: Image uploaded successfully
+ *       '400':
+ *         description: Bad request, e.g., missing parameters
+ *       '500':
+ *         description: Internal server error
+ */
 router.get('/api/product', productController.getAllProduct);
 router.post('/api/product', productController.createProduct);
 router.get('/api/product/:categoryId', productController.getProductsByCategory);

@@ -6,3 +6,7 @@ export async function updateOrDeleteQuantity(cartItemId, quantity) {
     await cartItemDAL.updateCartItemQuantity(cartItemId, quantity);
   if (quantity === 0) await cartItemDAL.removeCartItem(cartItemId, quantity);
 }
+export async function getCartItemDetailsByID(cartItemId) {
+  const result = await cartItemDAL.getCartItemDetailsByID(cartItemId);
+  return result;
+}

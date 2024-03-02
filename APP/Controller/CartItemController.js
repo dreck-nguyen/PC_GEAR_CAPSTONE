@@ -17,3 +17,13 @@ export async function updateCartItemQuantity(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+export async function getCartItemDetailsByID(req, res, next) {
+  try {
+    const cartItemId = req.params.cartItemId;
+    const result = await cartItemService.getCartItemDetailsByID(cartItemId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}

@@ -720,6 +720,28 @@ router.post('/api/auth/user/cart', cartController.createCart);
 /**
  * @swagger
  * /api/cart-item/{cartItemId}:
+ *   get:
+ *     summary: Get cart item details by ID
+ *     description: Retrieve details of a cart item by providing a cart item ID.
+ *     tags:
+ *       - CART ITEM SECTION
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         description: ID of the cart item to be retrieved
+ *         schema:
+ *           type: string
+ *           example: 77b13154-9cc0-4543-9713-600ab21188ba
+ *     responses:
+ *       200:
+ *         description: Successful response with the cart item details
+ *       404:
+ *         description: Cart item not found
+ */
+/**
+ * @swagger
+ * /api/cart-item/{cartItemId}:
  *   put:
  *     summary: Update cart item quantity
  *     description: Update the quantity of a cart item by providing the cartItemId in the path and the new quantity in the request body.
@@ -772,10 +794,15 @@ router.post('/api/auth/user/cart', cartController.createCart);
  *             example:
  *               error: Internal server error
  */
+router.get(
+  '/api/cart-item/:cartItemId',
+  cartItemController.getCartItemDetailsByID,
+);
 router.put(
   '/api/cart-item/:cartItemId',
   cartItemController.updateCartItemQuantity,
 );
+
 // BRANCH SECTION
 /**
  * @swagger

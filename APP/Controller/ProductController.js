@@ -14,6 +14,15 @@ export async function getAllProduct(req, res, next) {
     res.status(404).send(error);
   }
 }
+export async function getProductById(req, res, next) {
+  try {
+    const productId = req.params.productId;
+    const products = await productService.getProductById(productId);
+    res.send(products);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
 
 export async function getProductsByCategory(req, res, next) {
   try {

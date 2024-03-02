@@ -10,10 +10,9 @@ export async function createCart(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     await cartService.createCart(loginUser, cartObject);
+    t.commit();
     const result = await cartService.getUserCart(loginUser.user_id);
     res.status(200).send(result);
-    t.commit();
-    next();
   } catch (error) {
     t.rollback();
     console.log(error.message);
@@ -28,7 +27,6 @@ export async function getUserCart(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await cartService.getUserCart(loginUser.user_id);
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error.message);
     res.status(500).send({ error: error.message });
@@ -42,7 +40,6 @@ export async function getUsersCart(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const result = await cartService.getUsersCart();
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error.message);
     res.status(500).send({ error: error.message });

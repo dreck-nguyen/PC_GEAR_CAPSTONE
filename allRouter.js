@@ -350,7 +350,30 @@ router.get(
  *       '500':
  *         description: Internal server error
  */
+/**
+ * @swagger
+ * /api/product/{productId}:
+ *   get:
+ *     summary: Get product by ID
+ *     description: Retrieve product information by providing a product ID.
+ *     tags:
+ *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         description: ID of the product to be retrieved
+ *         schema:
+ *           type: string
+ *           example: 6313edd7-5ad3-4014-930b-eb6e638be805
+ *     responses:
+ *       200:
+ *         description: Successful response with the product information
+ *       404:
+ *         description: Product not found
+ */
 router.get('/api/product', productController.getAllProduct);
+router.get('/api/product/:productId', productController.getProductById);
 router.post('/api/product', productController.createProduct);
 router.get('/api/product/:categoryId', productController.getProductsByCategory);
 router.post(

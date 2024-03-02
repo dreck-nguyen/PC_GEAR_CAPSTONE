@@ -10,7 +10,7 @@ export async function getCartUser(userId) {
       'product_id', ci.product_id,
       'product_name', p.name,
       'quantity', ci.quantity,
-      'unit_price', ci.unit_price,
+      'unit_price', TO_CHAR(p.unit_price, 'FM999,999,999'),
       'created_at', ci.created_at,
       'images', pg.images
     )

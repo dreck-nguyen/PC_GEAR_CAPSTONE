@@ -478,9 +478,6 @@ const CartItem = sequelize.define(
     quantity: {
       type: DataTypes.INTEGER,
     },
-    unit_price: {
-      type: DataTypes.DECIMAL(10, 2),
-    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

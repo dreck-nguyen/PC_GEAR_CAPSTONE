@@ -12,7 +12,7 @@ import * as cartItemController from './APP/Controller/CartItemController.js';
 import * as orderController from './APP/Controller/OrderController.js';
 import * as paymentController from './APP/Controller/PaymentController.js';
 import * as orderStatusController from './APP/Controller/OrderStatusController.js';
-
+import * as shippingAddressController from './APP/Controller/ShippingAddressController.js';
 const router = express.Router();
 // ADMIN SECTION
 /**
@@ -136,14 +136,14 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/auth/admin/payment:
+ * /api/payment:
  *   get:
  *     summary: Get payment details (admin)
- *     description: Retrieve details of payments. This endpoint is for administrators.
+ *     description: Retrieve details of payments
  *     security:
  *       -  BearerAuth: []
  *     tags:
- *       - ADMIN SECTION
+ *       - PAYMENT SECTION
  *     responses:
  *       '200':
  *         description: A successful response with the details of payments.
@@ -206,11 +206,48 @@ const router = express.Router();
  *             example:
  *               error: Internal server error
  */
+/**
+ * @swagger
+ * /api/auth/admin/payment:
+ *   get:
+ *     summary: Get payment details (admin)
+ *     description: Retrieve details of payments. This endpoint is for administrators.
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - ADMIN SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the details of payments.
+ *         content:
+ *           application/json:
+ *             example:
+ *               payments:
+ *                 - payment_id: "6c9f6c1a-9c4b-4716-943b-8dbb3934952b"
+ *                   amount: 500.00
+ *                   payment_date: "2024-02-26T14:38:35.338589+00:00"
+ *                 - payment_id: "9b0a18c5-9c4b-4716-943b-8dbb3934952b"
+ *                   amount: 800.00
+ *                   payment_date: "2024-02-26T14:40:22.123456+00:00"
+ *       '401':
+ *         description: Unauthorized. The request requires administrator privileges.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized access
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
 router.get('/api/auth/admin/list/user', admController.getUsers);
 router.get('/api/auth/admin/cart', cartController.getUsersCart);
 router.get('/api/auth/admin/order', orderController.getUsersOrder);
-router.get('/api/auth/admin/payment', paymentController.getPayment);
+router.get('/api/payment', paymentController.getPayment);
+router.get('/api/auth/payment', paymentController.getPayment);
 router.get(
   '/api/auth/admin/order-status',
   orderStatusController.getOrderStatus,
@@ -1013,6 +1050,7 @@ router.delete(
  *       500:
  *         description: Internal Server Error
  */
+
 /**
  * /api/order:
     post:
@@ -1237,9 +1275,193 @@ router.delete(
  *             example:
  *               error: Internal server error
  */
+/**
+ * @swagger
+ * /api/auth/user/order-status/{orderStatusId}:
+ *   get:
+ *     summary: Get order status by ID
+ *     description: Retrieve the order status for the authenticated user based on the order status ID.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - ORDER SECTION
+ *     parameters:
+ *       - in: path
+ *         name: orderStatusId
+ *         required: true
+ *         description: The ID of the order status to retrieve.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: b56803ff-b2cd-42e8-8171-d2459e92b58f
+ *     responses:
+ *       '200':
+ *         description: A successful response with the details of the specified order status.
+ *         content:
+ *           application/json:
+ *             example:
+ *               orderStatusId: "b56803ff-b2cd-42e8-8171-d2459e92b58f"
+ *               status: "Processing"
+ *       '404':
+ *         description: The specified order status ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Order status not found"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal server error"
+ */
+/**
+ * @swagger
+ * /api/auth/user/order-status:
+ *   get:
+ *     summary: Get order status for the authenticated user
+ *     description: Retrieve the order status for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - ORDER SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the order status.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: "Shipped"
+ *       '401':
+ *         description: Unauthorized. User not authenticated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Unauthorized"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal server error"
+ */
 router.get('/api/auth/user/order', orderController.getOrderByUserId);
 router.post('/api/auth/user/order', orderController.createOrderByUser);
 router.put('/api/order/:orderId', orderController.updateOrderStatus);
 router.get('/api/auth/user/order/:orderId', orderController.getOrderById);
-
+router.get('/api/auth/user/order-status/', orderController.getOrderStatus);
+router.get(
+  '/api/auth/user/order-status/:orderStatusId',
+  orderController.getOrderStatusByStatusId,
+);
+// SHIPPING ADDRESS
+/**
+ * @swagger
+ * /api/auth/user/shipping-address:
+ *   get:
+ *     summary: Get user's shipping address
+ *     description: Retrieve the shipping address for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - SHIPPING ADDRESS SECTION
+ *     responses:
+ *       '200':
+ *         description: A successful response with the user's shipping address.
+ *         content:
+ *           application/json:
+ *             example:
+ *               street: "123 Main St"
+ *               city: "Cityville"
+ *               state: "State"
+ *               zip: "12345"
+ *       '401':
+ *         description: Unauthorized. User not authenticated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Unauthorized"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal server error"
+ */
+/**
+ * @swagger
+ * /api/auth/user/shipping-address:
+ *   post:
+ *     summary: Create user's shipping address
+ *     description: Create a new shipping address for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - SHIPPING ADDRESS SECTION
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               recipient_name:
+ *                 type: string
+ *                 description: The name of the recipient.
+ *                 example: "Jill valentine"
+ *               street_address:
+ *                 type: string
+ *                 description: The street address of the shipping address.
+ *                 example: "2 Cach Mang Thang 8"
+ *               city:
+ *                 type: string
+ *                 description: The city of the shipping address.
+ *                 example: "HCM"
+ *               country:
+ *                 type: string
+ *                 description: The country of the shipping address.
+ *                 example: "VN"
+ *             required:
+ *               - recipient_name
+ *               - street_address
+ *               - city
+ *               - country
+ *     responses:
+ *       '201':
+ *         description: Successfully created. Returns the created shipping address.
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               recipient_name: "Test"
+ *               street_address: "2 Mai Chi Tho"
+ *               city: "HCM"
+ *               country: "VN"
+ *       '400':
+ *         description: Bad Request. Invalid or missing parameters in the request.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid request body"
+ *       '401':
+ *         description: Unauthorized. User not authenticated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Unauthorized"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Internal server error"
+ */
+router.get(
+  '/api/auth/user/shipping-address',
+  shippingAddressController.getShippingAddress,
+);
+router.post(
+  '/api/auth/user/shipping-address',
+  shippingAddressController.createShippingAddress,
+);
 export default router;

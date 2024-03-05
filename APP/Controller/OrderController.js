@@ -2,6 +2,7 @@ import * as orderService from '../Service/OrderService.js';
 import { SequelizeInstance } from '../utility/DbHelper.js';
 import * as commonFunction from '../Common/CommonFunction.js';
 import * as commonEnums from '../Common/CommonEnums.js';
+import * as orderStatusService from '../Service/OrderStatusService.js';
 export async function getUsersOrder(req, res, next) {
   try {
     const loginUser = req.loginUser;
@@ -74,6 +75,36 @@ export async function updateOrderStatus(req, res, next) {
     next();
   } catch (error) {
     t.rollback();
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getOrderStatus(req, res, next) {
+  try {
+    const loginUser = req.loginUser;
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
+    const result = await orderStatusService.getOrderStatus();
+    res.status(200).send(result);
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getOrderStatusByStatusId(req, res, next) {
+  try {
+    const loginUser = req.loginUser;
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
+    const orderStatusId = req.params.orderStatusId;
+    const result = await orderStatusService.getOrderStatusByStatusId(
+      loginUser.user_id,
+      orderStatusId,
+    );
+    res.status(200).send(result);
+    next();
+  } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
   }

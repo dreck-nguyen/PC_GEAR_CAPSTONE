@@ -514,7 +514,7 @@ const Warehouse = sequelize.define(
 const ShippingAddress = sequelize.define(
   'ShippingAddress',
   {
-    AddressID: {
+    address_id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
@@ -533,6 +533,11 @@ const ShippingAddress = sequelize.define(
     },
     country: {
       type: DataTypes.STRING(255),
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
   },
   {

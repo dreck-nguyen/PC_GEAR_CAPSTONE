@@ -14,6 +14,10 @@ export async function getProductsByCategory(categoryId) {
   );
   return productsWithDetails;
 }
+export async function updateProductById(productId, product) {
+  const result = await productDAL.updateProductById(productId, product);
+  return result;
+}
 export async function createProduct(product) {
   product.product_id = uuidv4();
   const result = await productDAL.createProduct(product);
@@ -27,4 +31,10 @@ export async function createProductImage(productId, path) {
     path,
   );
   return result;
+}
+export async function deleteProductByID(productId) {
+  await productDAL.deleteProductByID(productId);
+}
+export async function deleteProductsByID(productId) {
+  await productDAL.deleteProductsByID(productId);
 }

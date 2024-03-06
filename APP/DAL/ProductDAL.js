@@ -107,6 +107,18 @@ GROUP BY
 
   return productsWithDetails;
 }
+export async function updateProductById(productId, product) {
+  const existingProduct = await Product.findOne({
+    where: { product_id: productId },
+  });
+  console.log(existingProduct);
+  const [updatedRows, updatedProductDetails] = await Product.update(product, {
+    where: { product_id: productId },
+    returning: true,
+  });
+
+  return [updatedRows, updatedProductDetails];
+}
 export async function createProduct(product) {
   const result = await Product.create({
     product_id: product.product_id,
@@ -126,5 +138,31 @@ export async function createProductImage(productGalleryId, productId, path) {
     product_gallery_id: productGalleryId,
     product_id: productId,
     image: path,
+  });
+}
+export async function deleteProductByID(productId) {
+  const sqlQuery = `
+ DELETE FROM 
+   product 
+ WHERE
+   product_id = '${productId}'
+  `;
+
+  await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+    raw: true,
+  });
+}
+export async function deleteProductsByID(productIds) {
+  const sqlQuery = `
+ DELETE FROM 
+   product 
+ WHERE
+   product_id IN (:productIds)
+  `;
+
+  await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+    replacements: { productIds },
   });
 }

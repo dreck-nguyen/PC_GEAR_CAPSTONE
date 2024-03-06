@@ -409,14 +409,142 @@ router.get(
  *       404:
  *         description: Product not found
  */
+/**
+ * @swagger
+ * /api/auth/staff/product/:
+ *   delete:
+ *     summary: Delete products by IDs
+ *     tags:
+ *       - PRODUCT SECTION
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productIds:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example:
+ *                   - "2145a7dc-178f-4e81-8bec-97dd82804e34"
+ *                   - "2145a7dc-178f-4e81-8bec-97dd82804e32"
+ *                   - "2145a7dc-178f-4e81-8bec-97dd82804e33"
+ *     responses:
+ *       '204':
+ *         description: Products successfully deleted
+ *       '404':
+ *         description: Products not found
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/auth/staff/product/{productId}:
+ *   delete:
+ *     summary: Delete a product by ID
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         description: ID of the product to delete
+ *         schema:
+ *           type: string
+ *         example: "458180ca-a0d9-4830-a3ce-90f7de22463e"
+ *     responses:
+ *       '204':
+ *         description: Product successfully deleted
+ *       '404':
+ *         description: Product not found
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/auth/staff/product/{productId}:
+ *   put:
+ *     summary: Update a product by ID
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         description: ID of the product to update
+ *         schema:
+ *           type: string
+ *         example: "12e157b3-7176-404f-904d-dff95f746fc0"
+ *       - in: body
+ *         name: updatedProduct
+ *         description: Updated product details
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             category_id:
+ *               type: string
+ *               description: ID of the product category
+ *               example: "12e157b3-7176-404f-904d-dff95f746fc0"
+ *             name:
+ *               type: string
+ *               description: Name of the product
+ *               example: "Test2"
+ *             description:
+ *               type: string
+ *               description: Description of the product
+ *               example: "Test Swagger"
+ *             unit_price:
+ *               type: number
+ *               description: Unit price of the product
+ *               example: 160000.00
+ *             discount:
+ *               type: number
+ *               description: Discount on the product
+ *               example: 0
+ *             quantity:
+ *               type: integer
+ *               description: Quantity of the product
+ *               example: 10
+ *             sold:
+ *               type: integer
+ *               description: Number of sold units
+ *               example: 10
+ *             product_brand_id:
+ *               type: string
+ *               description: ID of the product brand
+ *               example: "91dcfc85-5f39-44ae-9cea-535a9565d2e6"
+ *     responses:
+ *       '200':
+ *         description: Product successfully updated
+ *       '404':
+ *         description: Product not found
+ *       '500':
+ *         description: Internal server error
+ */
 router.get('/api/product', productController.getAllProduct);
 router.get('/api/product/:productId', productController.getProductById);
-router.post('/api/product', productController.createProduct);
+router.put(
+  '/api/auth/staff/product/:productId',
+  productController.updateProductById,
+);
+router.post('/api/auth/staff/product', productController.createProduct);
 router.get('/api/product/:categoryId', productController.getProductsByCategory);
 router.post(
   '/api/product/image/:productId',
   uploadCloud.single('image'),
   productController.createProductImage,
+);
+router.delete('/api/auth/staff/product/', productController.deleteProductsById);
+router.delete(
+  '/api/auth/staff/product/:productId',
+  productController.deleteProductById,
 );
 
 //CATEGORY SECTION

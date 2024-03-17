@@ -124,3 +124,110 @@ export async function deleteProductsById(req, res, next) {
     res.status(404).send(error);
   }
 }
+
+export async function getProcessor(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getProcessor(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getMotherboard(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getProcessor(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getCase(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getCase(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getGraphicsCard(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getGraphicsCard(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getRam(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getRam(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getStorage(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getStorage(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getCaseCooler(req, res, next) {
+  try {
+    const result = await productService.getCaseCooler();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getCpuCooler(req, res, next) {
+  try {
+    const result = await productService.getCpuCooler();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+export async function getPowerSupply(req, res, next) {
+  try {
+    const result = await productService.getPowerSupply();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getMonitor(req, res, next) {
+  try {
+    const result = await productService.getMonitor();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getAutoGen(req, res, next) {
+  try {
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}

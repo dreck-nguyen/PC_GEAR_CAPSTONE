@@ -166,3 +166,307 @@ export async function deleteProductsByID(productIds) {
     replacements: { productIds },
   });
 }
+export async function getMonitor() {
+  const sqlQuery = `
+SELECT 
+  p.product_id,
+  p."name",
+  p.description,
+  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+  p.discount,
+  p.sold,
+  c."name" AS category_name,
+  pb.product_brand_name AS brand_name,
+  ARRAY_AGG(pg.image) AS image_links,
+  ms.*
+FROM 
+  product p
+LEFT OUTER JOIN category c ON c.category_id = p.category_id
+LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+INNER JOIN monitor_specification ms on p.product_id = ms.product_id 
+GROUP BY 
+  p.product_id, c.category_id, pb.product_brand_id, ms.product_id ,ms.specification_id
+  `;
+
+  const monitorList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return monitorList;
+}
+export async function getPowerSupply() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    pss.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN power_supply_specification pss on p.product_id = pss.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, pss.product_id, pss.specification_id
+  `;
+
+  const powerSupplyList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return powerSupplyList;
+}
+export async function getCpuCooler() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    cs.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN cooler_specification cs  on p.product_id = cs.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+  `;
+
+  const cpuCoolerList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return cpuCoolerList;
+}
+
+export async function getCaseCooler() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    ccs.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN case_cooler_specification ccs  on p.product_id = ccs.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, ccs.product_id, ccs.specification_id
+  `;
+
+  const caseCoolerList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return caseCoolerList;
+}
+export async function getProcessor() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    ps.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN processor_specification ps  on p.product_id = ps.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
+  `;
+
+  const processorList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return processorList;
+}
+
+export async function getMotherboard() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    ms.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN motherboard_specification ms on p.product_id = ms.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
+  `;
+
+  const motherBoardList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return motherBoardList;
+}
+export async function getCase() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    cs.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN case_specification cs on p.product_id = cs.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+  `;
+
+  const caseList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return caseList;
+}
+
+export async function getGraphicsCard() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    gs.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN graphics_specification gs  on p.product_id = gs.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
+  `;
+
+  const gpuList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return gpuList;
+}
+
+export async function getRam() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    rs.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN ram_specification rs  on p.product_id = rs.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, rs.product_id, rs.specification_id
+  `;
+
+  const ramList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return ramList;
+}
+export async function getStorage() {
+  const sqlQuery = `
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    ss.*
+  FROM 
+    product p
+  LEFT OUTER JOIN category c ON c.category_id = p.category_id
+  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  INNER JOIN storage_specification ss on p.product_id = ss.product_id 
+  GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id, ss.product_id, ss.specification_id
+  `;
+
+  const ramList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return ramList;
+}

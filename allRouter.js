@@ -13,7 +13,11 @@ import * as orderController from './APP/Controller/OrderController.js';
 import * as paymentController from './APP/Controller/PaymentController.js';
 import * as orderStatusController from './APP/Controller/OrderStatusController.js';
 import * as shippingAddressController from './APP/Controller/ShippingAddressController.js';
+import * as pcBuilderController from './APP/Controller/PcBuilderController.js';
 const router = express.Router();
+// PC BUILD SECTION
+router.get('/api/auth/admin/pc-build-auto', pcBuilderController.pcAutoBuild);
+
 // ADMIN SECTION
 /**
  * @swagger
@@ -546,6 +550,79 @@ router.delete(
   '/api/auth/staff/product/:productId',
   productController.deleteProductById,
 );
+
+router.post('/api/pc-component/processor', productController.getProcessor);
+router.post('/api/pc-component/motherboard', productController.getMotherboard);
+router.post('/api/pc-component/case', productController.getCase);
+router.post(
+  '/api/pc-component/graphics-card',
+  productController.getGraphicsCard,
+);
+router.post('/api/pc-component/ram', productController.getRam);
+router.post('/api/pc-component/storage', productController.getStorage);
+router.get('/api/pc-component/auto-gen', productController.getAutoGen);
+
+/**
+ * @swagger
+ * /api/pc-component/case-cooler:
+ *   get:
+ *     summary: Get case cooler information
+ *     description: Retrieve information about case coolers for PC builds.
+ *     tags:
+ *       - PC Component
+ *     responses:
+ *       200:
+ *         description: Successful response with case cooler information
+ *       404:
+ *         description: Case cooler information not found
+ */
+/**
+ * @swagger
+ * /api/pc-component/cpu-cooler:
+ *   get:
+ *     summary: Get CPU cooler information
+ *     description: Retrieve information about CPU coolers for PC Components.
+ *     tags:
+ *       - PC Component
+ *     responses:
+ *       200:
+ *         description: Successful response with CPU cooler information
+ *       404:
+ *         description: CPU cooler information not found
+ */
+/**
+ * @swagger
+ * /api/pc-component/psu:
+ *   get:
+ *     summary: Get power supply unit (PSU) information
+ *     description: Retrieve information about power supply units (PSUs) for PC Components.
+ *     tags:
+ *       - PC Component
+ *     responses:
+ *       200:
+ *         description: Successful response with power supply unit information
+ *       404:
+ *         description: Power supply unit information not found
+ */
+/**
+ * @swagger
+ * /api/pc-component/monitor:
+ *   get:
+ *     summary: Get monitor information
+ *     description: Retrieve information about monitors for PC Components.
+ *     tags:
+ *       - PC Component
+ *     responses:
+ *       200:
+ *         description: Successful response with monitor information
+ *       404:
+ *         description: Monitor information not found
+ */
+
+router.get('/api/pc-component/case-cooler', productController.getCaseCooler);
+router.get('/api/pc-component/cpu-cooler', productController.getCpuCooler);
+router.get('/api/pc-component/psu', productController.getPowerSupply);
+router.get('/api/pc-component/monitor', productController.getMonitor);
 
 //CATEGORY SECTION
 /**
@@ -1592,4 +1669,7 @@ router.post(
   '/api/auth/user/shipping-address',
   shippingAddressController.createShippingAddress,
 );
+
+router.post;
+
 export default router;

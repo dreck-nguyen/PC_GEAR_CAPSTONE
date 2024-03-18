@@ -141,26 +141,6 @@ export async function getMotherboardSpecification() {
 }
 
 export async function insertPreBuildPc(combine) {
-  //   const sqlQuery = `
-  //   INSERT INTO public.pre_build_pc (pre_build_id, motherboard_id, processor_id, cpu_cooler_id, case_id, gpu_id, ram_id, storage_id, case_cooler_id, monitor_id, created_by)
-  //   VALUES(
-  //     ${combine.pre_build_id}
-  //     , ${combine.motherboard_id}
-  //     , ${combine.processor_id}
-  //     , ${combine.cpu_cooler}
-  //     , ${combine.case_id}
-  //     , ${combine.gpu_id}
-  //     , ${combine.ram_id}
-  //     , ${combine.storage}
-  //     , ${combine.case_cooler_id}
-  //     , ${combine.monitor_id}
-  //     , ${combine.user_id});
-  //   `;
-  //   await SequelizeInstance.query(sqlQuery, {
-  //     type: SequelizeInstance.QueryTypes.INSERT,
-  //     raw: true,
-  //   });
-  // }
   const sqlQuery = `
   INSERT INTO public.pre_build_pc (
     pre_build_id
@@ -183,7 +163,6 @@ export async function insertPreBuildPc(combine) {
     , :user_id
   );
 `;
-
   await SequelizeInstance.query(sqlQuery, {
     replacements: combine,
     type: SequelizeInstance.QueryTypes.INSERT,

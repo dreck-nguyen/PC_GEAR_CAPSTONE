@@ -381,7 +381,7 @@ router.get(
  *       - in: formData
  *         name: image
  *         required: true
- *         description: The image file to upload
+ *         description: The image file to upload. Select a file from your local folder.
  *         type: file
  *     responses:
  *       '200':
@@ -550,6 +550,7 @@ router.delete(
   '/api/auth/staff/product/:productId',
   productController.deleteProductById,
 );
+//
 
 router.post('/api/pc-component/processor', productController.getProcessor);
 router.post('/api/pc-component/motherboard', productController.getMotherboard);
@@ -560,7 +561,7 @@ router.post(
 );
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
-router.get('/api/pc-component/auto-gen', productController.getAutoGen);
+router.post('/api/pc-component/auto-gen', productController.getAutoGen);
 
 /**
  * @swagger

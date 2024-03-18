@@ -67,13 +67,13 @@ export async function getMotherboard(dataObj) {
   else
     result = result.filter((e) => {
       if (
-        dataObj.processorDetails?.chipset &&
+        dataObj.processorDetails.chipset &&
         dataObj.processorDetails.chipset !== e.chipset
       )
         return false;
 
       if (
-        dataObj.ramDetails?.ram_type &&
+        dataObj.ramDetails.ram_type &&
         !e.memory_supports
           .replace('DDR3 ', '')
           .replace('DDR4 ', '')
@@ -97,7 +97,7 @@ export async function getMotherboard(dataObj) {
 }
 export async function getCase(dataObj) {
   let result = await productDAL.getCase();
-  if (!dataObj.gpu.length) return result;
+  if (!dataObj.gpuDetail.length) return result;
   else
     result = result.filter(
       (e) =>
@@ -145,7 +145,7 @@ export async function getRam(dataObj) {
 }
 export async function getStorage(dataObj) {
   let result = await productDAL.getStorage();
-  if (!dataObj) return result;
+  if (!dataObj.storageDetail.gpu_length) return result;
   else
     result = result.filter(
       (e) =>
@@ -153,5 +153,29 @@ export async function getStorage(dataObj) {
           dataObj.storageDetail.gpu_length,
         ) >= Number(e.length),
     );
+  return result;
+}
+export async function getAutoGen(dataObj) {
+  let result = await productDAL.getAutoGen();
+  console.log(dataObj);
+  if (dataObj)
+    result = result.filter((e) => {
+      if (dataObj.motherBoardDetails.chipset) {
+        e.motherboard_specification.chipset ===
+          dataObj.motherBoardDetails.chipset;
+      }
+      if (dataObj.motherBoardDetails.memory_supports) {
+      }
+      if (dataObj.caseDetails.gpu_length) {
+      }
+      if (dataObj.gpuDetail.length) {
+      }
+      if (dataObj.processorDetails.chipset) {
+      }
+      if (dataObj.storageDetail.interface) {
+      }
+      if (dataObj.ramDetails.ram_type) {
+      }
+    });
   return result;
 }

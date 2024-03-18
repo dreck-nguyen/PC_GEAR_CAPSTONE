@@ -33,3 +33,10 @@ export function extractNumberFromCpuCoolerSupportSize(cpuCoolerSupportSize) {
   const matches = cpuCoolerSupportSize.split('/')[1].match(/\d+(\.\d+)?/);
   return matches ? parseFloat(matches[0] + 'mm') : null;
 }
+export function hasFrequency(frequencyList, targetFrequency) {
+  const [ramType, ramFreq] = targetFrequency.split('-');
+  const ramFreqNum = extractNumberFromString(ramFreq);
+  console.log(ramType, ramFreqNum);
+
+  return frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum);
+}

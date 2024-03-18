@@ -135,10 +135,132 @@ export async function getProcessor(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
+export async function getProcessorById(req, res, next) {
+  try {
+    const processorId = req.params.processor_id;
+    const result = await productService.getProcessorById(processorId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getMotherboardById(req, res, next) {
+  try {
+    const motherBoardId = req.params.motherboard_id;
+    const result = await productService.getMotherboardById(motherBoardId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getCaseById(req, res, next) {
+  try {
+    const caseId = req.params.case_id;
+    const result = await productService.getCaseById(caseId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getGraphicsCardById(req, res, next) {
+  try {
+    const gpuId = req.params.gpu_id;
+    const result = await productService.getGraphicsCardById(gpuId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getRamById(req, res, next) {
+  try {
+    const ramId = req.params.ram_id;
+    const result = await productService.getRamById(ramId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getStorageById(req, res, next) {
+  try {
+    const storageId = req.params.storage_id;
+    const result = await productService.getStorageById(storageId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getAutoGenById(req, res, next) {
+  try {
+    const autoGenId = req.params.auto_gen_id;
+    const result = await productService.getAutoGenById(autoGenId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getCaseCoolerById(req, res, next) {
+  try {
+    const caseCoolerId = req.params.case_cooler_id;
+    const result = await productService.getCaseCoolerById(caseCoolerId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getCpuCoolerById(req, res, next) {
+  try {
+    const cpuCoolerId = req.params.cpu_cooler_id;
+    const result = await productService.getCpuCoolerById(cpuCoolerId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getPowerSupplyById(req, res, next) {
+  try {
+    const psuId = req.params.psu_id;
+    const result = await productService.getPowerSupplyById(psuId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getMonitorById(req, res, next) {
+  try {
+    const monitorId = req.params.monitor_id;
+    const result = await productService.getMonitorById(monitorId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getMotherboard(req, res, next) {
   try {
     const dataObj = req.body || null;
-    const result = await productService.getProcessor(dataObj);
+    const result = await productService.getMotherboard(dataObj);
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

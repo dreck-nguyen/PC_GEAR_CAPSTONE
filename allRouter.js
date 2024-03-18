@@ -532,6 +532,7 @@ router.get(
  *       '500':
  *         description: Internal server error
  */
+
 router.get('/api/product', productController.getAllProduct);
 router.get('/api/product/:productId', productController.getProductById);
 router.put(
@@ -551,7 +552,189 @@ router.delete(
   productController.deleteProductById,
 );
 //
+/**
+ * @swagger
+ * /api/pc-component/processor:
+ *   post:
+ *     summary: Get processor information
+ *     description: Retrieve information about processors for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with processor information
+ *       404:
+ *         description: Processor information not found
+ *
+ * /api/pc-component/motherboard:
+ *   post:
+ *     summary: Get motherboard information
+ *     description: Retrieve information about motherboards for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with motherboard information
+ *       404:
+ *         description: Motherboard information not found
+ *
+ * /api/pc-component/case:
+ *   post:
+ *     summary: Get case information
+ *     description: Retrieve information about cases for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with case information
+ *       404:
+ *         description: Case information not found
+ *
+ * /api/pc-component/graphics-card:
+ *   post:
+ *     summary: Get graphics card information
+ *     description: Retrieve information about graphics cards for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with graphics card information
+ *       404:
+ *         description: Graphics card information not found
+ *
+ * /api/pc-component/ram:
+ *   post:
+ *     summary: Get RAM information
+ *     description: Retrieve information about RAM for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with RAM information
+ *       404:
+ *         description: RAM information not found
+ *
+ * /api/pc-component/storage:
+ *   post:
+ *     summary: Get storage information
+ *     description: Retrieve information about storage for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with storage information
+ *       404:
+ *         description: Storage information not found
+ *
+ * /api/pc-component/auto-gen:
+ *   post:
+ *     summary: Get auto-generated information
+ *     description: Retrieve auto-generated information for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with auto-generated information
+ *       404:
+ *         description: Auto-generated information not found
+ */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PCComponentRequestBody:
+ *       type: object
+ *       properties:
+ *         motherboardDetail:
+ *           type: object
+ *           properties:
+ *             chipset:
+ *               type: string
+ *               description: The chipset of the motherboard.
+ *               example: AMD TRX40
+ *             memory_supports:
+ *               type: string
+ *               description: The memory support of the motherboard.
+ *               example: "DDR4 2133, 2400, 2666, 2800, 3733, 3800, 4133, 4266, 4333, 4400, 4600, 4733 MHz"
+ *         caseDetails:
+ *           type: object
+ *           properties:
+ *             gpu_length:
+ *               type: string
+ *               description: The GPU length supported by the case.
+ *               example: 365 mm / 14.37"
+ *         gpuDetail:
+ *           type: object
+ *           properties:
+ *             length:
+ *               type: number
+ *               description: The length of the graphics card.
+ *               example: 358
+ *         processorDetails:
+ *           type: object
+ *           properties:
+ *             chipset:
+ *               type: string
+ *               description: The chipset of the processor.
+ *               example: AMD TRX40
+ *         storageDetail:
+ *           type: object
+ *           properties:
+ *             interface:
+ *               type: string
+ *               description: The interface of the storage.
+ *               example: SATA III
+ *         ramDetails:
+ *           type: object
+ *           properties:
+ *             ram_type:
+ *               type: string
+ *               description: The type of RAM.
+ *               example: DDR4-2133 MHz
+ */
 router.post('/api/pc-component/processor', productController.getProcessor);
 router.post('/api/pc-component/motherboard', productController.getMotherboard);
 router.post('/api/pc-component/case', productController.getCase);
@@ -562,6 +745,106 @@ router.post(
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
 router.post('/api/pc-component/auto-gen', productController.getAutoGen);
+
+//
+/**
+ * @swagger
+ * /api/pc-component/processor/{processor_id}:
+ *   get:
+ *     summary: Get processor by ID
+ *     description: Retrieve information about a processor by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: processor_id
+ *         required: true
+ *         description: ID of the processor to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with processor information
+ *       404:
+ *         description: Processor with the specified ID not found
+ *
+ * /api/pc-component/motherboard/{motherboard_id}:
+ *   get:
+ *     summary: Get motherboard by ID
+ *     description: Retrieve information about a motherboard by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: motherboard_id
+ *         required: true
+ *         description: ID of the motherboard to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with motherboard information
+ *       404:
+ *         description: Motherboard with the specified ID not found
+ *
+ * /api/pc-component/case/{case_id}:
+ *   get:
+ *     summary: Get case by ID
+ *     description: Retrieve information about a case by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: case_id
+ *         required: true
+ *         description: ID of the case to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with case information
+ *       404:
+ *         description: Case with the specified ID not found
+ *
+ */
+router.get(
+  '/api/pc-component/processor/:processor_id',
+  productController.getProcessorById,
+);
+router.get(
+  '/api/pc-component/motherboard/:motherboard_id',
+  productController.getMotherboardById,
+);
+router.get('/api/pc-component/case/:case_id', productController.getCaseById);
+router.get(
+  '/api/pc-component/graphics-card/:gpu_id',
+  productController.getGraphicsCardById,
+);
+router.get('/api/pc-component/ram/:ram_id', productController.getRamById);
+router.get(
+  '/api/pc-component/storage/:storage_id',
+  productController.getStorageById,
+);
+router.get(
+  '/api/pc-component/auto-gen/:auto_gen_id',
+  productController.getAutoGenById,
+);
+router.get(
+  '/api/pc-component/case-cooler/:case_cooler_id',
+  productController.getCaseCoolerById,
+);
+router.get(
+  '/api/pc-component/cpu-cooler/:cpu_cooler_id',
+  productController.getCpuCoolerById,
+);
+router.get(
+  '/api/pc-component/psu/:psu_id',
+  productController.getPowerSupplyById,
+);
+router.get(
+  '/api/pc-component/monitor/:monitor_id',
+  productController.getMonitorById,
+);
 
 /**
  * @swagger

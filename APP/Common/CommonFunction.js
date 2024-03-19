@@ -36,7 +36,11 @@ export function extractNumberFromCpuCoolerSupportSize(cpuCoolerSupportSize) {
 export function hasFrequency(frequencyList, targetFrequency) {
   const [ramType, ramFreq] = targetFrequency.split('-');
   const ramFreqNum = extractNumberFromString(ramFreq);
-  console.log(ramType, ramFreqNum);
+  console.log(
+    ramType,
+    ramFreqNum,
+    frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum),
+  );
 
   return frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum);
 }

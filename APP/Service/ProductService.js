@@ -151,12 +151,13 @@ export async function getRam(dataObj) {
   let result = await productDAL.getRam();
   if (!dataObj.motherboardDetail.memory_supports) return result;
   else
-    result = result.filter((e) => {
+    result = result.filter((e) =>
       commonFunction.hasFrequency(
         dataObj.motherboardDetail.memory_supports,
         e.ram_type,
-      );
-    });
+      ),
+    );
+  console.log(result);
   return result;
 }
 

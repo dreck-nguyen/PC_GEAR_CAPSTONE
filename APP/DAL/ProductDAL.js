@@ -621,8 +621,14 @@ export async function getAutoGenById(autoGenId) {
   pbp.ram_id,
   to_json(rs.*) AS ram_specification,
   pbp.storage_id,
-  to_json(ss.*) AS storage_specification
-FROM 
+  to_json(ss.*) AS storage_specification,
+  SUM(ms.unit_price::numeric) +
+  SUM(ps.unit_price::numeric) +
+  SUM(cs.unit_price::numeric) +
+  SUM(gs.unit_price::numeric) +
+  SUM(rs.unit_price::numeric) +
+  SUM(ss.unit_price::numeric) AS total_price
+	FROM 
   public.pre_build_pc pbp
 INNER JOIN 
   (
@@ -630,7 +636,8 @@ INNER JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.unit_price,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
     c."name" AS category_name,
@@ -653,7 +660,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -676,7 +684,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -699,7 +708,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -722,7 +732,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -745,7 +756,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -763,6 +775,7 @@ INNER JOIN
   ) ss 
   ON pbp.storage_id = ss.primary_product_id
   WHERE pbp.pre_build_id = '${autoGenId}'
+  group by pbp.pre_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
   `;
   const ramList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
@@ -959,7 +972,7 @@ export async function getStorage() {
 }
 export async function getAutoGen() {
   const sqlQuery = `
- SELECT 
+SELECT 
   pbp.pre_build_id,
   pbp.motherboard_id,
   to_json(ms.*) AS motherboard_specification,
@@ -972,8 +985,14 @@ export async function getAutoGen() {
   pbp.ram_id,
   to_json(rs.*) AS ram_specification,
   pbp.storage_id,
-  to_json(ss.*) AS storage_specification
-FROM 
+  to_json(ss.*) AS storage_specification,
+  SUM(ms.unit_price::numeric) +
+  SUM(ps.unit_price::numeric) +
+  SUM(cs.unit_price::numeric) +
+  SUM(gs.unit_price::numeric) +
+  SUM(rs.unit_price::numeric) +
+  SUM(ss.unit_price::numeric) AS total_price
+	FROM 
   public.pre_build_pc pbp
 INNER JOIN 
   (
@@ -981,7 +1000,8 @@ INNER JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.unit_price,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
     c."name" AS category_name,
@@ -1004,7 +1024,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -1027,7 +1048,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -1050,7 +1072,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -1073,7 +1096,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -1096,7 +1120,8 @@ INNER JOIN
       p.product_id as primary_product_id,
       p."name",
       p.description,
-      TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
       p.discount,
       p.sold,
       c."name" AS category_name,
@@ -1113,6 +1138,7 @@ INNER JOIN
       p.product_id, c.category_id, pb.product_brand_id, ss.product_id, ss.specification_id
   ) ss 
   ON pbp.storage_id = ss.primary_product_id
+ group by pbp.pre_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
   `;
   const ramList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

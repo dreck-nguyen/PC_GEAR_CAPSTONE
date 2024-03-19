@@ -7,7 +7,8 @@ export async function getCategoryBreadcrumb() {
       (select category_id
          from category 
          where parent_id is null) c
-    on category.parent_id = c.category_id`;
+    on category.parent_id = c.category_id
+    order by category.index ASC`;
 
   const categories = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
@@ -19,7 +20,8 @@ export async function getCategoryBreadcrumb() {
 
 export async function getAllCategory() {
   const sqlQuery = `
-    select * from category`;
+    select * from category
+    order by category.index ASC`;
   const categories = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

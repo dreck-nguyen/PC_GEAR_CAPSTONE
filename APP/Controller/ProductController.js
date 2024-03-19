@@ -56,13 +56,15 @@ export async function updateProductById(req, res, next) {
 export async function createProduct(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
+    const images = req.file;
+    console.log(images);
     const loginUser = req.loginUser;
     if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(
         `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
       );
     const product = req.body;
-    const result = await productService.createProduct(product);
+    const result = await productService.createProduct(product, images);
     res.status(200).send(result);
     await t.commit();
   } catch (error) {

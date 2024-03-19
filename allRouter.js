@@ -1958,6 +1958,40 @@ router.post(
   shippingAddressController.createShippingAddress,
 );
 
-router.post;
+// STAFF SECTION
+/**
+ * @swagger
+ * /api/staff/login:
+ *   post:
+ *     summary: Staff Login
+ *     description: Authenticate staff member and generate access token.
+ *     tags:
+ *       - Staff Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the staff member.
+ *                 example : johndoe@gmail.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the staff member.
+ *                 example: pass
+ *     responses:
+ *       200:
+ *         description: Successful login, returns access token.
+ *       401:
+ *         description: Unauthorized, invalid email or password.
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post('/api/staff/login', userController.loginStaff);
 
 export default router;

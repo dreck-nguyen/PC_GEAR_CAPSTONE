@@ -18,6 +18,25 @@ export async function getUserDetails(email) {
   if (!userDetails) throw Error('USER NOT FOUND');
   return userDetails;
 }
+
+export async function getStaffDetails(email) {
+  const userDetails = await User.findOne({
+    where: {
+      email,
+    },
+    include: [
+      {
+        model: UserRole,
+        as: 'userRole',
+        where: {
+          role: 'STAFF',
+        },
+      },
+    ],
+  });
+  if (!userDetails) throw Error('USER NOT FOUND');
+  return userDetails;
+}
 export async function getUserRole() {
   const usersWithRole = await UserRole.findOne({
     where: {

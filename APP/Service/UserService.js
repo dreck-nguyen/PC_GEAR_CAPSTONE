@@ -19,6 +19,19 @@ export async function loginUser(email, password) {
   }
   return user;
 }
+export async function loginStaff(email, password) {
+  const result = await userDAL.getStaffDetails(email);
+  const user = result.dataValues;
+  console.log(user);
+  const isPasswordValid = await comparePasswordWithSalt(
+    password,
+    user.password,
+  );
+  if (!isPasswordValid) {
+    throw new Error('Invalid password');
+  }
+  return user;
+}
 
 export async function registerUser(userDetails) {
   if (

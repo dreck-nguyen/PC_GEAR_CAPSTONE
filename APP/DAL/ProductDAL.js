@@ -52,7 +52,7 @@ LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
 WHERE p.product_id = '${productId}'
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ps.product_id;
+  p.product_id, c.category_id, pb.product_brand_id
   `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
@@ -90,7 +90,7 @@ LEFT OUTER JOIN
 ON pg.product_id = p.product_id
 ON ps.product_id = p.product_id
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ps.product_id;
+  p.product_id, c.category_id, pb.product_brand_id
   `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {

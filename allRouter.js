@@ -313,9 +313,11 @@ router.get(
  */
 /**
  * @swagger
- * /api/product:
+ * /api/auth/staff/product:
  *   post:
  *     summary: Create a new product
+ *     security:
+ *       -  BearerAuth: []
  *     description: Creates a new product with the provided data.
  *     tags:
  *       - PRODUCT SECTION
@@ -323,24 +325,37 @@ router.get(
  *       description: Product data to create
  *       required: true
  *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               category_id:
  *                 type: string
+ *                 example: e54b04fc-f95d-410f-8097-fb7a0d6abae9
  *               name:
  *                 type: string
  *               description:
  *                 type: string
+ *                 example: Product description
  *               unit_price:
  *                 type: number
+ *                 example: 1999
  *               discount:
  *                 type: number
+ *                 example: 0
  *               quantity:
  *                 type: integer
+ *                 example: 15
  *               product_brand_id:
  *                 type: string
+ *                 example: 91dcfc85-5f39-44ae-9cea-535a9565d2ec
  *             required:
  *               - category_id
  *               - name
@@ -366,9 +381,21 @@ router.get(
  */
 /**
  * @swagger
- * /api/product/image/{productId}:
+ * /api/auth/staff/product/{productId}:
  *   post:
- *     summary: Upload an image for a product
+ *     summary: Upload product data with an image
+ *     security:
+ *       -  BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     tags:
  *       - PRODUCT SECTION
  *     parameters:
@@ -378,14 +405,9 @@ router.get(
  *         description: ID of the product
  *         schema:
  *           type: string
- *       - in: formData
- *         name: image
- *         required: true
- *         description: The image file to upload. Select a file from your local folder.
- *         type: file
  *     responses:
  *       '200':
- *         description: Image uploaded successfully
+ *         description: Product data uploaded successfully
  *       '400':
  *         description: Bad request, e.g., missing parameters
  *       '500':
@@ -396,6 +418,8 @@ router.get(
  * /api/product/{productId}:
  *   get:
  *     summary: Get product by ID
+ *     security:
+ *       -  BearerAuth: []
  *     description: Retrieve product information by providing a product ID.
  *     tags:
  *       - PRODUCT SECTION

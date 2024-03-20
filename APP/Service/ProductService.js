@@ -19,10 +19,10 @@ export async function updateProductById(productId, product) {
   const result = await productDAL.updateProductById(productId, product);
   return result;
 }
-export async function createProduct(product, image) {
+export async function createProduct(product) {
   product.product_id = uuidv4();
   const result = await productDAL.createProduct(product);
-  await createProductImage(product.product_id, image);
+  // await createProductImage(product.product_id, image);
   return result;
 }
 export async function createProductImage(productId, path) {

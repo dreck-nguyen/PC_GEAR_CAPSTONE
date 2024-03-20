@@ -57,10 +57,9 @@ export async function updateProductById(req, res, next) {
 export async function createProduct(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
-    const image = req.files || [];
-    console.log(image);
+    // const image = req.file || [];
+    // console.log(image);
     const loginUser = req.loginUser;
-    console.log('~~~~~~~~');
     if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER)) {
       throw new Error(
         `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
@@ -68,7 +67,8 @@ export async function createProduct(req, res, next) {
     }
 
     const product = req.body;
-    const result = await productService.createProduct(product, image);
+    console.log(product);
+    const result = await productService.createProduct(product);
     res.status(201).send(result);
     await t.commit();
   } catch (error) {

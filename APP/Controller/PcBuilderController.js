@@ -6,8 +6,8 @@ export async function pcAutoBuild(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
-      throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`YOUR ROLE MUST HIGHER THAN USER`);
     await pcBuilderService.pcBuilderService(loginUser.user_id);
     res.status(200).send('Pre-Build PC complete');
     t.commit();

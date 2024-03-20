@@ -16,7 +16,21 @@ import * as shippingAddressController from './APP/Controller/ShippingAddressCont
 import * as pcBuilderController from './APP/Controller/PcBuilderController.js';
 const router = express.Router();
 // PC BUILD SECTION
-router.get('/api/auth/admin/pc-build-auto', pcBuilderController.pcAutoBuild);
+/**
+ * @swagger
+ * /api/auth/staff/pc-build-auto:
+ *   get:
+ *     summary: Endpoint for automated PC build
+ *     tags:
+ *       - STAFF AUTHENTICATION
+ *     description: Retrieve a randomly generated PC build.
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *       '500':
+ *         description: An internal server error occurred
+ */
+router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 
 // ADMIN SECTION
 /**

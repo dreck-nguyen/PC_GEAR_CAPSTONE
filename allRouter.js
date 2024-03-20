@@ -2024,7 +2024,7 @@ router.post(
  *     summary: Staff Login
  *     description: Authenticate staff member and generate access token.
  *     tags:
- *       - Staff Authentication
+ *       - STAFF AUTHENTICATION
  *     requestBody:
  *       required: true
  *       content:

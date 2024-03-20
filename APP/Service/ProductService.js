@@ -22,7 +22,7 @@ export async function updateProductById(productId, product) {
 export async function createProduct(product) {
   product.product_id = uuidv4();
   const result = await productDAL.createProduct(product);
-  // await createProductImage(product.product_id, image);
+  await createProductImage(product.product_id, product.image_link);
   return result;
 }
 export async function createProductImage(productId, path) {
@@ -247,4 +247,80 @@ export async function getAutoGen(dataObj) {
       });
   }
   return result;
+}
+export async function getMobileAutoGen(dataObj) {
+  let result = await productDAL.getAutoGen();
+  console.log(dataObj);
+  if (dataObj) {
+    result = result
+      .filter((e) => {
+        if (dataObj.motherboardDetail && dataObj.motherboardDetail.chipset) {
+          return (
+            e.motherboard_specification.chipset ===
+            dataObj.motherboardDetail.chipset
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (
+          dataObj.motherboardDetail &&
+          dataObj.motherboardDetail.memory_supports
+        ) {
+          return commonFunction.hasFrequency(
+            dataObj.motherboardDetail.memory_supports,
+            e.ram_specification.ram_type,
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (dataObj.caseDetails && dataObj.caseDetails.gpu_length) {
+          return (
+            commonFunction.extractNumberFromString(
+              dataObj.caseDetails.gpu_length,
+            ) >= Number(e.gpu_specification['length'])
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (dataObj.gpuDetail && dataObj.gpuDetail.length) {
+          return (
+            commonFunction.extractNumberFromString(
+              e.case_specification.gpu_length,
+            ) >= Number(dataObj.gpuDetail.length)
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (dataObj.processorDetails && dataObj.processorDetails.chipset) {
+          return (
+            e.motherboard_specification.chipset ===
+            dataObj.processorDetails.chipset
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (dataObj.storageDetail && dataObj.storageDetail.interface) {
+          return e.motherboard_specification.sata.includes(
+            dataObj.storageDetail.interface,
+          );
+        }
+        return true;
+      })
+      .filter((e) => {
+        if (dataObj.ramDetails && dataObj.ramDetails.ram_type) {
+          return commonFunction.hasFrequency(
+            e.motherboard_specification.memory_supports,
+            dataObj.ramDetails.ram_type,
+          );
+        }
+        return true;
+      });
+  }
+  const randomIndex = Math.floor(Math.random() * (result.length + 1));
+  return result[randomIndex];
 }

@@ -362,3 +362,13 @@ export async function getAutoGen(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+export async function getMobileAutoGen(req, res, next) {
+  try {
+    const dataObj = req.body || null;
+    const result = await productService.getMobileAutoGen(dataObj);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}

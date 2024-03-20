@@ -341,6 +341,7 @@ router.get(
  *                 example: e54b04fc-f95d-410f-8097-fb7a0d6abae9
  *               name:
  *                 type: string
+ *                 example: Monitor
  *               description:
  *                 type: string
  *                 example: Product description
@@ -356,6 +357,9 @@ router.get(
  *               product_brand_id:
  *                 type: string
  *                 example: 91dcfc85-5f39-44ae-9cea-535a9565d2ec
+ *               image_link:
+ *                 type: string
+ *                 example: x.com
  *             required:
  *               - category_id
  *               - name
@@ -565,7 +569,7 @@ router.put(
 );
 router.post(
   '/api/auth/staff/product',
-  uploadCloud.single('image'),
+  // uploadCloud.single('image'),
   productController.createProduct,
 );
 router.get('/api/product/:categoryId', productController.getProductsByCategory);
@@ -707,6 +711,23 @@ router.delete(
  *         description: Successful response with auto-generated information
  *       404:
  *         description: Auto-generated information not found
+ * /api/pc-component/mobile/auto-gen:
+ *   post:
+ *     summary: Get auto-generated information
+ *     description: Retrieve auto-generated information for PC builds.
+ *     tags:
+ *       - PC Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PCComponentRequestBody'
+ *     responses:
+ *       200:
+ *         description: Successful response with auto-generated information
+ *       404:
+ *         description: Auto-generated information not found
  */
 
 /**
@@ -773,7 +794,10 @@ router.post(
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
 router.post('/api/pc-component/auto-gen', productController.getAutoGen);
-
+router.post(
+  '/api/pc-component/mobile/auto-gen',
+  productController.getMobileAutoGen,
+);
 //
 /**
  * @swagger

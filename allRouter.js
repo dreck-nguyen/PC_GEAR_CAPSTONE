@@ -584,7 +584,7 @@ router.put(
 router.post('/api/auth/staff/product', productController.createProduct);
 router.get('/api/product/:categoryId', productController.getProductsByCategory);
 router.post(
-  '/api/product/image/:productId',
+  '/api/auth/staff/product/image/:productId',
   uploadCloud.single('image'),
   productController.createProductImage,
 );

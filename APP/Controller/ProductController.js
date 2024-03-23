@@ -80,6 +80,13 @@ export async function createProduct(req, res, next) {
 export async function createProductImage(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
+    const loginUser = req.loginUser;
+    console.log(loginUser);
+    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER)) {
+      throw new Error(
+        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+      );
+    }
     const images = req.file;
     console.log(images);
     const productId = req.params.productId;

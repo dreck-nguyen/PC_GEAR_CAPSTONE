@@ -869,6 +869,180 @@ router.post(
  *         description: Case with the specified ID not found
  *
  */
+/**
+ * @swagger
+ * /api/pc-component/graphics-card/{gpu_id}:
+ *   get:
+ *     summary: Get graphics card by ID
+ *     description: Retrieve information about a graphics card by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: gpu_id
+ *         required: true
+ *         description: ID of the graphics card to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with graphics card information
+ *       404:
+ *         description: Graphics card with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/ram/{ram_id}:
+ *   get:
+ *     summary: Get RAM by ID
+ *     description: Retrieve information about RAM by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: ram_id
+ *         required: true
+ *         description: ID of the RAM to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with RAM information
+ *       404:
+ *         description: RAM with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/storage/{storage_id}:
+ *   get:
+ *     summary: Get storage by ID
+ *     description: Retrieve information about a storage device by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: storage_id
+ *         required: true
+ *         description: ID of the storage device to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with storage information
+ *       404:
+ *         description: Storage device with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/auto-gen/{auto_gen_id}:
+ *   get:
+ *     summary: Get auto-generated component by ID
+ *     description: Retrieve information about an auto-generated component by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: auto_gen_id
+ *         required: true
+ *         description: ID of the auto-generated component to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with auto-generated component information
+ *       404:
+ *         description: Auto-generated component with the specified ID not found
+ */
+/**
+ * @swagger
+ * /api/pc-component/case-cooler/{case_cooler_id}:
+ *   get:
+ *     summary: Get case cooler by ID
+ *     description: Retrieve information about a case cooler by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: case_cooler_id
+ *         required: true
+ *         description: ID of the case cooler to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with case cooler information
+ *       404:
+ *         description: Case cooler with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/cpu-cooler/{cpu_cooler_id}:
+ *   get:
+ *     summary: Get CPU cooler by ID
+ *     description: Retrieve information about a CPU cooler by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: cpu_cooler_id
+ *         required: true
+ *         description: ID of the CPU cooler to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with CPU cooler information
+ *       404:
+ *         description: CPU cooler with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/psu/{psu_id}:
+ *   get:
+ *     summary: Get power supply unit by ID
+ *     description: Retrieve information about a power supply unit by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: psu_id
+ *         required: true
+ *         description: ID of the power supply unit to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with power supply unit information
+ *       404:
+ *         description: Power supply unit with the specified ID not found
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/monitor/{monitor_id}:
+ *   get:
+ *     summary: Get monitor by ID
+ *     description: Retrieve information about a monitor by its ID.
+ *     tags:
+ *       - PC Component
+ *     parameters:
+ *       - in: path
+ *         name: monitor_id
+ *         required: true
+ *         description: ID of the monitor to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with monitor information
+ *       404:
+ *         description: Monitor with the specified ID not found
+ */
 router.get(
   '/api/pc-component/processor/:processor_id',
   productController.getProcessorById,

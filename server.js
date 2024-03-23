@@ -31,6 +31,7 @@ const getUserInfoMiddleware = async (req, res, next) => {
     const decodedToken = jwt.verify(accessToken, SECRET_KEY);
     const userId = decodedToken.user_id;
     const [loginUser] = await userService.getUserInfoById(userId);
+    console.log(loginUser);
     req.loginUser = loginUser;
     next();
   } catch (error) {

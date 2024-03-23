@@ -105,21 +105,19 @@ export async function getProcessor(dataObj) {
 }
 export async function getMotherboard(dataObj) {
   let result = await productDAL.getMotherboard();
+  console.log(result);
   if (!dataObj) return result;
   else
-    result = result.filter((e) => {
-      if (
+    result = result.filter(
+      (e) =>
         dataObj.processorDetails.chipset &&
-        dataObj.processorDetails.chipset !== e.chipset
-      )
-        return false;
-
-      if (dataObj.ramDetails.ram_type)
+        dataObj.processorDetails.chipset === e.chipset &&
+        dataObj.ramDetails.ram_type &&
         commonFunction.hasFrequency(
           e.memory_supports,
           dataObj.ramDetails.ram_type,
-        );
-    });
+        ),
+    );
   return result;
 }
 export async function getCase(dataObj) {
@@ -128,10 +126,8 @@ export async function getCase(dataObj) {
   else
     result = result.filter(
       (e) =>
-        e.cabinet_type === 'ATX Mid Tower' ||
-        e.cabinet_type === 'E-ATX' ||
         commonFunction.extractNumberFromString(e.gpu_length) >=
-          Number(dataObj.gpuDetail['length']),
+        Number(dataObj.gpuDetail['length']),
     );
   return result;
 }
@@ -179,72 +175,60 @@ export async function getAutoGen(dataObj) {
   if (dataObj) {
     result = result
       .filter((e) => {
-        if (dataObj.motherboardDetail && dataObj.motherboardDetail.chipset) {
-          return (
-            e.motherboard_specification.chipset ===
-            dataObj.motherboardDetail.chipset
-          );
-        }
-        return true;
+        dataObj.motherboardDetail &&
+          dataObj.motherboardDetail.chipset &&
+          e.motherboard_specification.chipset ===
+            dataObj.motherboardDetail.chipset;
       })
-      .filter((e) => {
-        if (
+      .filter(
+        (e) =>
           dataObj.motherboardDetail &&
-          dataObj.motherboardDetail.memory_supports
-        ) {
-          return commonFunction.hasFrequency(
+          dataObj.motherboardDetail.memory_supports &&
+          commonFunction.hasFrequency(
             dataObj.motherboardDetail.memory_supports,
             e.ram_specification.ram_type,
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.caseDetails && dataObj.caseDetails.gpu_length) {
-          return (
-            commonFunction.extractNumberFromString(
-              dataObj.caseDetails.gpu_length,
-            ) >= Number(e.gpu_specification['length'])
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.gpuDetail && dataObj.gpuDetail.length) {
-          return (
-            commonFunction.extractNumberFromString(
-              e.case_specification.gpu_length,
-            ) >= Number(dataObj.gpuDetail.length)
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.processorDetails && dataObj.processorDetails.chipset) {
-          return (
-            e.motherboard_specification.chipset ===
-            dataObj.processorDetails.chipset
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.storageDetail && dataObj.storageDetail.interface) {
-          return e.motherboard_specification.sata.includes(
+          ),
+      )
+      .filter(
+        (e) =>
+          dataObj.caseDetails &&
+          dataObj.caseDetails.gpu_length &&
+          commonFunction.extractNumberFromString(
+            dataObj.caseDetails.gpu_length,
+          ) >= Number(e.gpu_specification['length']),
+      )
+      .filter(
+        (e) =>
+          dataObj.gpuDetail &&
+          dataObj.gpuDetail.length &&
+          commonFunction.extractNumberFromString(
+            e.case_specification.gpu_length,
+          ) >= Number(dataObj.gpuDetail.length),
+      )
+      .filter(
+        (e) =>
+          dataObj.processorDetails &&
+          dataObj.processorDetails.chipset &&
+          e.motherboard_specification.chipset ===
+            dataObj.processorDetails.chipset,
+      )
+      .filter(
+        (e) =>
+          dataObj.storageDetail &&
+          dataObj.storageDetail.interface &&
+          e.motherboard_specification.sata.includes(
             dataObj.storageDetail.interface,
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.ramDetails && dataObj.ramDetails.ram_type) {
-          return commonFunction.hasFrequency(
+          ),
+      )
+      .filter(
+        (e) =>
+          dataObj.ramDetails &&
+          dataObj.ramDetails.ram_type &&
+          commonFunction.hasFrequency(
             e.motherboard_specification.memory_supports,
             dataObj.ramDetails.ram_type,
-          );
-        }
-        return true;
-      });
+          ),
+      );
   }
   return result;
 }

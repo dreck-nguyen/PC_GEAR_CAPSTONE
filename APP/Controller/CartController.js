@@ -46,3 +46,21 @@ export async function getUsersCart(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
+export async function uploadCartPcComponent(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const dataObj = req.body;
+    const result = await cartService.uploadCartPcComponent(
+      loginUser.user_id,
+      dataObj,
+    );
+    t.commit();
+    res.status(200).send({ message: 'Add to cart successful' });
+  } catch (error) {
+    t.rollback();
+    console.log(error.message);
+    res.status(500).send({ error: error.message });
+  }
+}

@@ -1547,6 +1547,10 @@ router.post('/api/user/register', userController.registerUser);
  *       500:
  *         description: Internal server error. Failed to create personal PC build.
  */
+router.post(
+  '/api/auth/user/pc-build-cart',
+  cartController.uploadCartPcComponent,
+);
 router.get('/api/auth/user/cart', cartController.getUserCart);
 router.post('/api/auth/user/cart', cartController.createCart);
 router.post(

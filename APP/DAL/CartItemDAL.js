@@ -8,6 +8,7 @@ export async function createCartItem(product) {
     quantity: product.quantity,
   });
 }
+
 export async function getCartItem(cartItemId) {
   const sqlQuery = `
   select * from cart c 

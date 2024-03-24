@@ -96,7 +96,7 @@ export async function getStorageById(storageId) {
 // TODO
 export async function getProcessor(dataObj) {
   let result = await productDAL.getProcessor();
-  if (!dataObj.motherboardDetail.chipset) return result;
+  if (!dataObj?.motherboardDetail) return result;
   else
     result = result.filter(
       (e) => dataObj.motherboardDetail.chipset === e.chipset,
@@ -109,33 +109,35 @@ export async function getMotherboard(dataObj) {
   else
     result = result.filter(
       (e) =>
-        dataObj.processorDetails.chipset &&
-        dataObj.processorDetails.chipset === e.chipset &&
-        dataObj.ramDetails.ram_type &&
-        commonFunction.hasFrequency(
-          e.memory_supports,
-          dataObj.ramDetails.ram_type,
-        ),
+        (dataObj?.processorDetails.chipset &&
+          dataObj.processorDetails.chipset === e.chipset) ||
+        (dataObj?.ramDetails &&
+          commonFunction.hasFrequency(
+            e.memory_supports,
+            dataObj.ramDetails.ram_type,
+          )),
     );
   return result;
 }
 export async function getCase(dataObj) {
   let result = await productDAL.getCase();
-  if (!dataObj.gpuDetail['length']) return result;
+  if (!dataObj?.gpuDetail['length']) return result;
   else
     result = result.filter(
       (e) =>
+        dataObj?.gpuDetail['length'] &&
         commonFunction.extractNumberFromString(e.gpu_length) >=
-        Number(dataObj.gpuDetail['length']),
+          Number(dataObj.gpuDetail['length']),
     );
   return result;
 }
 export async function getGraphicsCard(dataObj) {
   let result = await productDAL.getGraphicsCard();
-  if (!dataObj.caseDetails.gpu_length) return result;
+  if (!dataObj?.caseDetails) return result;
   else {
     result = result.filter(
       (e) =>
+        dataObj?.caseDetails &&
         commonFunction.extractNumberFromString(
           dataObj.caseDetails.gpu_length,
         ) >= Number(e.length),
@@ -145,13 +147,15 @@ export async function getGraphicsCard(dataObj) {
 }
 export async function getRam(dataObj) {
   let result = await productDAL.getRam();
-  if (!dataObj.motherboardDetail.memory_supports) return result;
+  if (!dataObj?.motherboardDetail) return result;
   else
-    result = result.filter((e) =>
-      commonFunction.hasFrequency(
-        dataObj.motherboardDetail.memory_supports,
-        e.ram_type,
-      ),
+    result = result.filter(
+      (e) =>
+        dataObj?.motherboardDetail.memory_supports &&
+        commonFunction.hasFrequency(
+          dataObj.motherboardDetail.memory_supports,
+          e.ram_type,
+        ),
     );
   console.log(result);
   return result;
@@ -160,7 +164,7 @@ export async function getRam(dataObj) {
 export async function getStorage(dataObj) {
   let result = await productDAL.getStorage();
   console.log(result);
-  if (!dataObj.storageDetail.interface) return result;
+  if (!dataObj?.storageDetail) return result;
   else
     result = result.filter((e) =>
       e.interface.includes(dataObj.storageDetail.interface),
@@ -174,15 +178,13 @@ export async function getAutoGen(dataObj) {
   if (dataObj) {
     result = result
       .filter((e) => {
-        dataObj.motherboardDetail &&
-          dataObj.motherboardDetail.chipset &&
+        dataObj?.motherboardDetail &&
           e.motherboard_specification.chipset ===
             dataObj.motherboardDetail.chipset;
       })
       .filter(
         (e) =>
-          dataObj.motherboardDetail &&
-          dataObj.motherboardDetail.memory_supports &&
+          dataObj?.motherboardDetail &&
           commonFunction.hasFrequency(
             dataObj.motherboardDetail.memory_supports,
             e.ram_specification.ram_type,
@@ -190,39 +192,34 @@ export async function getAutoGen(dataObj) {
       )
       .filter(
         (e) =>
-          dataObj.caseDetails &&
-          dataObj.caseDetails.gpu_length &&
+          dataObj?.caseDetails &&
           commonFunction.extractNumberFromString(
             dataObj.caseDetails.gpu_length,
           ) >= Number(e.gpu_specification['length']),
       )
       .filter(
         (e) =>
-          dataObj.gpuDetail &&
-          dataObj.gpuDetail.length &&
+          dataObj?.gpuDetail &&
           commonFunction.extractNumberFromString(
             e.case_specification.gpu_length,
           ) >= Number(dataObj.gpuDetail.length),
       )
       .filter(
         (e) =>
-          dataObj.processorDetails &&
-          dataObj.processorDetails.chipset &&
+          dataObj?.processorDetails &&
           e.motherboard_specification.chipset ===
             dataObj.processorDetails.chipset,
       )
       .filter(
         (e) =>
-          dataObj.storageDetail &&
-          dataObj.storageDetail.interface &&
+          dataObj?.storageDetail &&
           e.motherboard_specification.sata.includes(
             dataObj.storageDetail.interface,
           ),
       )
       .filter(
         (e) =>
-          dataObj.ramDetails &&
-          dataObj.ramDetails.ram_type &&
+          dataObj?.ramDetails &&
           commonFunction.hasFrequency(
             e.motherboard_specification.memory_supports,
             dataObj.ramDetails.ram_type,

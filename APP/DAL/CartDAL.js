@@ -62,3 +62,37 @@ export async function getUsersCart() {
   const cart = await Cart.findAll();
   return cart;
 }
+export async function addBuildPcComponentToCart(
+  cartItemId,
+  cartId,
+  productId,
+  quantity,
+  createdAt,
+  isBuildPc,
+) {
+  const sqlQuery = `
+      INSERT INTO public.cart_item (
+        cart_item_id,
+        cart_id,
+        product_id,
+        quantity,
+        created_at,
+        is_build_pc
+      ) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      cartItemId,
+      cartId,
+      productId,
+      quantity,
+      createdAt,
+      isBuildPc,
+    ],
+    type: SequelizeInstance.QueryTypes.INSERT,
+  });
+
+  console.log('Build PC component added to cart successfully');
+}

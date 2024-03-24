@@ -45,7 +45,7 @@ export async function getCaseSpecification() {
 // getGraphicsSpecification
 export async function getGraphicsSpecification() {
   const sqlQuery = `
- SELECT specification_id, product_id, product_specification_type, brand, chipset, memory, benchmark, max_power_consumption, clock_speed, base_clock_speed, length, frame_sync, cooler_typer, interface, support_api
+ SELECT *
  FROM public.graphics_specification;
   `;
   const graphicsSpecification = await SequelizeInstance.query(sqlQuery, {
@@ -59,7 +59,7 @@ export async function getGraphicsSpecification() {
 // getMonitorSpecification
 export async function getMonitorSpecification() {
   const sqlQuery = `
- SELECT specification_id, product_id, product_specification_type, brand, model, screen_size, resolution, response_time, aspect_ration, refresh_rate, panel_type
+ SELECT *
 FROM public.monitor_specification;
   `;
   const monitorSpecification = await SequelizeInstance.query(sqlQuery, {
@@ -73,7 +73,7 @@ FROM public.monitor_specification;
 // getPowerSupplySpecification
 export async function getPowerSupplySpecification() {
   const sqlQuery = `
-  SELECT specification_id, product_id, product_specification_type, brand, model, form_factor, power, effeciency, color
+  SELECT *
 FROM public.power_supply_specification;
   `;
   const powerSupplySpecification = await SequelizeInstance.query(sqlQuery, {
@@ -87,8 +87,8 @@ FROM public.power_supply_specification;
 // getProcessorSpecification
 export async function getProcessorSpecification() {
   const sqlQuery = `
-  SELECT specification_id, product_id, product_specification_type, brand, model, socket, micro_architecture, core_quantity, threads_quantity, clock_speed, boost_speed_max, "cache", memory_support, ecc_memory, channel_architecture, power, graphic_chipset,chipset
-FROM public.processor_specification;
+  SELECT *
+  FROM public.processor_specification;
   `;
   const processorSpecification = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
@@ -101,7 +101,7 @@ FROM public.processor_specification;
 // getRamSpecification
 export async function getRamSpecification() {
   const sqlQuery = `
-  SELECT specification_id, product_id, product_specification_type, brand, warranty, memory, ram_type, cas_latency, dimm_type, voltage
+  SELECT *
 FROM public.ram_specification;
   `;
   const ramSpecification = await SequelizeInstance.query(sqlQuery, {
@@ -115,7 +115,7 @@ FROM public.ram_specification;
 // getStorageSpecification
 export async function getStorageSpecification() {
   const sqlQuery = `
- SELECT specification_id, product_id, product_specification_type, brand, model, "type", rpm, cache_memory, interface, form_factor, capacity
+ SELECT *
 FROM public.storage_specification;
   `;
   const storageSpecification = await SequelizeInstance.query(sqlQuery, {
@@ -129,7 +129,7 @@ FROM public.storage_specification;
 // getMotherboardSpecification
 export async function getMotherboardSpecification() {
   const sqlQuery = `
-  SELECT specification_id, product_id, product_specification_type, chipset, spu_socket, usb_details, audio, ethernet_controller, ps_2, wifi_antenna, button, memory_slots, memory_supports, maximum_capacity, channel_architecture, sata, m2, dimm2, optane_memory_support, raid_support, expansion_slots, usb_internal, multi_gpu_support, air_cooling, liquid_cooling, power_connectors, "security", audio_internal, "diagnostics", rom, audio_codec, bluetooth, wifi, form_factor, pacakage_weight, box_dimessions,brand
+  SELECT *
   FROM public.motherboard_specification;
   `;
   const motherboardSpecification = await SequelizeInstance.query(sqlQuery, {

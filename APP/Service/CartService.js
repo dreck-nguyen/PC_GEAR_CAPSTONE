@@ -1,5 +1,6 @@
 import * as cartDAL from '../DAL/CartDAL.js';
 import * as cartItemDAL from '../DAL/CartItemDAL.js';
+import * as commonFunction from '../Common/CommonFunction.js';
 import { v4 as uuidv4 } from 'uuid';
 export async function createCart(loginUser, cartObject) {
   let cart_id = uuidv4();
@@ -73,4 +74,31 @@ export async function getUserCart(userId) {
 export async function getUsersCart() {
   const userCart = await cartDAL.getUsersCart();
   return userCart;
+}
+export async function uploadCartPcComponent(userId, dataObj) {
+  let cart_id = uuidv4();
+  const userCart = await getUserCart(userId);
+
+  if (userCart) {
+    cart_id = userCart.cart_id;
+  } else {
+    // Create a new cart if the user doesn't have one
+    const newCartObj = {
+      cart_id,
+      user_id: userId,
+      status: cartObject.status,
+    };
+    await cartDAL.createCart(newCartObj);
+  }
+  const dateTime = new Date();
+  const productIds = commonFunction.getProductIds(dataObj);
+  for (const productId of productIds)
+    await cartDAL.addBuildPcComponentToCart(
+      uuidv4(),
+      cart_id,
+      productId,
+      1,
+      dateTime,
+      true,
+    );
 }

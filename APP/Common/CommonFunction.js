@@ -44,3 +44,12 @@ export function hasFrequency(frequencyList, targetFrequency) {
 
   return frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum);
 }
+export function getProductIds(jsonObject) {
+  const filteredEntries = Object.entries(jsonObject).filter(
+    ([key, value]) => value !== null,
+  );
+
+  const productIds = filteredEntries.map(([key, value]) => value);
+
+  return productIds;
+}

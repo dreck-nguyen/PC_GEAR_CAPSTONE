@@ -49,6 +49,7 @@ group by
 
   return userCart;
 }
+
 export async function createCart(cartObject) {
   const user = await Cart.create({
     cart_id: cartObject.cart_id,

@@ -4,6 +4,7 @@ export async function getOrderStatus() {
   const result = await OrderStatus.findAll();
   return result;
 }
+
 export async function getOrderStatusByStatusId(userId, orderStatusId) {
   const sqlQuery = `
 select 

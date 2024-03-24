@@ -169,6 +169,7 @@ export async function insertPreBuildPc(combine) {
     raw: true,
   });
 }
+
 export async function clearPreBuildPC() {
   const sqlQuery = `
   DELETE FROM public.pre_build_pc WHERE pre_build_id=gen_random_uuid();
@@ -178,6 +179,7 @@ export async function clearPreBuildPC() {
     raw: true,
   });
 }
+
 export async function createPersonalBuildPc(dataObj) {
   const sqlQuery = `
     INSERT INTO public.user_pc_build (user_pc_build_id, user_id, created_at, profile_name, motherboard_id, processor_id, cpu_cooler_id, case_id, gpu_id, ram_id, storage_id, case_cooler_id, monitor_id)
@@ -206,6 +208,7 @@ export async function createPersonalBuildPc(dataObj) {
 
   return createPersonalPc;
 }
+
 export async function updatePersonalBuildPc(updatedData) {
   const sqlQuery = `
     UPDATE public.user_pc_build 

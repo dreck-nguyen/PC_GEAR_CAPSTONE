@@ -81,6 +81,7 @@ group by o.order_id,os.status_id,p.payment_id
 
   return userOrder;
 }
+
 export async function createOrderByUser(orderObject) {
   await Order.create({
     order_id: orderObject.order_id,
@@ -91,6 +92,7 @@ export async function createOrderByUser(orderObject) {
     total: orderObject.total,
   });
 }
+
 export async function updateOrderStatus(orderId, statusId) {
   await Order.update(
     { status_id: statusId },
@@ -101,6 +103,7 @@ export async function updateOrderStatus(orderId, statusId) {
     },
   );
 }
+
 export async function getOrderById(orderId) {
   const sqlQuery = `
 select 

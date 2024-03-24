@@ -2,6 +2,7 @@ import * as commonFunction from '../Common/CommonFunction.js';
 import * as commonEnums from '../Common/CommonEnums.js';
 import * as shippingAddressService from '../Service/ShippingAddressService.js';
 import { SequelizeInstance } from '../utility/DbHelper.js';
+
 export async function getShippingAddress(req, res, next) {
   try {
     const loginUser = req.loginUser;
@@ -16,6 +17,7 @@ export async function getShippingAddress(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
 export async function createShippingAddress(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {

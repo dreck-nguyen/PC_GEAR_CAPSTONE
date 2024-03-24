@@ -17,6 +17,7 @@ export async function updateCartItemQuantity(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
 export async function getCartItemDetailsByID(req, res, next) {
   try {
     const cartItemId = req.params.cartItemId;

@@ -7,6 +7,7 @@ dotenv.config();
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
+
 export async function loginUser(req, res, next) {
   try {
     const { email, password } = req.body;

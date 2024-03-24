@@ -238,10 +238,10 @@ export async function updatePersonalBuildPc(updatedData) {
 }
 
 export async function getPersonalBuildPc(userId) {
-  const sql = `
-  SELECT 
+  const sqlQuery = `
+ SELECT 
 upb.user_pc_build_id,
-upb.profile_name
+upb.profile_name,
 upb.motherboard_id,
 to_json(ms.*) AS motherboard_specification,
 upb.processor_id,
@@ -253,7 +253,7 @@ to_json(gs.*) AS gpu_specification,
 upb.ram_id,
 to_json(rs.*) AS ram_specification,
 upb.storage_id,
-to_json(ss.*) AS storage_specification,
+to_json(ss.*) AS storage_specification
 FROM 
 public.user_pc_build upb
 INNER JOIN 
@@ -403,10 +403,10 @@ ON upb.storage_id = ss.primary_product_id
 WHERE upb.user_id = '${userId}'
 group by upb.user_pc_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
 `;
-  const ramList = await SequelizeInstance.query(sqlQuery, {
+  const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
 
-  return ramList;
+  return personalBuildPcList;
 }

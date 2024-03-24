@@ -110,7 +110,8 @@ export async function getMotherboard(dataObj) {
     result = result.filter(
       (e) =>
         (dataObj?.processorDetails.chipset &&
-          dataObj.processorDetails.chipset === e.chipset) ||
+          dataObj?.processorDetails.chipset) ||
+        '' === e.chipset ||
         (dataObj?.ramDetails &&
           commonFunction.hasFrequency(
             e.memory_supports,
@@ -125,9 +126,8 @@ export async function getCase(dataObj) {
   else
     result = result.filter(
       (e) =>
-        dataObj?.gpuDetail['length'] &&
         commonFunction.extractNumberFromString(e.gpu_length) >=
-          Number(dataObj.gpuDetail['length']),
+        Number(dataObj?.gpuDetail['length'] || 0),
     );
   return result;
 }
@@ -173,58 +173,67 @@ export async function getStorage(dataObj) {
 }
 
 export async function getAutoGen(dataObj) {
-  let result = await productDAL.getAutoGen();
+  let result = await await productDAL.getAutoGen();
   console.log(dataObj);
-  if (dataObj) {
-    result = result
-      .filter((e) => {
-        dataObj?.motherboardDetail &&
-          e.motherboard_specification.chipset ===
-            dataObj.motherboardDetail.chipset;
-      })
-      .filter(
-        (e) =>
-          dataObj?.motherboardDetail &&
-          commonFunction.hasFrequency(
-            dataObj.motherboardDetail.memory_supports,
-            e.ram_specification.ram_type,
-          ),
-      )
-      .filter(
-        (e) =>
-          dataObj?.caseDetails &&
-          commonFunction.extractNumberFromString(
-            dataObj.caseDetails.gpu_length,
-          ) >= Number(e.gpu_specification['length']),
-      )
-      .filter(
-        (e) =>
-          dataObj?.gpuDetail &&
-          commonFunction.extractNumberFromString(
-            e.case_specification.gpu_length,
-          ) >= Number(dataObj.gpuDetail.length),
-      )
-      .filter(
-        (e) =>
-          dataObj?.processorDetails &&
-          e.motherboard_specification.chipset ===
-            dataObj.processorDetails.chipset,
-      )
-      .filter(
-        (e) =>
-          dataObj?.storageDetail &&
-          e.motherboard_specification.sata.includes(
-            dataObj.storageDetail.interface,
-          ),
-      )
-      .filter(
-        (e) =>
-          dataObj?.ramDetails &&
-          commonFunction.hasFrequency(
-            e.motherboard_specification.memory_supports,
-            dataObj.ramDetails.ram_type,
-          ),
-      );
+  if (dataObj?.motherboardDetail) {
+    result = result.filter(
+      (e) =>
+        e.motherboard_specification.chipset ===
+        dataObj.motherboardDetail.chipset,
+    );
+    console.log(1, result.length);
+  }
+  if (dataObj?.motherboardDetail) {
+    result = result.filter((e) =>
+      commonFunction.hasFrequency(
+        dataObj.motherboardDetail.memory_supports,
+        e.ram_specification.ram_type,
+      ),
+    );
+    console.log(2, result.length);
+  }
+  if (dataObj?.caseDetails) {
+    result = result.filter(
+      (e) =>
+        commonFunction.extractNumberFromString(
+          dataObj.caseDetails.gpu_length,
+        ) >= Number(e.gpu_specification['length']),
+    );
+    console.log(3, result.length);
+  }
+  if (dataObj?.gpuDetail) {
+    result = result.filter(
+      (e) =>
+        commonFunction.extractNumberFromString(
+          e.case_specification.gpu_length,
+        ) >= Number(dataObj.gpuDetail.length),
+    );
+    console.log(4, result.length);
+  }
+  if (dataObj?.processorDetails) {
+    result = result.filter(
+      (e) =>
+        e.motherboard_specification.chipset ===
+        dataObj.processorDetails.chipset,
+    );
+    console.log(5, result.length);
+  }
+  if (dataObj?.storageDetail) {
+    result = result.filter((e) =>
+      e.motherboard_specification.sata.includes(
+        dataObj.storageDetail.interface,
+      ),
+    );
+    console.log(6, result.length);
+  }
+  if (dataObj?.ramDetails) {
+    result = result.filter((e) =>
+      commonFunction.hasFrequency(
+        e.motherboard_specification.memory_supports,
+        dataObj.ramDetails.ram_type,
+      ),
+    );
+    console.log(7, result.length);
   }
   return result;
 }

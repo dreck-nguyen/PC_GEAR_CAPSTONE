@@ -1144,10 +1144,10 @@ INNER JOIN
 ON pbp.storage_id = ss.primary_product_id
 group by pbp.pre_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
 `;
-  const ramList = await SequelizeInstance.query(sqlQuery, {
+  const autoGenList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
 
-  return ramList;
+  return autoGenList;
 }

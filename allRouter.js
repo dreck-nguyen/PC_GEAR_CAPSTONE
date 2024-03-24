@@ -753,7 +753,7 @@ router.delete(
  *             chipset:
  *               type: string
  *               description: The chipset of the motherboard.
- *               example: AMD TRX40
+ *               example: AMD
  *             memory_supports:
  *               type: string
  *               description: The memory support of the motherboard.
@@ -778,7 +778,7 @@ router.delete(
  *             chipset:
  *               type: string
  *               description: The chipset of the processor.
- *               example: AMD TRX40
+ *               example: AMD
  *         storageDetail:
  *           type: object
  *           properties:
@@ -1547,6 +1547,24 @@ router.post('/api/user/register', userController.registerUser);
  *       500:
  *         description: Internal server error. Failed to create personal PC build.
  */
+/**
+ * @swagger
+ * /api/auth/user/pc-component/personal-build:
+ *   get:
+ *     summary: Get personal build PC components for the authenticated user
+ *     description: Retrieve personal build PC components for the authenticated user.
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - USER SECTION
+ *     responses:
+ *       200:
+ *         description: Personal PC build created successfully.
+ *       400:
+ *         description: Bad request. Invalid data provided.
+ *       500:
+ *         description: Internal server error. Failed to create personal PC build.
+ */
 router.post(
   '/api/auth/user/pc-build-cart',
   cartController.uploadCartPcComponent,
@@ -1556,6 +1574,10 @@ router.post('/api/auth/user/cart', cartController.createCart);
 router.post(
   '/api/auth/user/pc-component/personal-build',
   userController.createPersonalBuildPc,
+);
+router.get(
+  '/api/auth/user/pc-component/personal-build',
+  userController.getPersonalBuildPc,
 );
 // CART ITEM SECTION
 /**

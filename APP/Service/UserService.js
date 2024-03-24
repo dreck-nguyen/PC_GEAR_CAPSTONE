@@ -92,3 +92,6 @@ export async function createPersonalBuildPc(loginUser, dataObj) {
   }
   return result;
 }
+export async function getPersonalBuildPc(userId) {
+  return await pcBuildDAL.getPersonalBuildPc(userId);
+}

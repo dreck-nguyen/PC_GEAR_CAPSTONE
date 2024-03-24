@@ -105,7 +105,6 @@ export async function getProcessor(dataObj) {
 }
 export async function getMotherboard(dataObj) {
   let result = await productDAL.getMotherboard();
-  console.log(result);
   if (!dataObj) return result;
   else
     result = result.filter(

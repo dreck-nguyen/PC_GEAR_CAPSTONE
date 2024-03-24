@@ -808,6 +808,7 @@ router.post(
   '/api/pc-component/mobile/auto-gen',
   productController.getMobileAutoGen,
 );
+
 //
 /**
  * @swagger
@@ -1475,9 +1476,83 @@ router.post('/api/user/register', userController.registerUser);
  *             example:
  *               error: Internal server error
  */
+/**
+ * @swagger
+ * /api/auth/user/pc-component/personal-build:
+ *   post:
+ *     summary: Create Personal PC Build
+ *     description: Endpoint to create a new personal PC build.
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - USER SECTION
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_pc_build_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the personal PC build.
+ *               profile_name:
+ *                 type: string
+ *                 description: The profile name of the personal PC build.
+ *               motherboard_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the motherboard used in the personal PC build.
+ *               processor_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the processor used in the personal PC build.
+ *               cpu_cooler_id:
+ *                 type: string
+ *                 format: uuid
+ *                 nullable: true
+ *                 description: The ID of the CPU cooler used in the personal PC build.
+ *               case_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the case used in the personal PC build.
+ *               gpu_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the GPU used in the personal PC build.
+ *               ram_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the RAM used in the personal PC build.
+ *               storage_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the storage used in the personal PC build.
+ *               case_cooler_id:
+ *                 type: string
+ *                 format: uuid
+ *                 nullable: true
+ *                 description: The ID of the case cooler used in the personal PC build.
+ *               monitor_id:
+ *                 type: string
+ *                 format: uuid
+ *                 nullable: true
+ *                 description: The ID of the monitor used in the personal PC build.
+ *     responses:
+ *       200:
+ *         description: Personal PC build created successfully.
+ *       400:
+ *         description: Bad request. Invalid data provided.
+ *       500:
+ *         description: Internal server error. Failed to create personal PC build.
+ */
 router.get('/api/auth/user/cart', cartController.getUserCart);
 router.post('/api/auth/user/cart', cartController.createCart);
-
+router.post(
+  '/api/auth/user/pc-component/personal-build',
+  userController.createPersonalBuildPc,
+);
 // CART ITEM SECTION
 /**
  * @swagger

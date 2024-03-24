@@ -75,3 +75,18 @@ export async function registerUser(req, res, next) {
     res.status(404).send({ error: error.message });
   }
 }
+
+export async function createPersonalBuildPc(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const dataObj = req.body;
+    const result = await userService.createPersonalBuildPc(loginUser, dataObj);
+    res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    console.error(error);
+    await t.rollback();
+    res.status(404).send({ error: error.message });
+  }
+}

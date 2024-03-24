@@ -2,6 +2,7 @@ import * as userDAL from '../DAL/UserDAL.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import * as pcBuildDAL from '../DAL/PcBuilderDAL.js';
 dotenv.config();
 export async function loginUser(email, password) {
   const result = await userDAL.getUserDetails(email);
@@ -74,5 +75,20 @@ export async function getUserInfoById(userId) {
 }
 export async function checkAuth(email, password) {
   const result = await userDAL.checkAuth(email, password);
+  return result;
+}
+export async function createPersonalBuildPc(loginUser, dataObj) {
+  const buildPcId = uuidv4();
+  const userId = loginUser.user_id;
+  let result;
+  if (!dataObj.user_pc_build_id) {
+    console.log(dataObj, buildPcId, userId);
+    dataObj.user_pc_build_id = buildPcId;
+    dataObj.user_id = userId;
+    result = await pcBuildDAL.createPersonalBuildPc(dataObj);
+  } else {
+    console.log(dataObj);
+    result = await pcBuildDAL.updatePersonalBuildPc(dataObj);
+  }
   return result;
 }

@@ -178,3 +178,58 @@ export async function clearPreBuildPC() {
     raw: true,
   });
 }
+export async function createPersonalBuildPc(dataObj) {
+  const sqlQuery = `
+    INSERT INTO public.user_pc_build (user_pc_build_id, user_id, created_at, profile_name, motherboard_id, processor_id, cpu_cooler_id, case_id, gpu_id, ram_id, storage_id, case_cooler_id, monitor_id)
+    VALUES (
+      :user_pc_build_id,
+      :user_id,
+      now(),
+      :profile_name,
+      :motherboard_id,
+      :processor_id,
+      :cpu_cooler_id,
+      :case_id,
+      :gpu_id,
+      :ram_id,
+      :storage_id,
+      :case_cooler_id,
+      :monitor_id
+    )
+    RETURNING *
+  `;
+  const createPersonalPc = await SequelizeInstance.query(sqlQuery, {
+    replacements: dataObj,
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
+
+  return createPersonalPc;
+}
+export async function updatePersonalBuildPc(updatedData) {
+  const sqlQuery = `
+    UPDATE public.user_pc_build 
+    SET 
+      profile_name = :profile_name,
+      motherboard_id = :motherboard_id,
+      processor_id = :processor_id,
+      cpu_cooler_id = :cpu_cooler_id,
+      case_id = :case_id,
+      gpu_id = :gpu_id,
+      ram_id = :ram_id,
+      storage_id = :storage_id,
+      case_cooler_id = :case_cooler_id,
+      monitor_id = :monitor_id
+    WHERE 
+      user_pc_build_id = :user_pc_build_id
+    RETURNING *
+  `;
+
+  const updateResult = await SequelizeInstance.query(sqlQuery, {
+    replacements: updatedData,
+    type: SequelizeInstance.QueryTypes.UPDATE,
+    raw: true,
+  });
+
+  return updateResult;
+}

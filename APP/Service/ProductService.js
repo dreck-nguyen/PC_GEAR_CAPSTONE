@@ -83,6 +83,11 @@ export async function getGraphicsCardById(gpuId) {
   return result;
 }
 
+export async function getRamById(ramId) {
+  const result = await productDAL.getRamById(ramId);
+  return result;
+}
+
 export async function getAutoGenById(autoGenId) {
   const result = await productDAL.getAutoGenById(autoGenId);
   return result;
@@ -173,7 +178,7 @@ export async function getStorage(dataObj) {
 }
 
 export async function getAutoGen(dataObj) {
-  let result = await await productDAL.getAutoGen();
+  let result = await productDAL.getAutoGen();
   console.log(dataObj);
   if (dataObj?.motherboardDetail) {
     result = result.filter(

@@ -49,6 +49,7 @@ export async function pcBuilderService(userId) {
   const preBuildPc = motherboardSpecification.reduce((acc, curr) => {
     const rs = {};
     const processors = { chipset: curr.chipset, socket: curr.spu_socket };
+    console.log(processors);
 
     // Processor Section
     rs['processors'] = processors;
@@ -219,12 +220,12 @@ export async function pcBuilderService(userId) {
     acc.push(rs);
     return acc;
   }, []);
-  await pcBuilderDAL.clearPreBuildPC();
+  // await pcBuilderDAL.clearPreBuildPC();
   for (const preBuild of preBuildPc) {
     console.log(preBuild.combinations.length);
     for (const combine of preBuild.combinations) {
       combine['user_id'] = userId;
-      await pcBuilderDAL.insertPreBuildPc(combine);
+      // await pcBuilderDAL.insertPreBuildPc(combine);
     }
   }
 }

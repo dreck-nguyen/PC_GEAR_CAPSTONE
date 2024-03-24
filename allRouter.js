@@ -21,6 +21,8 @@ const router = express.Router();
  * /api/auth/staff/pc-build-auto:
  *   get:
  *     summary: Endpoint for automated PC build
+ *     security:
+ *       -  BearerAuth: []
  *     tags:
  *       - STAFF AUTHENTICATION
  *     description: Retrieve a randomly generated PC build.

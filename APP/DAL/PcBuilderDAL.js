@@ -182,7 +182,20 @@ export async function clearPreBuildPC() {
 
 export async function createPersonalBuildPc(dataObj) {
   const sqlQuery = `
-    INSERT INTO public.user_pc_build (user_pc_build_id, user_id, created_at, profile_name, motherboard_id, processor_id, cpu_cooler_id, case_id, gpu_id, ram_id, storage_id, case_cooler_id, monitor_id)
+    INSERT INTO public.user_pc_build (
+      user_pc_build_id
+      , user_id
+      , created_at
+      , profile_name
+      , motherboard_id
+      , processor_id
+      , cpu_cooler_id
+      , case_id
+      , gpu_id
+      , ram_id
+      , storage_id
+      , case_cooler_id
+      , monitor_id)
     VALUES (
       :user_pc_build_id,
       :user_id,

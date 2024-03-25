@@ -256,7 +256,7 @@ upb.storage_id,
 to_json(ss.*) AS storage_specification
 FROM 
 public.user_pc_build upb
-INNER JOIN 
+LEFT JOIN 
 (
 SELECT 
   p.product_id as primary_product_id,
@@ -280,7 +280,7 @@ GROUP BY
   p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
 )ms 
 ON upb.motherboard_id = ms.primary_product_id 
-INNER JOIN 
+LEFT JOIN 
 (
   SELECT 
     p.product_id as primary_product_id,
@@ -304,7 +304,7 @@ INNER JOIN
     p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
 ) ps 
 ON upb.processor_id = ps.primary_product_id 
-INNER JOIN 
+LEFT JOIN 
 (
   SELECT 
     p.product_id as primary_product_id,
@@ -328,7 +328,7 @@ INNER JOIN
     p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
 ) cs 
 ON upb.case_id = cs.primary_product_id 
-INNER JOIN 
+LEFT JOIN 
 (
   SELECT 
     p.product_id as primary_product_id,
@@ -352,7 +352,7 @@ INNER JOIN
     p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
 ) gs 
 ON upb.gpu_id = gs.primary_product_id 
-INNER JOIN 
+LEFT JOIN 
 (
   SELECT 
     p.product_id as primary_product_id,
@@ -376,7 +376,7 @@ INNER JOIN
     p.product_id, c.category_id, pb.product_brand_id, rs.product_id, rs.specification_id
 ) rs 
 ON upb.ram_id = rs.primary_product_id 
-INNER JOIN 
+LEFT JOIN 
 (
   SELECT 
     p.product_id as primary_product_id,

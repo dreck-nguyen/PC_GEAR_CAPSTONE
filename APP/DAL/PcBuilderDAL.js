@@ -195,7 +195,8 @@ export async function createPersonalBuildPc(dataObj) {
       , ram_id
       , storage_id
       , case_cooler_id
-      , monitor_id)
+      , monitor_id
+      , psu_id)
     VALUES (
       :user_pc_build_id,
       :user_id,
@@ -209,7 +210,8 @@ export async function createPersonalBuildPc(dataObj) {
       :ram_id,
       :storage_id,
       :case_cooler_id,
-      :monitor_id
+      :monitor_id,
+      psu_id
     )
     RETURNING *
   `;
@@ -235,7 +237,8 @@ export async function updatePersonalBuildPc(updatedData) {
       ram_id = :ram_id,
       storage_id = :storage_id,
       case_cooler_id = :case_cooler_id,
-      monitor_id = :monitor_id
+      monitor_id = :monitor_id,
+      psu_id = :psu_id
     WHERE 
       user_pc_build_id = :user_pc_build_id
     RETURNING *

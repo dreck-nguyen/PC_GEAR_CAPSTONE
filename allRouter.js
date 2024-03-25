@@ -304,7 +304,7 @@ router.get(
  * tags:
  *   name: PRODUCT SECTION
  *   description: product-related routes
- * /api/product/{categoryId}:
+ * /api/category/product/{categoryId}:
  *   get:
  *     summary: Get products by category
  *     description: Retrieve a list of products for a specific category.
@@ -584,7 +584,10 @@ router.put(
   productController.updateProductById,
 );
 router.post('/api/auth/staff/product', productController.createProduct);
-router.get('/api/product/:categoryId', productController.getProductsByCategory);
+router.get(
+  '/api/category/product/:categoryId',
+  productController.getProductsByCategory,
+);
 router.post(
   '/api/auth/staff/product/image/:productId',
   uploadCloud.single('image'),
@@ -1542,6 +1545,11 @@ router.post('/api/user/register', userController.registerUser);
  *                 format: uuid
  *                 nullable: true
  *                 description: The ID of the monitor used in the personal PC build.
+ *               psu_id:
+ *                 type: string
+ *                 format: uuid
+ *                 nullable: true
+ *                 description: The ID of the psu used in the personal PC build.
  *     responses:
  *       200:
  *         description: Personal PC build created successfully.

@@ -1576,6 +1576,43 @@ router.post('/api/user/register', userController.registerUser);
  *       500:
  *         description: Internal server error. Failed to create personal PC build.
  */
+/**
+ * @swagger
+ * /api/auth/user/pc-component/personal-build/{user_pc_build_id}:
+ *   delete:
+ *     summary: Delete a personal PC build
+ *     description: Delete a personal PC build for the authenticated user.
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - USER SECTION
+ *     parameters:
+ *       - in: path
+ *         name: user_pc_build_id
+ *         required: true
+ *         description: ID of the personal PC build to delete
+ *         example: 5f1fb3f3-45c3-4621-b65f-615fb6453135
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Successfully deleted the personal PC build
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Personal PC build deleted successfully
+ *       '400':
+ *         description: Bad request, invalid user_pc_build_id provided
+ *       '404':
+ *         description: Personal PC build not found
+ *       '500':
+ *         description: Internal server error
+ */
 router.post(
   '/api/auth/user/pc-build-cart',
   cartController.uploadCartPcComponent,
@@ -1589,6 +1626,10 @@ router.post(
 router.get(
   '/api/auth/user/pc-component/personal-build',
   userController.getPersonalBuildPc,
+);
+router.delete(
+  '/api/auth/user/pc-component/personal-build/:user_pc_build_id',
+  userController.deletePersonalBuildPc,
 );
 // CART ITEM SECTION
 /**

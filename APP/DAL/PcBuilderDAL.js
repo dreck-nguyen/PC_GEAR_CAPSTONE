@@ -252,7 +252,22 @@ export async function updatePersonalBuildPc(updatedData) {
 
   return updateResult;
 }
+export async function deletePersonalBuildPc(userId, userPcBuildId) {
+  const sqlQuery = `
+    DELETE FROM public.user_pc_build 
+    WHERE 
+      user_pc_build_id = :userPcBuildId
+      AND user_id = :userId
+    RETURNING *
+  `;
 
+  const updateResult = await SequelizeInstance.query(sqlQuery, {
+    replacements: { userPcBuildId, userId },
+    type: SequelizeInstance.QueryTypes.DELETE,
+    raw: true,
+  });
+  return updateResult;
+}
 export async function getPersonalBuildPc(userId) {
   const sqlQuery = `
  

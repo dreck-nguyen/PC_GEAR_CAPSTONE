@@ -95,3 +95,10 @@ export async function createPersonalBuildPc(loginUser, dataObj) {
 export async function getPersonalBuildPc(userId) {
   return await pcBuildDAL.getPersonalBuildPc(userId);
 }
+
+export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
+  return await pcBuildDAL.deletePersonalBuildPc(
+    loginUser.user_id,
+    userPcBuildId,
+  );
+}

@@ -101,85 +101,88 @@ export async function getStorageById(storageId) {
 // TODO
 export async function getProcessor(dataObj) {
   let result = await productDAL.getProcessor();
-  if (!dataObj?.motherboardDetail) return result;
-  else
+
+  if (dataObj?.motherboardDetail) {
     result = result.filter(
-      (e) => dataObj.motherboardDetail.chipset === e.chipset,
+      (e) => e.chipset === dataObj.motherboardDetail.chipset,
     );
+  }
+
   return result;
 }
 export async function getMotherboard(dataObj) {
   let result = await productDAL.getMotherboard();
-  if (!dataObj) return result;
-  else
-    result = result.filter(
-      (e) =>
-        (dataObj?.processorDetails.chipset &&
-          dataObj?.processorDetails.chipset) ||
-        '' === e.chipset ||
-        (dataObj?.ramDetails &&
-          commonFunction.hasFrequency(
-            e.memory_supports,
-            dataObj.ramDetails.ram_type,
-          )),
-    );
+
+  if (dataObj) {
+    result = result.filter((e) => {
+      const hasMatchingChipset =
+        !dataObj.processorDetails.chipset ||
+        dataObj.processorDetails.chipset === e.chipset ||
+        '';
+      const hasMatchingRAMFrequency =
+        !dataObj.ramDetails ||
+        commonFunction.hasFrequency(
+          e.memory_supports,
+          dataObj.ramDetails.ram_type,
+        );
+
+      return hasMatchingChipset && hasMatchingRAMFrequency;
+    });
+  }
+
   return result;
 }
 export async function getCase(dataObj) {
   let result = await productDAL.getCase();
-  if (!dataObj?.gpuDetail['length']) return result;
-  else
+
+  if (dataObj?.gpuDetail?.length) {
+    const minLength = Number(dataObj.gpuDetail.length);
     result = result.filter(
-      (e) =>
-        commonFunction.extractNumberFromString(e.gpu_length) >=
-        Number(dataObj?.gpuDetail['length'] || 0),
+      (e) => commonFunction.extractNumberFromString(e.gpu_length) >= minLength,
     );
+  }
+
   return result;
 }
 export async function getGraphicsCard(dataObj) {
   let result = await productDAL.getGraphicsCard();
-  if (!dataObj?.caseDetails) return result;
-  else {
-    result = result.filter(
-      (e) =>
-        dataObj?.caseDetails &&
-        commonFunction.extractNumberFromString(
-          dataObj.caseDetails.gpu_length,
-        ) >= Number(e.length),
+
+  if (dataObj?.caseDetails) {
+    const minLength = commonFunction.extractNumberFromString(
+      dataObj.caseDetails.gpu_length,
     );
+    result = result.filter((e) => minLength >= Number(e.length));
   }
+
   return result;
 }
 export async function getRam(dataObj) {
   let result = await productDAL.getRam();
-  if (!dataObj?.motherboardDetail) return result;
-  else
-    result = result.filter(
-      (e) =>
-        dataObj?.motherboardDetail.memory_supports &&
-        commonFunction.hasFrequency(
-          dataObj.motherboardDetail.memory_supports,
-          e.ram_type,
-        ),
+
+  if (dataObj?.motherboardDetail && dataObj.motherboardDetail.memory_supports) {
+    const supportedRamTypes = dataObj.motherboardDetail.memory_supports;
+    result = result.filter((e) =>
+      commonFunction.hasFrequency(supportedRamTypes, e.ram_type),
     );
+  }
+
   console.log(result);
   return result;
 }
-
 export async function getStorage(dataObj) {
   let result = await productDAL.getStorage();
+
+  if (dataObj?.storageDetail && dataObj.storageDetail.interface) {
+    const desiredInterface = dataObj.storageDetail.interface;
+    result = result.filter((e) => e.interface.includes(desiredInterface));
+  }
+
   console.log(result);
-  if (!dataObj?.storageDetail) return result;
-  else
-    result = result.filter((e) =>
-      e.interface.includes(dataObj.storageDetail.interface),
-    );
   return result;
 }
-
 export async function getAutoGen(dataObj) {
   let result = await productDAL.getAutoGen();
-  console.log(dataObj);
+
   if (dataObj?.motherboardDetail) {
     result = result.filter(
       (e) =>
@@ -188,7 +191,8 @@ export async function getAutoGen(dataObj) {
     );
     console.log(1, result.length);
   }
-  if (dataObj?.motherboardDetail) {
+
+  if (dataObj?.motherboardDetail && dataObj.motherboardDetail.memory_supports) {
     result = result.filter((e) =>
       commonFunction.hasFrequency(
         dataObj.motherboardDetail.memory_supports,
@@ -197,24 +201,27 @@ export async function getAutoGen(dataObj) {
     );
     console.log(2, result.length);
   }
-  if (dataObj?.caseDetails) {
+
+  if (dataObj?.caseDetails && dataObj.caseDetails.gpu_length) {
+    const minLength = commonFunction.extractNumberFromString(
+      dataObj.caseDetails.gpu_length,
+    );
     result = result.filter(
-      (e) =>
-        commonFunction.extractNumberFromString(
-          dataObj.caseDetails.gpu_length,
-        ) >= Number(e.gpu_specification['length']),
+      (e) => Number(e.gpu_specification.length) >= minLength,
     );
     console.log(3, result.length);
   }
-  if (dataObj?.gpuDetail) {
+
+  if (dataObj?.gpuDetail && dataObj.gpuDetail.length) {
+    const minLength = commonFunction.extractNumberFromString(
+      dataObj.gpuDetail.length,
+    );
     result = result.filter(
-      (e) =>
-        commonFunction.extractNumberFromString(
-          e.case_specification.gpu_length,
-        ) >= Number(dataObj.gpuDetail.length),
+      (e) => Number(e.case_specification.gpu_length) >= minLength,
     );
     console.log(4, result.length);
   }
+
   if (dataObj?.processorDetails) {
     result = result.filter(
       (e) =>
@@ -223,7 +230,8 @@ export async function getAutoGen(dataObj) {
     );
     console.log(5, result.length);
   }
-  if (dataObj?.storageDetail) {
+
+  if (dataObj?.storageDetail && dataObj.storageDetail.interface) {
     result = result.filter((e) =>
       e.motherboard_specification.sata.includes(
         dataObj.storageDetail.interface,
@@ -231,7 +239,8 @@ export async function getAutoGen(dataObj) {
     );
     console.log(6, result.length);
   }
-  if (dataObj?.ramDetails) {
+
+  if (dataObj?.ramDetails && dataObj.ramDetails.ram_type) {
     result = result.filter((e) =>
       commonFunction.hasFrequency(
         e.motherboard_specification.memory_supports,
@@ -240,11 +249,12 @@ export async function getAutoGen(dataObj) {
     );
     console.log(7, result.length);
   }
+
   return result;
 }
-export async function getMobileAutoGen(dataObj) {
+export async function getRandomOne(dataObj) {
   let result = await productDAL.getAutoGen();
-  console.log(dataObj);
+
   if (dataObj) {
     result = result
       .filter((e) => {
@@ -273,7 +283,7 @@ export async function getMobileAutoGen(dataObj) {
           return (
             commonFunction.extractNumberFromString(
               dataObj.caseDetails.gpu_length,
-            ) >= Number(e.gpu_specification['length'])
+            ) >= Number(e.gpu_specification.length)
           );
         }
         return true;
@@ -315,6 +325,7 @@ export async function getMobileAutoGen(dataObj) {
         return true;
       });
   }
-  const randomIndex = Math.floor(Math.random() * (result.length + 1));
+
+  const randomIndex = Math.floor(Math.random() * result.length);
   return result[randomIndex];
 }

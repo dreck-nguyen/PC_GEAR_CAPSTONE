@@ -723,7 +723,8 @@ router.delete(
  *         description: Successful response with auto-generated information
  *       404:
  *         description: Auto-generated information not found
- * /api/pc-component/mobile/auto-gen:
+ *
+ * /api/pc-component/random/auto-gen:
  *   post:
  *     summary: Get auto-generated information
  *     description: Retrieve auto-generated information for PC builds.
@@ -807,8 +808,8 @@ router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
 router.post('/api/pc-component/auto-gen', productController.getAutoGen);
 router.post(
-  '/api/pc-component/mobile/auto-gen',
-  productController.getMobileAutoGen,
+  '/api/pc-component/random/auto-gen',
+  productController.getRandomOne,
 );
 
 //

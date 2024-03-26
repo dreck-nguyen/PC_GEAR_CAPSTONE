@@ -1247,7 +1247,7 @@ router.get('/api/pc-component/monitor', productController.getMonitor);
  */
 /**
  * @swagger
- * /api/category:
+ * /api/category/:categoryId:
  *   put:
  *     summary: update a new category
  *     description: updates a new category with the provided data.
@@ -1365,7 +1365,7 @@ router.get('/api/pc-component/monitor', productController.getMonitor);
 router.get('/api/category', categoryController.getCategoryBreadcrumb);
 router.get('/api/category/:categoryId', categoryController.getCategory);
 router.delete('/api/category/:categoryId', categoryController.deleteCategory);
-router.put('/api/category', categoryController.updateCategory);
+router.put('/api/category/:categoryId', categoryController.updateCategory);
 router.post('/api/category', categoryController.createCategory);
 router.get('/api/categories', categoryController.getAllCategory);
 

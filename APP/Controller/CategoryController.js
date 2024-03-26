@@ -36,11 +36,14 @@ export async function getCategory(req, res, next) {
 }
 
 export async function deleteCategory(req, res, next) {
+  const t = await SequelizeInstance.transaction();
   try {
     const categoryId = req.params.categoryId;
     const categories = await categoryService.deleteCategory(categoryId);
+    await t.commit();
     res.send(categories);
   } catch (error) {
+    await t.rollback();
     res.status(404).send(error);
   }
 }
@@ -62,8 +65,10 @@ export async function createCategory(req, res, next) {
 export async function updateCategory(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
+    const categoryId = req.params.categoryId;
+
     const category = req.body;
-    const result = await categoryService.updateCategory(category);
+    const result = await categoryService.updateCategory(categoryId, category);
     res.status(200).send(result);
     await t.commit();
   } catch (error) {

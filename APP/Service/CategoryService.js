@@ -23,7 +23,7 @@ export async function createCategory(category) {
   const result = await categoryDAL.createCategory(category);
   return result;
 }
-export async function updateCategory(category) {
-  const result = await categoryDAL.updateCategory(category);
+export async function updateCategory(categoryId, category) {
+  const result = await categoryDAL.updateCategory(categoryId, category);
   return result;
 }

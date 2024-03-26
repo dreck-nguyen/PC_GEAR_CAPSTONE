@@ -53,7 +53,7 @@ export async function deleteCategory(categoryId) {
   return categories;
 }
 
-export async function updateCategory(category) {
+export async function updateCategory(categoryId, category) {
   const result = await Category.update(
     {
       parent_id: category.parent_id,
@@ -64,7 +64,7 @@ export async function updateCategory(category) {
     },
     {
       where: {
-        category_id: category.id,
+        category_id: categoryId,
       },
     },
   );

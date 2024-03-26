@@ -10,6 +10,7 @@ const router = express.Router();
 export async function getCategoryBreadcrumb(req, res, next) {
   try {
     const categories = await categoryService.getCategoryBreadcrumb();
+    console.log(categories);
     res.send(categories);
   } catch (error) {
     res.status(404).send(error);

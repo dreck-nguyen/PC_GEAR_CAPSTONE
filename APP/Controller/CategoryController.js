@@ -25,11 +25,45 @@ export async function getAllCategory(req, res, next) {
   }
 }
 
+export async function getCategory(req, res, next) {
+  try {
+    const categoryId = req.params.categoryId;
+    const categories = await categoryService.getCategory(categoryId);
+    res.send(categories);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
+
+export async function deleteCategory(req, res, next) {
+  try {
+    const categoryId = req.params.categoryId;
+    const categories = await categoryService.deleteCategory(categoryId);
+    res.send(categories);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
+
 export async function createCategory(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const category = req.body;
     const result = await categoryService.createCategory(category);
+    res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    await t.rollback();
+    console.log(error);
+    res.status(404).send(error);
+  }
+}
+
+export async function updateCategory(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const category = req.body;
+    const result = await categoryService.updateCategory(category);
     res.status(200).send(result);
     await t.commit();
   } catch (error) {

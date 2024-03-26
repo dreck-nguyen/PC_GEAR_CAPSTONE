@@ -1245,7 +1245,127 @@ router.get('/api/pc-component/monitor', productController.getMonitor);
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/category:
+ *   put:
+ *     summary: update a new category
+ *     description: updates a new category with the provided data.
+ *     tags:
+ *       - CATEGORY SECTION
+ *     requestBody:
+ *       description: Category data to update
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               parent_id:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               status:
+ *                 type: boolean
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - status
+ *     responses:
+ *       201:
+ *         description: Successfully update a new category
+ *         content:
+ *           application/json:
+ *             example:
+ *               category_id: null
+ *               parent_id: "6f5acf44-4542-4c5c-be43-6a71b150f752"
+ *               name: "test category"
+ *               status: true
+ *               description: "string"
+ *               image: example.jpg
+ *               created_at: "2024-02-21T12:00:00Z"
+ *       500:
+ *         description: Internal Server Error
+ */
+/**
+ * @swagger
+ * tags:
+ *   - name: CATEGORY SECTION
+ *     description: Operations related to categories
+ *
+ * /api/category/{categoryId}:
+ *   get:
+ *     summary: Get a category by ID
+ *     description: Retrieve a category by its ID.
+ *     tags:
+ *       - CATEGORY SECTION
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the category to retrieve
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               parent_id: 1
+ *               name: Example Category
+ *               status: active
+ *               description: This is an example category
+ *               image: http://example.com/image.jpg
+ *               category_id: 123
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * tags:
+ *   - name: CATEGORY SECTION
+ *     description: Operations related to categories
+ *
+ * /api/category/{categoryId}:
+ *   delete:
+ *     summary: delete a category by ID
+ *     description: delete a category by its ID.
+ *     tags:
+ *       - CATEGORY SECTION
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the category to delete
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               parent_id: 1
+ *               name: Example Category
+ *               status: active
+ *               description: This is an example category
+ *               image: http://example.com/image.jpg
+ *               category_id: 123
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/api/category', categoryController.getCategoryBreadcrumb);
+router.get('/api/category/:categoryId', categoryController.getCategory);
+router.delete('/api/category/:categoryId', categoryController.deleteCategory);
+router.put('/api/category', categoryController.updateCategory);
 router.post('/api/category', categoryController.createCategory);
 router.get('/api/categories', categoryController.getAllCategory);
 

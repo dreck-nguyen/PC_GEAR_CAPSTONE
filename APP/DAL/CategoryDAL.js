@@ -30,8 +30,49 @@ export async function getAllCategory() {
   return categories;
 }
 
+export async function getCategory(categoryId) {
+  const sqlQuery = `
+    select * from category
+    where categoryId = ${categoryId}`;
+  const categories = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return categories;
+}
+export async function deleteCategory(categoryId) {
+  const sqlQuery = `
+    delete from category
+    where categoryId = ${categoryId}`;
+  const categories = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return categories;
+}
+
+export async function updateCategory(category) {
+  const result = await Category.update(
+    {
+      parent_id: category.parent_id,
+      name: category.name,
+      status: category.status,
+      description: category.description,
+      image: category.image,
+    },
+    {
+      where: {
+        category_id: category.id,
+      },
+    },
+  );
+  console.log(category);
+  return result;
+}
 export async function createCategory(category) {
-  const result = await Category.create({
+  const result = await Category.update({
     parent_id: category.parent_id,
     name: category.name,
     status: category.status,

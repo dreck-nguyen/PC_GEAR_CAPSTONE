@@ -211,7 +211,7 @@ export async function createPersonalBuildPc(dataObj) {
       :storage_id,
       :case_cooler_id,
       :monitor_id,
-      psu_id
+      :psu_id
     )
     RETURNING *
   `;

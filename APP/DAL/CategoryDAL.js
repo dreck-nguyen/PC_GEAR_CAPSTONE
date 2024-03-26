@@ -3,11 +3,8 @@ import { Category, SequelizeInstance } from '../utility/DbHelper.js';
 export async function getCategoryBreadcrumb() {
   const sqlQuery = `
     select * from category
-      inner join 
-      (select category_id
-         from category 
-         where parent_id is null) c
-    on category.parent_id = c.category_id
+    where 1 = 1
+    and parent_id is not null
     order by category.index ASC`;
 
   const categories = await SequelizeInstance.query(sqlQuery, {

@@ -529,45 +529,45 @@ router.get(
  *         schema:
  *           type: string
  *         example: "12e157b3-7176-404f-904d-dff95f746fc0"
- *       - in: body
- *         name: updatedProduct
- *         description: Updated product details
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             category_id:
- *               type: string
- *               description: ID of the product category
- *               example: "12e157b3-7176-404f-904d-dff95f746fc0"
- *             name:
- *               type: string
- *               description: Name of the product
- *               example: "Test2"
- *             description:
- *               type: string
- *               description: Description of the product
- *               example: "Test Swagger"
- *             unit_price:
- *               type: number
- *               description: Unit price of the product
- *               example: 160000.00
- *             discount:
- *               type: number
- *               description: Discount on the product
- *               example: 0
- *             quantity:
- *               type: integer
- *               description: Quantity of the product
- *               example: 10
- *             sold:
- *               type: integer
- *               description: Number of sold units
- *               example: 10
- *             product_brand_id:
- *               type: string
- *               description: ID of the product brand
- *               example: "91dcfc85-5f39-44ae-9cea-535a9565d2e6"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_id:
+ *                 type: string
+ *                 description: ID of the product category
+ *                 example: "12e157b3-7176-404f-904d-dff95f746fc0"
+ *               name:
+ *                 type: string
+ *                 description: Name of the product
+ *                 example: "Test2"
+ *               description:
+ *                 type: string
+ *                 description: Description of the product
+ *                 example: "Test Swagger"
+ *               unit_price:
+ *                 type: number
+ *                 description: Unit price of the product
+ *                 example: 160000.00
+ *               discount:
+ *                 type: number
+ *                 description: Discount on the product
+ *                 example: 0
+ *               quantity:
+ *                 type: integer
+ *                 description: Quantity of the product
+ *                 example: 10
+ *               sold:
+ *                 type: integer
+ *                 description: Number of sold units
+ *                 example: 10
+ *               product_brand_id:
+ *                 type: string
+ *                 description: ID of the product brand
+ *                 example: "91dcfc85-5f39-44ae-9cea-535a9565d2e6"
  *     responses:
  *       '200':
  *         description: Product successfully updated

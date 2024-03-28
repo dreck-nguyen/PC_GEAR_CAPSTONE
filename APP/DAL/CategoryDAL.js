@@ -30,7 +30,7 @@ export async function getAllCategory() {
 export async function getCategory(categoryId) {
   const sqlQuery = `
     select * from category
-    where categoryId = ${categoryId}`;
+    where category_id = '${categoryId}'`;
   const categories = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

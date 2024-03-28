@@ -44,6 +44,7 @@ export async function updateProductById(req, res, next) {
       );
     const productId = req.params.productId;
     const product = req.body;
+    console.log(product);
     const result = await productService.updateProductById(productId, product);
     res.status(200).send(result);
     await t.commit();

@@ -69,32 +69,34 @@ export async function getProductsByCategory(categoryId) {
   const sqlQuery = `
 SELECT 
     p.product_id,
-    p."name",
+    p.category_id,
+    p.name,
     p.description,
     p.unit_price,
     p.discount,
     p.sold,
-    c."name" AS category_name,
+    c.name AS category_name,
     pb.product_brand_name AS brand_name,
     ARRAY_AGG(pg.image) AS image_links
 FROM 
     product p
-LEFT OUTER JOIN 
+LEFT JOIN 
     category c
 ON 
     c.category_id = p.category_id 
-    OR (c.parent_id IS NULL AND c.category_id = '${categoryId}')
-    OR (c.category_id = '${categoryId}' OR c.parent_id = '${categoryId}')
-LEFT OUTER JOIN 
+LEFT JOIN 
     product_brand pb 
 ON 
     pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN 
+LEFT JOIN 
     product_gallery pg 
 ON 
     pg.product_id = p.product_id
+WHERE 
+	c.parent_id = '${categoryId}'
+	OR (c.parent_id IS not NULL AND p.category_id = '${categoryId}')
 GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id;
+    p.product_id, p.category_id, p.name, p.description, p.unit_price, p.discount, p.sold, c.name, pb.product_brand_name;
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
@@ -109,13 +111,12 @@ export async function updateProductById(productId, product) {
   const existingProduct = await Product.findOne({
     where: { product_id: productId },
   });
-  console.log(existingProduct);
-  const [updatedRows, updatedProductDetails] = await Product.update(product, {
+  const updatedProduct = await existingProduct.update(product, {
     where: { product_id: productId },
     returning: true,
   });
 
-  return [updatedRows, updatedProductDetails];
+  return updatedProduct;
 }
 
 export async function createProduct(product) {

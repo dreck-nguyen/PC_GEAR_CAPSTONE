@@ -18,6 +18,39 @@ export async function getUserDetails(email) {
   if (!userDetails) throw Error('USER NOT FOUND');
   return userDetails;
 }
+export async function updateUserAvatar(userId, image) {
+  const sqlQuery = `
+    UPDATE public."user" SET avatar=:image
+    WHERE user_id=:userId
+     RETURNING user_id, first_name, last_name, phone_number, created_at, avatar
+  `;
+
+  const updateResult = await SequelizeInstance.query(sqlQuery, {
+    replacements: { userId, image },
+    type: SequelizeInstance.QueryTypes.UPDATE,
+    raw: true,
+  });
+
+  return updateResult;
+}
+
+export async function updateUserInfo(userId, dataObj) {
+  const { first_name, last_name, phone_number, created_at } = dataObj;
+  const sqlQuery = `
+    UPDATE public."user" 
+    SET first_name = ?, last_name = ?, phone_number = ?, created_at = ? 
+    WHERE user_id = ?
+    RETURNING user_id, first_name, last_name, phone_number, created_at, avatar
+  `;
+
+  const updateResult = await SequelizeInstance.query(sqlQuery, {
+    replacements: [first_name, last_name, phone_number, created_at, userId],
+    type: SequelizeInstance.QueryTypes.UPDATE,
+    raw: true,
+  });
+
+  return updateResult;
+}
 
 export async function getStaffDetails(email) {
   const userDetails = await User.findOne({

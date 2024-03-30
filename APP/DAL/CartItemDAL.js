@@ -9,12 +9,51 @@ export async function createCartItem(product) {
   });
 }
 
+export async function createCartItemByUserPcBuild(cartId, userPcBuildId) {
+  const sqlQuery = `
+    INSERT INTO public.cart_item (cart_item_id, cart_id, created_at, personal_build_pc_id) 
+    VALUES (gen_random_uuid(), :cart_id, now(), :userPcBuildId)
+    RETURNING *;
+  `;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { cart_id: cartId, userPcBuildId: userPcBuildId },
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
+
+  return result;
+}
 export async function getCartItem(cartItemId) {
   const sqlQuery = `
   select * from cart c 
   inner join cart_item ci on c.cart_id = ci.cart_id 
   inner join product p on ci.product_id  = p.product_id 
   where ci.cart_item_id = '${cartItemId}'
+  `;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function getCartUser(userId) {
+  const sqlQuery = `
+  select * from cart c 
+  where c.user_id = '${userId}' 
+  `;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function getCartItemByUserPcBuild(userId, pcBuildId) {
+  const sqlQuery = `
+ select * from cart c 
+  inner join cart_item ci on c.cart_id = ci.cart_id
+  where c.user_id = '${userId}' and ci.personal_build_pc_id = '${pcBuildId}'
   `;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

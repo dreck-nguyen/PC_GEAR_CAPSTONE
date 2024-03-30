@@ -17,6 +17,23 @@ export async function updateCartItemQuantity(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+export async function createCartItemByUserPcBuild(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const userPcBuildId = req.params.userPcBuildId;
+    const result = await cartItemService.createCartItemByUserPcBuild(
+      loginUser,
+      userPcBuildId,
+    );
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    t.rollback();
+    console.log(error.message);
+    res.status(500).send({ error: error.message });
+  }
+}
 
 export async function getCartItemDetailsByID(req, res, next) {
   try {

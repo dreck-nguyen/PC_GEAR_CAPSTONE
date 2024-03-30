@@ -13,3 +13,19 @@ export async function createShippingAddress(userId, dataObj) {
   );
   return result;
 }
+
+export async function updateShippingAddress(userId, dataObj) {
+  const result = await shippingAddressDAL.updateShippingAddress(
+    userId,
+    dataObj,
+  );
+  return result;
+}
+
+export async function deleteShippingAddress(userId, addressId) {
+  const result = await shippingAddressDAL.deleteShippingAddress(
+    userId,
+    addressId,
+  );
+  return result;
+}

@@ -598,6 +598,7 @@ router.delete(
   '/api/auth/staff/product/:productId',
   productController.deleteProductById,
 );
+
 //
 /**
  * @swagger
@@ -1247,7 +1248,7 @@ router.get('/api/pc-component/monitor', productController.getMonitor);
  */
 /**
  * @swagger
- * /api/category/:categoryId:
+ * /api/category/{categoryId}:
  *   put:
  *     summary: update a new category
  *     description: updates a new category with the provided data.
@@ -1829,6 +1830,33 @@ router.delete(
  *             example:
  *               error: Internal server error
  */
+/**
+ * @swagger
+ * /api/auth/user/cart-item/{cartItemId}:
+ *   post:
+ *     summary: Create a cart item for a user's PC build
+ *     description: |
+ *       Creates a cart item for the specified user's PC build.
+ *     tags:
+ *       - CART ITEM SECTION
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the cart item.
+ *         example: 6f2b63aa-ef58-4afb-b452-dd0ea22441c0
+ *     responses:
+ *       '200':
+ *         description: Cart item created successfully.
+ *       '401':
+ *         description: Unauthorized. Invalid or missing token.
+ *       '500':
+ *         description: Internal Server Error.
+ */
 router.get(
   '/api/cart-item/:cartItemId',
   cartItemController.getCartItemDetailsByID,
@@ -1836,6 +1864,10 @@ router.get(
 router.put(
   '/api/cart-item/:cartItemId',
   cartItemController.updateCartItemQuantity,
+);
+router.post(
+  '/api/auth/user/cart-item/:userPcBuildId',
+  cartItemController.createCartItemByUserPcBuild,
 );
 
 // BRANCH SECTION
@@ -2454,6 +2486,94 @@ router.get(
  *             example:
  *               error: "Internal server error"
  */
+/**
+ * @swagger
+ * paths:
+ *   /api/auth/user/shipping-address/{addressId}:
+ *     put:
+ *       summary: Update user's shipping address
+ *       description: Update the specified shipping address for the authenticated user.
+ *       tags:
+ *        - SHIPPING ADDRESS SECTION
+ *       security:
+ *         - BearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: addressId
+ *           required: true
+ *           schema:
+ *             type: string
+ *             description: ID of the shipping address to update
+ *             example: d7923b74-77c0-4be6-8b1b-809463490ec8
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 recipient_name:
+ *                   type: string
+ *                   description: The name of the recipient.
+ *                   example: "Jill valentine"
+ *                 street_address:
+ *                   type: string
+ *                   description: The street address of the shipping address.
+ *                   example: "2 Cach Mang Thang 8"
+ *                 city:
+ *                   type: string
+ *                   description: The city of the shipping address.
+ *                   example: "HCM"
+ *                 country:
+ *                   type: string
+ *                   description: The country of the shipping address.
+ *                   example: "VN"
+ *               required:
+ *                 - recipient_name
+ *                 - street_address
+ *                 - city
+ *                 - country
+ *       responses:
+ *         '200':
+ *           description: Shipping address updated successfully
+ *         '400':
+ *           description: Invalid request
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '404':
+ *           description: Shipping address not found
+ *         '500':
+ *           description: Internal Server Error
+ */
+/**
+ * @swagger
+ * paths:
+ *   /api/auth/user/shipping-address/{addressId}:
+ *     delete:
+ *       summary: Delete user's shipping address
+ *       description: Delete the specified shipping address for the authenticated user.
+ *       tags:
+ *        - SHIPPING ADDRESS SECTION
+ *       security:
+ *         - BearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: addressId
+ *           required: true
+ *           schema:
+ *             type: string
+ *             description: ID of the shipping address to delete
+ *             example: d7923b74-77c0-4be6-8b1b-809463490ec8
+ *       responses:
+ *         '200':
+ *           description: Shipping address deleted successfully
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '404':
+ *           description: Shipping address not found
+ *         '500':
+ *           description: Internal Server Error
+ */
 router.get(
   '/api/auth/user/shipping-address',
   shippingAddressController.getShippingAddress,
@@ -2461,6 +2581,14 @@ router.get(
 router.post(
   '/api/auth/user/shipping-address',
   shippingAddressController.createShippingAddress,
+);
+router.put(
+  '/api/auth/user/shipping-address/:addressId',
+  shippingAddressController.updateShippingAddress,
+);
+router.delete(
+  '/api/auth/user/shipping-address/:addressId',
+  shippingAddressController.deleteShippingAddress,
 );
 
 // STAFF SECTION
@@ -2498,5 +2626,88 @@ router.post(
  *         description: Internal Server Error
  */
 router.post('/api/staff/login', userController.loginStaff);
+
+/**
+ * @swagger
+ * paths:
+ *   /api/auth/avatar:
+ *     post:
+ *       summary: Update user avatar
+ *       description: Upload a new avatar image for the authenticated user.
+ *       tags:
+ *         - COMMON SECTION
+ *       security:
+ *         - BearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           multipart/form-data:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 image:
+ *                   type: string
+ *                   format: binary
+ *       responses:
+ *         '200':
+ *           description: Avatar updated successfully
+ *         '400':
+ *           description: Invalid request
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '500':
+ *           description: Internal Server Error
+ */
+router.post(
+  '/api/auth/avatar',
+  uploadCloud.single('image'),
+  userController.updateUserAvatar,
+);
+/**
+ * @swagger
+ * paths:
+ *   /api/auth/user/information:
+ *     put:
+ *       summary: Update user information
+ *       description: Update the information of the authenticated user.
+ *       tags:
+ *         - USER SECTION
+ *       security:
+ *         - BearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 first_name:
+ *                   type: string
+ *                   description: The first name of the user.
+ *                   example: John
+ *                 last_name:
+ *                   type: string
+ *                   description: The last name of the user.
+ *                   example: Doe
+ *                 phone_number:
+ *                   type: string
+ *                   description: The phone number of the user.
+ *                   example: "0000000000"
+ *                 created_at:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The creation date of the user account.
+ *                   example: "2024-01-13T17:00:00.000Z"
+ *       responses:
+ *         '200':
+ *           description: User information updated successfully
+ *         '400':
+ *           description: Invalid request
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '500':
+ *           description: Internal Server Error
+ */
+router.put('/api/auth/user/information', userController.updateUserInfo);
 
 export default router;

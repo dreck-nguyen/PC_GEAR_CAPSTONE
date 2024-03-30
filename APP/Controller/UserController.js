@@ -118,3 +118,33 @@ export async function getPersonalBuildPc(req, res, next) {
     res.status(404).send({ error: error.message });
   }
 }
+export async function updateUserAvatar(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+
+  try {
+    const loginUser = req.loginUser;
+    const image = req.file;
+    console.log(image);
+    const [user] = await userService.updateUserAvatar(loginUser, image.path);
+    res.status(201).send(user);
+    t.commit();
+  } catch (error) {
+    t.rollback();
+    console.error(error);
+    res.status(404).send({ error: error.message });
+  }
+}
+export async function updateUserInfo(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const dataObj = req.body;
+    const user = await userService.updateUserInfo(loginUser, dataObj);
+    res.status(201).send(user);
+    t.commit();
+  } catch (error) {
+    t.rollback();
+    console.error(error);
+    res.status(404).send({ error: error.message });
+  }
+}

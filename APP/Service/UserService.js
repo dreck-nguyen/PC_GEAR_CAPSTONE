@@ -102,3 +102,13 @@ export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
     userPcBuildId,
   );
 }
+
+export async function updateUserAvatar(loginUser, image) {
+  const [result] = await userDAL.updateUserAvatar(loginUser.user_id, image);
+  return result;
+}
+
+export async function updateUserInfo(loginUser, dataObj) {
+  const [result] = await userDAL.updateUserInfo(loginUser.user_id, dataObj);
+  return result;
+}

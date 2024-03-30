@@ -22,14 +22,51 @@ export async function createShippingAddress(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
-      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
+
     const dataObj = req.body;
     const result = await shippingAddressService.createShippingAddress(
       loginUser.user_id,
       dataObj,
     );
     res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+export async function updateShippingAddress(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const dataObj = req.body;
+    const addressId = req.params.addressId;
+    dataObj.address_id = addressId;
+    const result = await shippingAddressService.updateShippingAddress(
+      loginUser.user_id,
+      dataObj,
+    );
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function deleteShippingAddress(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const addressId = req.params.addressId;
+
+    const result = await shippingAddressService.deleteShippingAddress(
+      loginUser.user_id,
+      addressId,
+    );
+    res.status(200).send({ deletedRecord: result });
     t.commit();
   } catch (error) {
     console.log(error);

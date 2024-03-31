@@ -2371,7 +2371,7 @@ router.delete(
  */
 /**
  * @swagger
- * /api/auth/user/order-status:
+ * /api/user/order-status:
  *   get:
  *     summary: Get order status for the authenticated user
  *     description: Retrieve the order status for the authenticated user.
@@ -2403,7 +2403,7 @@ router.get('/api/auth/user/order', orderController.getOrderByUserId);
 router.post('/api/auth/user/order', orderController.createOrderByUser);
 router.put('/api/order/:orderId', orderController.updateOrderStatus);
 router.get('/api/auth/user/order/:orderId', orderController.getOrderById);
-router.get('/api/auth/user/order-status/', orderController.getOrderStatus);
+router.get('/api/user/order-status', orderController.getOrderStatus);
 router.get(
   '/api/auth/user/order-status/:orderStatusId',
   orderController.getOrderStatusByStatusId,

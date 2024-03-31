@@ -1857,6 +1857,29 @@ router.delete(
  *       '500':
  *         description: Internal Server Error.
  */
+/**
+ * @swagger
+ * /api/cart-item/{cartItemId}:
+ *   delete:
+ *     summary: Delete a cart item
+ *     tags:
+ *       - CART ITEM SECTION
+ *     parameters:
+ *       - in: path
+ *         name: cartItemId
+ *         required: true
+ *         description: ID of the cart item to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Cart item deleted successfully
+ *       '404':
+ *         description: Cart item not found
+ *       '500':
+ *         description: Internal Server Error
+ */
+
 router.get(
   '/api/cart-item/:cartItemId',
   cartItemController.getCartItemDetailsByID,
@@ -1865,6 +1888,7 @@ router.put(
   '/api/cart-item/:cartItemId',
   cartItemController.updateCartItemQuantity,
 );
+router.delete('/api/cart-item/:cartItemId', cartItemController.deleteCartItem);
 router.post(
   '/api/auth/user/cart-item/:userPcBuildId',
   cartItemController.createCartItemByUserPcBuild,

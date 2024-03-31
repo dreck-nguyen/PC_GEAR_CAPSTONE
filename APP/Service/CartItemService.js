@@ -35,3 +35,6 @@ export async function createCartItemByUserPcBuild(loginUser, userPcBuildId) {
     );
   } else return existingCartItem;
 }
+export async function deleteCartItem(cartItemId) {
+  await cartItemDAL.deleteCartItem(cartItemId);
+}

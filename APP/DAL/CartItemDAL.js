@@ -23,6 +23,14 @@ export async function createCartItemByUserPcBuild(cartId, userPcBuildId) {
 
   return result;
 }
+export async function deleteCartItem(cartItemId) {
+  const sqlQuery = `
+    DELETE FROM public.cart_item WHERE cart_item_id = '${cartItemId}'
+  `;
+  await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+  });
+}
 export async function getCartItem(cartItemId) {
   const sqlQuery = `
   select * from cart c 

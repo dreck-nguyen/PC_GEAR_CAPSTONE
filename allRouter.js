@@ -262,6 +262,26 @@ router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
  *             example:
  *               error: Internal server error
  */
+/**
+ * @swagger
+ * /api/auth/admin/dashboard:
+ *   get:
+ *     summary: Get Dashboard
+ *     description: Retrieve information for dashboard
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - ADMIN SECTION
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
 router.get('/api/auth/admin/list/user', admController.getUsers);
 router.get('/api/auth/admin/cart', cartController.getUsersCart);
@@ -272,6 +292,7 @@ router.get(
   '/api/auth/admin/order-status',
   orderStatusController.getOrderStatus,
 );
+router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
 
 // PRODUCT SECTION
 /**

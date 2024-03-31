@@ -48,3 +48,45 @@ group by o.order_id,os.status_id,p.payment_id
 
   return userOrder;
 }
+
+export async function getDashboard() {
+  const sqlQuery = `
+ SELECT 'Product' AS entity_type, COUNT(*) AS entity_count
+FROM public.product
+UNION
+SELECT 'User' AS entity_type, COUNT(*) AS entity_count
+FROM public."user" u 
+UNION
+SELECT 'Order' AS entity_type, COUNT(*) AS entity_count
+FROM public."order" o 
+`;
+
+  const dashboard = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return dashboard;
+}
+export async function generateChart() {
+  const sqlQuery = `
+SELECT 
+    EXTRACT(MONTH FROM o.created_at) AS month,
+    SUM(od.quantity * od.unit_price) AS monthly_total
+FROM 
+    public."order" o
+JOIN 
+    public.order_detail od ON o.order_id = od.order_id
+GROUP BY 
+    EXTRACT(MONTH FROM o.created_at)
+ORDER BY 
+    EXTRACT(MONTH FROM o.created_at)
+`;
+
+  const chart = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return chart;
+}

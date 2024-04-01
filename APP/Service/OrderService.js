@@ -20,12 +20,15 @@ export async function getOrderById(orderId) {
 export async function createOrderByUser(loginUser, cartObject) {
   const userId = loginUser.user_id;
   const orderId = uuidv4();
+  console.log(userId, orderId);
   cartObject.userId = userId;
   cartObject.orderId = orderId;
   let quantity = 0;
   let total = 0;
-  const cartItems = cartObject.map((e) => e.cart_item_id);
+  const cartItems = cartObject.cartItemList.map((e) => e.cart_item_id);
   const cart = await cartItemDAL.getCartItemByUser(user_id, cartItems);
+  console.log(cartItems, cart);
+  throw new Error();
   for (const cartItem of cart) {
     if (cartItem.product_id) {
       quantity += cartItem.quantity;

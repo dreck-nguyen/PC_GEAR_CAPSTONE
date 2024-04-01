@@ -15,6 +15,15 @@ export async function getAllProduct(req, res, next) {
     res.status(404).send(error);
   }
 }
+export async function getProductByName(req, res, next) {
+  try {
+    const productName = req.query.productName;
+    const products = await productService.getProductByName(productName);
+    res.send(products);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
 export async function getPaginateProduct(req, res, next) {
   try {
     const limit = req.query.limit;

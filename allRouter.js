@@ -633,9 +633,41 @@ router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
  *       '500':
  *         description: Internal server error
  */
-
+/**
+ * @swagger
+ * tags:
+ *   - name: PRODUCT SECTION
+ *     description: Operations related to products
+ *
+ * @swagger
+ * /api/product/name:
+ *   get:
+ *     summary: Get products by name
+ *     description: Retrieve products by name.
+ *     tags:
+ *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: query
+ *         name: productName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the product to search for
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Success
+ *               data:
+ *                 products: [...]
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/api/product', productController.getAllProduct);
 router.get('/api/paginate/product', productController.getPaginateProduct);
+router.get('/api/product/name', productController.getProductByName);
 router.get('/api/product/:productId', productController.getProductById);
 router.put(
   '/api/auth/staff/product/:productId',

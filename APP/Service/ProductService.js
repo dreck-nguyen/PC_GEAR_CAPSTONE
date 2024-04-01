@@ -5,6 +5,10 @@ export async function getAllProduct() {
   const productsWithDetails = await productDAL.getAllProduct();
   return productsWithDetails;
 }
+export async function getProductByName(productName) {
+  const productsWithDetails = await productDAL.getProductByName(productName);
+  return productsWithDetails;
+}
 export async function getPaginateProduct(limit, offset) {
   const countProduct = await productDAL.countProduct();
   const productsWithDetails = await productDAL.getPaginateProduct(

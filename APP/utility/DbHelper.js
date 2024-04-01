@@ -107,6 +107,9 @@ const Order = sequelize.define(
     total: {
       type: DataTypes.DECIMAL(18, 2),
     },
+    quantity: {
+      type: DataTypes.INTEGER,
+    },
     payment_id: {
       type: DataTypes.UUID,
     },

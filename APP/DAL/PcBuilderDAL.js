@@ -271,8 +271,9 @@ export async function deletePersonalBuildPc(userId, userPcBuildId) {
 export async function getPersonalBuildPc(userId) {
   const sqlQuery = `
  
- SELECT 
+SELECT 
 upb.user_pc_build_id,
+upb.user_id,
 upb.profile_name,
 upb.motherboard_id,
 to_json(ms.*) AS motherboard_specification,
@@ -294,6 +295,8 @@ to_json(ss.*) AS storage_specification
 , to_json(cpu_cooler.*) AS cpu_cooler
 , upb.psu_id
 , to_json(psu.*) AS psu
+, upb.ram_quantity
+, upb.storage_quantity
 FROM 
 public.user_pc_build upb
 left join (

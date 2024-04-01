@@ -6,7 +6,7 @@ select
   o.order_id
   , o.user_id 
   , o.shipping_fee
-  , os.status_details 
+  , os.status_detail 
   , p.payment_method 
   , array_agg(jsonb_build_object(
   'order_detail_id', od.order_detail_id,
@@ -40,13 +40,29 @@ group by o.order_id,os.status_id,p.payment_id
   return userOrder;
 }
 
+export async function getOrderStatus() {
+  const sqlQuery = `
+select 
+ *
+from 
+  order_status
+`;
+
+  const orderStatus = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return orderStatus;
+}
+
 export async function getOrderByUserId(userId) {
   const sqlQuery = `
 select 
   o.order_id
   , o.user_id 
   , o.shipping_fee
-  , os.status_details 
+  , os.status_detail 
   , p.payment_method 
   , array_agg(jsonb_build_object(
   'order_detail_id', od.order_detail_id,
@@ -89,6 +105,7 @@ export async function createOrderByUser(orderObject) {
     status_id: orderObject.status_id,
     payment_id: orderObject.payment_id,
     shipping_fee: orderObject.shipping_fee,
+    quantity: orderObject.quantity,
     total: orderObject.total,
   });
 }
@@ -110,7 +127,7 @@ select
   o.order_id
   , o.user_id 
   , o.shipping_fee
-  , os.status_details 
+  , os.status_detail 
   , p.payment_method 
   , array_agg(jsonb_build_object(
   'order_detail_id', od.order_detail_id,

@@ -3,7 +3,10 @@ import * as commonFunction from '../Common/CommonFunction.js';
 import { v4 as uuidv4 } from 'uuid';
 export async function getAllProduct(limit, offset) {
   const countProduct = await productDAL.countProduct();
-  const productsWithDetails = await productDAL.getAllProduct(limit, offset);
+  const productsWithDetails = await productDAL.getAllProduct(
+    limit,
+    offset * limit,
+  );
   return { countProduct, productsWithDetails };
 }
 export async function getProductById(productId) {

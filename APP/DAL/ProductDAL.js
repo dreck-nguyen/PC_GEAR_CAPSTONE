@@ -4,7 +4,23 @@ import {
   SequelizeInstance,
 } from '../utility/DbHelper.js';
 
-export async function getAllProduct() {
+export async function countProduct() {
+  const sqlQuery = `
+SELECT 
+  COUNT(*)
+FROM
+  product
+`;
+
+  const productCount = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return productCount;
+}
+
+export async function getAllProduct(limit, offset) {
   const sqlQuery = `
 SELECT 
 p.product_id,
@@ -24,6 +40,7 @@ LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
 p.product_id, c.category_id, pb.product_brand_id
+limit  ${limit} OFFSET ${offset};
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {

@@ -9,7 +9,9 @@ dotenv.config();
 
 export async function getAllProduct(req, res, next) {
   try {
-    const products = await productService.getAllProduct();
+    const limit = req.query.limit;
+    const offset = req.query.offset;
+    const products = await productService.getAllProduct(limit, offset);
     res.send(products);
   } catch (error) {
     res.status(404).send(error);

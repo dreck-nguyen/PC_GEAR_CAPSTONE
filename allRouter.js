@@ -308,6 +308,17 @@ router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
  *     description: Retrieve a list of all products.
  *     tags:
  *       - PRODUCT SECTION
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of products to return
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *         description: Offset for pagination
  *     responses:
  *       200:
  *         description: Successful response

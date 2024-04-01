@@ -9,9 +9,17 @@ dotenv.config();
 
 export async function getAllProduct(req, res, next) {
   try {
+    const products = await productService.getAllProduct();
+    res.send(products);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
+export async function getPaginateProduct(req, res, next) {
+  try {
     const limit = req.query.limit;
     const offset = req.query.offset;
-    const products = await productService.getAllProduct(limit, offset);
+    const products = await productService.getPaginateProduct(limit, offset);
     res.send(products);
   } catch (error) {
     res.status(404).send(error);

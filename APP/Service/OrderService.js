@@ -24,6 +24,7 @@ export async function createOrderByUser(loginUser, cartObject) {
   cartObject.orderId = orderId;
   let quantity = 0;
   let total = 0;
+  const cartItems = cartObject.map((e) => e.cart_item_id);
   const cart = await cartItemDAL.getCartItemByUser(user_id, cartItems);
   for (const cartItem of cart) {
     if (cartItem.product_id) {

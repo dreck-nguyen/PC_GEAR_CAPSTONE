@@ -302,9 +302,9 @@ router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
  *     description: Operations related to categories
  *
  * @swagger
- * /api/product:
+ * /api/paginate/product:
  *   get:
- *     summary: Get all products
+ *     summary: Get paging all products
  *     description: Retrieve a list of all products.
  *     tags:
  *       - PRODUCT SECTION
@@ -319,6 +319,31 @@ router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
  *         schema:
  *           type: integer
  *         description: Offset for pagination
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Success
+ *               data:
+ *                 products: [...]
+ *       500:
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * tags:
+ *   - name: PRODUCT SECTION
+ *     description: Operations related to categories
+ *
+ * @swagger
+ * /api/product:
+ *   get:
+ *     summary: Get all products
+ *     description: Retrieve a list of all products.
+ *     tags:
+ *       - PRODUCT SECTION
  *     responses:
  *       200:
  *         description: Successful response
@@ -610,6 +635,7 @@ router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
  */
 
 router.get('/api/product', productController.getAllProduct);
+router.get('/api/paginate/product', productController.getPaginateProduct);
 router.get('/api/product/:productId', productController.getProductById);
 router.put(
   '/api/auth/staff/product/:productId',

@@ -1,9 +1,13 @@
 import * as productDAL from '../DAL/ProductDAL.js';
 import * as commonFunction from '../Common/CommonFunction.js';
 import { v4 as uuidv4 } from 'uuid';
-export async function getAllProduct(limit, offset) {
+export async function getAllProduct() {
+  const productsWithDetails = await productDAL.getAllProduct();
+  return productsWithDetails;
+}
+export async function getPaginateProduct(limit, offset) {
   const countProduct = await productDAL.countProduct();
-  const productsWithDetails = await productDAL.getAllProduct(
+  const productsWithDetails = await productDAL.getPaginateProduct(
     limit,
     offset * limit,
   );

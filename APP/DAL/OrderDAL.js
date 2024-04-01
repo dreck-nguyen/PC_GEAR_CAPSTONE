@@ -100,9 +100,9 @@ group by o.order_id,os.status_id,p.payment_id
 
 export async function createOrderByUser(orderObject) {
   await Order.create({
-    order_id: orderObject.order_id,
-    user_id: orderObject.user_id,
-    status_id: orderObject.status_id,
+    order_id: orderObject.orderId,
+    user_id: orderObject.userId,
+    status_id: orderObject.statusId,
     payment_id: orderObject.payment_id,
     shipping_fee: orderObject.shipping_fee,
     quantity: orderObject.quantity,

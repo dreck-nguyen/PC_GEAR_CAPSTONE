@@ -1922,7 +1922,7 @@ router.delete(
  */
 /**
  * @swagger
- * /api/auth/user/cart-item/{cartItemId}:
+ * /api/auth/user/cart-item/{userPcBuildId}:
  *   post:
  *     summary: Create a cart item for a user's PC build
  *     description: |
@@ -1933,7 +1933,7 @@ router.delete(
  *       - BearerAuth: []
  *     parameters:
  *       - in: path
- *         name: cartItemId
+ *         name: userPcBuildId
  *         required: true
  *         schema:
  *           type: string
@@ -2196,63 +2196,13 @@ router.delete(
  */
 
 /**
- * /api/order:
-    post:
-      summary: Create an order by user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                shipping_fee:
-                  type: string
-                  example: "0.00"
-                status_id:
-                  type: string
-                  format: uuid
-                  example: "dc097dbd-2a67-4172-becb-cea00040a661"
-                payment_id:
-                  type: string
-                  format: uuid
-                  example: "6c9f6c1a-9c4b-4716-943b-8dbb3934952b"
-                order_details:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      quantity:
-                        type: integer
-                        example: 5
-                      product_id:
-                        type: string
-                        format: uuid
-                        example: "6313edd7-5ad3-4014-930b-eb6e638be817"
-                      unit_price:
-                        type: integer
-                        example: 34900000
-              required:
-                - shipping_fee
-                - status_id
-                - payment_id
-                - order_details
-      responses:
-        '200':
-          description: Successful response
-        '400':
-          description: Bad Request
-        '500':
-          description: Internal Server Error
- */
-/**
  * @swagger
  * /api/auth/user/order:
  *   post:
  *     summary: Create a new order by user
- *     description: Create a new order with the specified details, including shipping fee, status ID, payment ID, and order details.
+ *     description: Create a new order with the specified details, including shipping fee, payment ID, and cart item list.
  *     security:
- *       -  BearerAuth: []
+ *       - BearerAuth: []
  *     tags:
  *       - ORDER SECTION
  *     requestBody:
@@ -2264,35 +2214,25 @@ router.delete(
  *             properties:
  *               shipping_fee:
  *                 type: number
- *                 description: The shipping fee for the order.
- *               status_id:
- *                 type: string
- *                 format: uuid
- *                 description: The ID of the order status.
+ *                 description: Shipping fee for the order
  *               payment_id:
  *                 type: string
  *                 format: uuid
- *                 description: The ID of the payment associated with the order.
- *               order_details:
+ *                 description: ID of the payment method used
+ *               cartItemList:
  *                 type: array
+ *                 description: List of items in the cart
  *                 items:
  *                   type: object
  *                   properties:
- *                     quantity:
- *                       type: integer
- *                       description: The quantity of the product in the order.
- *                     product_id:
+ *                     cart_item_id:
  *                       type: string
  *                       format: uuid
- *                       description: The ID of the product in the order.
- *                     unit_price:
- *                       type: number
- *                       description: The unit price of the product in the order.
+ *                       description: ID of the cart item
  *             required:
  *               - shipping_fee
- *               - status_id
  *               - payment_id
- *               - order_details
+ *               - cartItemList
  *     responses:
  *       '201':
  *         description: A successful response indicating the order has been created.

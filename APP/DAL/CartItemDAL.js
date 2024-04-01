@@ -130,6 +130,7 @@ export async function getCartItemByUser(userId, cartItemIds) {
   const sqlQuery = `
   select 
   ci.product_id,
+  p.unit_price,
   ci.quantity,
   ci.personal_build_pc_id,
   to_json(upb.*) as build_pc
@@ -138,6 +139,9 @@ from
 inner join cart_item ci
 on 1 = 1
 and c.cart_id = ci.cart_id 
+left join product p
+  on 1=1
+  and p.product_id = ci.product_id
 left join
   (SELECT 
 upb.user_pc_build_id,
@@ -405,12 +409,17 @@ group by upb.user_pc_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*, case_cooler.*,
   and upb.user_pc_build_id  = ci.personal_build_pc_id 
 where 1 = 1
 and c.user_id = '${userId}'
-and ci.cart_item_id = ANY (ARRAY[${cartItemIds}]::uuid[])
-group by upb.*,
-ci.product_id,
-  ci.quantity,
-  ci.personal_build_pc_id
+ AND ci.cart_item_id = any  (
+        SELECT UNNEST(STRING_TO_ARRAY('${cartItemIds}', ',')::uuid[])
+    )
+    GROUP BY 
+    upb.*,
+      ci.product_id,
+      ci.quantity,
+      ci.personal_build_pc_id,
+      p.unit_price;
   `;
+
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

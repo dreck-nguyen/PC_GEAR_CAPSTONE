@@ -6,7 +6,15 @@ export async function getOrderStatus() {
 export async function getDashboard() {
   const result = await orderStatusDAL.getDashboard();
   const chart = await orderStatusDAL.generateChart();
-  return [result, chart];
+
+  const chartMapped = chart.map(({ month, monthly_total }) => ({
+    month,
+    monthly_total,
+  }));
+
+  const total = chart[0]?.total || 0;
+
+  return { result, chart: chartMapped, total };
 }
 
 export async function getOrderStatusByStatusId(userId, orderStatusId) {

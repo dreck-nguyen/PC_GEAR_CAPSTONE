@@ -72,7 +72,7 @@ SELECT
     p.category_id,
     p.name,
     p.description,
-    p.unit_price,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
     p.discount,
     p.sold,
     c.name AS category_name,

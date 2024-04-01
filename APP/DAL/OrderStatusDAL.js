@@ -71,16 +71,24 @@ FROM public."order" o
 export async function generateChart() {
   const sqlQuery = `
 SELECT 
-    EXTRACT(MONTH FROM o.created_at) AS month,
-    SUM(od.quantity * od.unit_price) AS monthly_total
-FROM 
-    public."order" o
-JOIN 
-    public.order_detail od ON o.order_id = od.order_id
+    month,
+    TO_CHAR(monthly_total, 'FM999,999,999') AS monthly_total,
+    TO_CHAR(SUM(monthly_total), 'FM999,999,999') AS total
+FROM (
+    SELECT 
+        EXTRACT(MONTH FROM o.created_at) AS month,
+        SUM(od.quantity * od.unit_price) AS monthly_total
+    FROM 
+        public."order" o
+    JOIN 
+        public.order_detail od ON o.order_id = od.order_id
+    GROUP BY 
+        EXTRACT(MONTH FROM o.created_at)
+) AS monthly_totals
 GROUP BY 
-    EXTRACT(MONTH FROM o.created_at)
+    month, monthly_total
 ORDER BY 
-    EXTRACT(MONTH FROM o.created_at)
+    month;
 `;
 
   const chart = await SequelizeInstance.query(sqlQuery, {

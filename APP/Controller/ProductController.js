@@ -492,3 +492,19 @@ export async function upsertStorage(req, res, next) {
     t.rollback();
   }
 }
+
+export async function upsertCaseCooler(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const caseCoolerId = req.params.case_cooler_id;
+    const dataObj = req.body;
+    await productService.upsertCaseCooler(caseCoolerId, dataObj);
+    const result = await productService.getCaseCoolerById(caseCoolerId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

@@ -1458,6 +1458,7 @@ router.get(
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: 24d408df-c423-4545-bdf0-41445adeb999
  *         description: ID of the case to update
  *     requestBody:
  *       required: true
@@ -1749,6 +1750,64 @@ router.get(
  *       '500':
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/pc-component/case-cooler/{case_cooler_id}:
+ *   post:
+ *     summary: Update Case Cooler information by ID
+ *     description: Update Case Cooler information with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: case_cooler_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: c892e071-3a9e-4344-bdb4-b5faac099999
+ *         description: ID of the case cooler to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 enum: [CASE_COOLER]
+ *                 example: CASE_COOLER
+ *               brand:
+ *                 type: string
+ *                 example: ARCTIC
+ *               model:
+ *                 type: string
+ *                 example: P12 PST
+ *               airflow:
+ *                 type: string
+ *                 example: 56.30
+ *               fan_rpm:
+ *                 type: integer
+ *                 example: 1800
+ *               size:
+ *                 type: string
+ *                 example: 1203.00
+ *               color:
+ *                 type: string
+ *                 example: Black
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.post(
   '/api/pc-component/processor/:processor_id',
   productController.upsertProcessorSpec,
@@ -1767,13 +1826,9 @@ router.post(
   '/api/pc-component/storage/:storage_id',
   productController.upsertStorage,
 );
-router.get(
-  '/api/pc-component/auto-gen/:auto_gen_id',
-  productController.getAutoGenById,
-);
-router.get(
+router.post(
   '/api/pc-component/case-cooler/:case_cooler_id',
-  productController.getCaseCoolerById,
+  productController.upsertCaseCooler,
 );
 router.get(
   '/api/pc-component/cpu-cooler/:cpu_cooler_id',

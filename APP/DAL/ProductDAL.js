@@ -1654,3 +1654,48 @@ export async function upsertStorage(dataObj) {
 
   return result;
 }
+
+export async function upsertCaseCooler(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    model,
+    airflow,
+    fan_rpm,
+    size,
+    color,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.case_cooler_specification 
+    (specification_id, product_id, product_specification_type, brand, model, airflow, fan_rpm, "size", color) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        model = EXCLUDED.model,
+        airflow = EXCLUDED.airflow,
+        fan_rpm = EXCLUDED.fan_rpm,
+        "size" = EXCLUDED."size",
+        color = EXCLUDED.color
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      airflow,
+      fan_rpm,
+      size,
+      color,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}

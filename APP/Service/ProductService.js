@@ -376,3 +376,8 @@ export async function upsertStorage(storageId, dataObj) {
   dataObj.product_id = storageId;
   await productDAL.upsertStorage(dataObj);
 }
+export async function upsertCaseCooler(caseCoolerId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = caseCoolerId;
+  await productDAL.upsertCaseCooler(dataObj);
+}

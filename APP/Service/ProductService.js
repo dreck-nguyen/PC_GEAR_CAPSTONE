@@ -66,16 +66,20 @@ export async function getCaseCooler() {
 }
 //
 export async function getMonitorById(monitorId) {
-  return await productDAL.getMonitorById(monitorId);
+  const [result] = await productDAL.getMonitorById(monitorId);
+  return result;
 }
 export async function getPowerSupplyById(psuId) {
-  return await productDAL.getPowerSupplyById(psuId);
+  const [result] = await productDAL.getPowerSupplyById(psuId);
+  return result;
 }
 export async function getCpuCoolerById(cpuCoolerId) {
-  return await productDAL.getCpuCoolerById(cpuCoolerId);
+  const [result] = await productDAL.getCpuCoolerById(cpuCoolerId);
+  return result;
 }
 export async function getCaseCoolerById(caseCoolerId) {
-  return await productDAL.getCaseCoolerById(caseCoolerId);
+  const [result] = await productDAL.getCaseCoolerById(caseCoolerId);
+  return result;
 }
 //
 export async function getProcessorById(processorId) {
@@ -380,4 +384,22 @@ export async function upsertCaseCooler(caseCoolerId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = caseCoolerId;
   await productDAL.upsertCaseCooler(dataObj);
+}
+
+export async function upsertCpuCooler(cpuCoolerId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = cpuCoolerId;
+  await productDAL.upsertCpuCooler(dataObj);
+}
+
+export async function upsertPsu(psuId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = psuId;
+  await productDAL.upsertPsu(dataObj);
+}
+
+export async function upsertMonitor(monitorId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = monitorId;
+  await productDAL.upsertMonitor(dataObj);
 }

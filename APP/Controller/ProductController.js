@@ -508,3 +508,49 @@ export async function upsertCaseCooler(req, res, next) {
     t.rollback();
   }
 }
+export async function upsertCpuCooler(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const cpuCoolerId = req.params.cpu_cooler_id;
+    const dataObj = req.body;
+    await productService.upsertCpuCooler(cpuCoolerId, dataObj);
+    const result = await productService.getCpuCoolerById(cpuCoolerId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function upsertPsu(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const psuId = req.params.psu_id;
+    const dataObj = req.body;
+    await productService.upsertPsu(psuId, dataObj);
+    const result = await productService.getPowerSupplyById(psuId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+export async function upsertMonitor(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const monitorId = req.params.monitor_id;
+    const dataObj = req.body;
+    await productService.upsertMonitor(monitorId, dataObj);
+    const result = await productService.getMonitorById(monitorId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

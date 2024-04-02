@@ -1699,3 +1699,140 @@ export async function upsertCaseCooler(dataObj) {
 
   return result;
 }
+export async function upsertCpuCooler(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    model,
+    cpu_cooler,
+    fan_rpm,
+    noise_level,
+    fan_number,
+    cpu_cooler_size,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.cooler_specification 
+    (specification_id, product_id, product_specification_type, brand, model, cpu_cooler, fan_rpm, noise_level, fan_number, cpu_cooler_size) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        model = EXCLUDED.model,
+        cpu_cooler = EXCLUDED.cpu_cooler,
+        fan_rpm = EXCLUDED.fan_rpm,
+        noise_level = EXCLUDED.noise_level,
+        fan_number = EXCLUDED.fan_number,
+        cpu_cooler_size = EXCLUDED.cpu_cooler_size
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      cpu_cooler,
+      fan_rpm,
+      noise_level,
+      fan_number,
+      cpu_cooler_size,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+
+export async function upsertPsu(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    model,
+    form_factor,
+    power,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.power_supply_specification 
+    (specification_id, product_id, product_specification_type, brand, model, form_factor, power) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        model = EXCLUDED.model,
+        form_factor = EXCLUDED.form_factor,
+        power = EXCLUDED.power
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      form_factor,
+      power,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+
+export async function upsertMonitor(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    model,
+    screen_size,
+    resolution,
+    response_time,
+    aspect_ratio,
+    refresh_rate,
+    panel_type,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.monitor_specification 
+    (specification_id, product_id, product_specification_type, brand, model, screen_size, resolution, response_time, aspect_ratio, refresh_rate, panel_type) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        model = EXCLUDED.model,
+        screen_size = EXCLUDED.screen_size,
+        resolution = EXCLUDED.resolution,
+        response_time = EXCLUDED.response_time,
+        aspect_ratio = EXCLUDED.aspect_ratio,
+        refresh_rate = EXCLUDED.refresh_rate,
+        panel_type = EXCLUDED.panel_type
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      screen_size,
+      resolution,
+      response_time,
+      aspect_ratio,
+      refresh_rate,
+      panel_type,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}

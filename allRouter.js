@@ -1808,6 +1808,120 @@ router.get(
  *       '500':
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/pc-component/psu/{psu_id}:
+ *   post:
+ *     summary: Update PSU Information by ID
+ *     description: Update PSU information with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: psu_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 71e81089-08a0-4fd9-a7d3-a05d4e989999
+ *         description: ID of the PSU to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 example: TEST PSU V2
+ *               brand:
+ *                 type: string
+ *                 example: Thermaltake
+ *               model:
+ *                 type: string
+ *                 example: Toughpower PF1
+ *               form_factor:
+ *                 type: string
+ *                 example: ATX
+ *               power:
+ *                 type: integer
+ *                 example: 850
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
+/**
+ * @swagger
+ * /api/pc-component/monitor/{monitor_id}:
+ *   post:
+ *     summary: Update Monitor Information by ID
+ *     description: Update Monitor information with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: monitor_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 136f2f7f-2bf5-463a-8839-bc1135b9c999
+ *         description: ID of the monitor to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 example: TESST MONITOR SPEC
+ *               brand:
+ *                 type: string
+ *                 example: DELL
+ *               model:
+ *                 type: string
+ *                 example: SE2719H
+ *               screen_size:
+ *                 type: string
+ *                 example: 27.00
+ *               resolution:
+ *                 type: string
+ *                 example: 1920 x 1080
+ *               response_time:
+ *                 type: string
+ *                 example: 5.00
+ *               aspect_ratio:
+ *                 type: string
+ *                 example: 16:9
+ *               refresh_rate:
+ *                 type: string
+ *                 example: 60.00
+ *               panel_type:
+ *                 type: string
+ *                 example: IPS
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.post(
   '/api/pc-component/processor/:processor_id',
   productController.upsertProcessorSpec,
@@ -1830,17 +1944,14 @@ router.post(
   '/api/pc-component/case-cooler/:case_cooler_id',
   productController.upsertCaseCooler,
 );
-router.get(
+router.post(
   '/api/pc-component/cpu-cooler/:cpu_cooler_id',
-  productController.getCpuCoolerById,
+  productController.upsertCpuCooler,
 );
-router.get(
-  '/api/pc-component/psu/:psu_id',
-  productController.getPowerSupplyById,
-);
-router.get(
+router.post('/api/pc-component/psu/:psu_id', productController.upsertPsu);
+router.post(
   '/api/pc-component/monitor/:monitor_id',
-  productController.getMonitorById,
+  productController.upsertMonitor,
 );
 //
 /**

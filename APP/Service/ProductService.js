@@ -79,7 +79,7 @@ export async function getCaseCoolerById(caseCoolerId) {
 }
 //
 export async function getProcessorById(processorId) {
-  const result = await productDAL.getProcessorById(processorId);
+  const [result] = await productDAL.getProcessorById(processorId);
   return result;
 }
 export async function getMotherboardById(motherBoardId) {
@@ -340,4 +340,8 @@ export async function getRandomOne(dataObj) {
 
   const randomIndex = Math.floor(Math.random() * result.length);
   return result[randomIndex];
+}
+export async function upsertProcessorSpec(processorId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  await productDAL.upsertProcessorSpec(processorId, dataObj);
 }

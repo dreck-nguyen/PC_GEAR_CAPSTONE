@@ -1249,3 +1249,83 @@ group by pbp.pre_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
 
   return autoGenList;
 }
+export async function upsertProcessorSpec(processorId, dataObj) {
+  const {
+    specification_id,
+    product_specification_type,
+    brand,
+    model,
+    socket,
+    micro_architecture,
+    core_quantity,
+    threads_quantity,
+    clock_speed,
+    boost_speed_max,
+    cache,
+    memory_support,
+    channel_architecture,
+    power,
+    chipset,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.processor_specification (
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      socket,
+      micro_architecture,
+      core_quantity,
+      threads_quantity,
+      clock_speed,
+      boost_speed_max,
+      "cache",
+      memory_support,
+      channel_architecture,
+      power,
+      chipset
+    ) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+      product_specification_type = EXCLUDED.product_specification_type,
+      brand = EXCLUDED.brand,
+      model = EXCLUDED.model,
+      socket = EXCLUDED.socket,
+      micro_architecture = EXCLUDED.micro_architecture,
+      core_quantity = EXCLUDED.core_quantity,
+      threads_quantity = EXCLUDED.threads_quantity,
+      clock_speed = EXCLUDED.clock_speed,
+      boost_speed_max = EXCLUDED.boost_speed_max,
+      "cache" = EXCLUDED.cache,
+      memory_support = EXCLUDED.memory_support,
+      channel_architecture = EXCLUDED.channel_architecture,
+      power = EXCLUDED.power,
+      chipset = EXCLUDED.chipset
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      processorId,
+      product_specification_type,
+      brand,
+      model,
+      socket,
+      micro_architecture,
+      core_quantity,
+      threads_quantity,
+      clock_speed,
+      boost_speed_max,
+      cache,
+      memory_support,
+      channel_architecture,
+      power,
+      chipset,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT, // Use UPSERT type for Sequelize
+  });
+
+  return result;
+}

@@ -399,3 +399,18 @@ export async function getRandomOne(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+export async function upsertProcessorSpec(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const processorId = req.params.processor_id;
+    const dataObj = req.body;
+    await productService.upsertProcessorSpec(processorId, dataObj);
+    const result = await productService.getProcessorById(processorId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

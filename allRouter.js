@@ -1179,7 +1179,155 @@ router.get(
   '/api/pc-component/monitor/:monitor_id',
   productController.getMonitorById,
 );
-
+//
+/**
+ * @swagger
+ * /api/pc-component/processor/{processorId}:
+ *   post:
+ *     summary: Update processor specification
+ *     description: Update the specification of a processor component.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: processorId
+ *         required: true
+ *         description: ID of the processor component to update.
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 6313edd7-5ad3-4014-930b-eb6e638be999
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 description: Type of the product specification.
+ *               brand:
+ *                 type: string
+ *                 description: Brand of the processor.
+ *               model:
+ *                 type: string
+ *                 description: Model of the processor.
+ *               socket:
+ *                 type: string
+ *                 description: Socket type of the processor.
+ *               micro_architecture:
+ *                 type: string
+ *                 description: Microarchitecture of the processor.
+ *               core_quantity:
+ *                 type: integer
+ *                 description: Number of cores in the processor.
+ *               threads_quantity:
+ *                 type: integer
+ *                 description: Number of threads in the processor.
+ *               clock_speed:
+ *                 type: string
+ *                 description: Base clock speed of the processor.
+ *               boost_speed_max:
+ *                 type: string
+ *                 description: Maximum boost clock speed of the processor.
+ *               cache:
+ *                 type: integer
+ *                 description: Cache size of the processor in MB.
+ *               memory_support:
+ *                 type: string
+ *                 description: Memory support specification for the processor.
+ *               channel_architecture:
+ *                 type: string
+ *                 description: Memory channel architecture for the processor.
+ *               power:
+ *                 type: integer
+ *                 description: Power consumption of the processor in watts.
+ *               chipset:
+ *                 type: string
+ *                 description: Chipset compatibility of the processor.
+ *           example:
+ *             product_specification_type: PROCESSOR
+ *             brand: Intel
+ *             model: Intel Core i3-14100
+ *             socket: LGA 1700
+ *             micro_architecture: Raptor Lake Refresh
+ *             core_quantity: 4
+ *             threads_quantity: 8
+ *             clock_speed: 3.50 GHz
+ *             boost_speed_max: 4.00 GHz
+ *             cache: 12
+ *             memory_support: DDR4 - 3200 MHz
+ *             channel_architecture: Dual Channel
+ *             power: 120
+ *             chipset: Intel
+ *     responses:
+ *       '200':
+ *         description: A successful response indicating the processor specification has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Processor specification updated successfully.
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '401':
+ *         description: Unauthorized, missing or invalid authorization token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized, missing or invalid authorization token.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error.
+ */
+router.post(
+  '/api/pc-component/processor/:processor_id',
+  productController.upsertProcessorSpec,
+);
+router.get(
+  '/api/pc-component/motherboard/:motherboard_id',
+  productController.getMotherboardById,
+);
+router.get('/api/pc-component/case/:case_id', productController.getCaseById);
+router.get(
+  '/api/pc-component/graphics-card/:gpu_id',
+  productController.getGraphicsCardById,
+);
+router.get('/api/pc-component/ram/:ram_id', productController.getRamById);
+router.get(
+  '/api/pc-component/storage/:storage_id',
+  productController.getStorageById,
+);
+router.get(
+  '/api/pc-component/auto-gen/:auto_gen_id',
+  productController.getAutoGenById,
+);
+router.get(
+  '/api/pc-component/case-cooler/:case_cooler_id',
+  productController.getCaseCoolerById,
+);
+router.get(
+  '/api/pc-component/cpu-cooler/:cpu_cooler_id',
+  productController.getCpuCoolerById,
+);
+router.get(
+  '/api/pc-component/psu/:psu_id',
+  productController.getPowerSupplyById,
+);
+router.get(
+  '/api/pc-component/monitor/:monitor_id',
+  productController.getMonitorById,
+);
+//
 /**
  * @swagger
  * /api/pc-component/case-cooler:

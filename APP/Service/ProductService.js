@@ -83,30 +83,30 @@ export async function getProcessorById(processorId) {
   return result;
 }
 export async function getMotherboardById(motherBoardId) {
-  const result = await productDAL.getMotherboardById(motherBoardId);
+  const [result] = await productDAL.getMotherboardById(motherBoardId);
   return result;
 }
 export async function getCaseById(caseId) {
-  const result = await productDAL.getCaseById(caseId);
+  const [result] = await productDAL.getCaseById(caseId);
   return result;
 }
 export async function getGraphicsCardById(gpuId) {
-  const result = await productDAL.getGraphicsCardById(gpuId);
+  const [result] = await productDAL.getGraphicsCardById(gpuId);
   return result;
 }
 
 export async function getRamById(ramId) {
-  const result = await productDAL.getRamById(ramId);
+  const [result] = await productDAL.getRamById(ramId);
   return result;
 }
 
 export async function getAutoGenById(autoGenId) {
-  const result = await productDAL.getAutoGenById(autoGenId);
+  const [result] = await productDAL.getAutoGenById(autoGenId);
   return result;
 }
 
 export async function getStorageById(storageId) {
-  const result = await productDAL.getStorageById(storageId);
+  const [result] = await productDAL.getStorageById(storageId);
   return result;
 }
 
@@ -343,5 +343,18 @@ export async function getRandomOne(dataObj) {
 }
 export async function upsertProcessorSpec(processorId, dataObj) {
   dataObj.specification_id = uuidv4();
-  await productDAL.upsertProcessorSpec(processorId, dataObj);
+  dataObj.product_id = processorId;
+  await productDAL.upsertProcessorSpec(dataObj);
+}
+
+export async function upsertMotherboard(motherboardId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = motherboardId;
+  await productDAL.upsertMotherboard(dataObj);
+}
+
+export async function upsertCase(caseId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = caseId;
+  await productDAL.upsertCase(dataObj);
 }

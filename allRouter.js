@@ -1289,15 +1289,289 @@ router.get(
  *             example:
  *               error: Internal server error.
  */
+/**
+ * @swagger
+ * /api/pc-component/motherboard/{motherboardId}:
+ *   post:
+ *     summary: Update motherboard specification by ID
+ *     description: Update the motherboard specification with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: motherboardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 5444e504-0569-4cae-8306-8a48daefb999
+ *         description: ID of the motherboard to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 description: Type of product specification (e.g., MOTHERBOARD)
+ *               chipset:
+ *                 type: string
+ *                 description: Chipset of the motherboard
+ *               spu_socket:
+ *                 type: string
+ *                 description: Socket type of the motherboard
+ *               usb_details:
+ *                 type: string
+ *                 description: USB details of the motherboard
+ *               audio:
+ *                 type: string
+ *                 description: Audio details of the motherboard
+ *               ethernet_controller:
+ *                 type: string
+ *                 description: Ethernet controller details of the motherboard
+ *               wifi_antenna:
+ *                 type: string
+ *                 description: WiFi antenna details of the motherboard
+ *               memory_slots:
+ *                 type: string
+ *                 description: Number of memory slots of the motherboard
+ *               memory_supports:
+ *                 type: string
+ *                 description: Memory support details of the motherboard
+ *               maximum_capacity:
+ *                 type: string
+ *                 description: Maximum memory capacity supported by the motherboard
+ *               channel_architecture:
+ *                 type: string
+ *                 description: Channel architecture of the motherboard
+ *               sata:
+ *                 type: string
+ *                 description: SATA details of the motherboard
+ *               m2:
+ *                 type: string
+ *                 description: M.2 details of the motherboard
+ *               raid_support:
+ *                 type: string
+ *                 description: RAID support details of the motherboard
+ *               expansion_slots:
+ *                 type: string
+ *                 description: Expansion slot details of the motherboard
+ *               air_cooling:
+ *                 type: string
+ *                 description: Air cooling details of the motherboard
+ *               power_connectors:
+ *                 type: string
+ *                 description: Power connector details of the motherboard
+ *               audio_internal:
+ *                 type: string
+ *                 description: Internal audio details of the motherboard
+ *               rom:
+ *                 type: string
+ *                 description: ROM details of the motherboard
+ *               audio_codec:
+ *                 type: string
+ *                 description: Audio codec details of the motherboard
+ *               bluetooth:
+ *                 type: string
+ *                 description: Bluetooth version of the motherboard
+ *               wifi:
+ *                 type: string
+ *                 description: WiFi version of the motherboard
+ *               form_factor:
+ *                 type: string
+ *                 description: Form factor of the motherboard
+ *               brand:
+ *                 type: string
+ *                 description: Brand of the motherboard
+ *           example:
+ *             product_specification_type: "MOTHERBOARD"
+ *             chipset: "TEST MOTHER BOARD"
+ *             spu_socket: "TRX4"
+ *             usb_details: "1 x USB 3.2 Gen 2x2 Type-C,6 x USB 3.1 / USB 3.2 Gen 2 Type-A,1 x USB 3.1 / USB 3.2 Gen 2 Type-C,4 x USB 3.1 / USB 3.2 Gen 1 Type-A"
+ *             audio: "1 x S/PDIF,5 x 3.5 mm"
+ *             ethernet_controller: "1 x Intel® 10GbE LAN chip (10 Gbit/5 Gbit/2.5 Gbit/1 Gbit/100 Mbit), supporting 2 RJ-45 ports"
+ *             wifi_antenna: "2 x Connector"
+ *             memory_slots: "8"
+ *             memory_supports: "DDR4 2133, 2400, 2666, 2933, 3200 MHz"
+ *             maximum_capacity: "256 GB"
+ *             channel_architecture: "Quad Channel"
+ *             sata: "4 x SATA III"
+ *             m2: "1 x PCIe 3.0 x4"
+ *             raid_support: "RAID 0, 1, 10"
+ *             expansion_slots: "2 x PCIe 4.0 x16"
+ *             air_cooling: "2 x 4-Pin CPU,2 x 4-Pin System,1 x 2-Pin W_IN,1 x 2-Pin W_OUT,1 x 3-Pin W_FLOW"
+ *             power_connectors: "1 x 6-Pin ATX,1 x 24-Pin Mainboard,2 x 8-Pin ATX,1 x 4-Pin Molex"
+ *             audio_internal: "1 x Speaker"
+ *             rom: "2 x 128 Mb"
+ *             audio_codec: "Realtek® ALC4050H codec+Realtek® ALC1220-VB codec"
+ *             bluetooth: "5.00"
+ *             wifi: "Intel® Wi-Fi 6 AX200"
+ *             form_factor: "ATX"
+ *             brand: "GIGABYTE"
+ *     responses:
+ *       '200':
+ *         description: A successful response indicating the motherboard specification has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Motherboard specification updated successfully
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '401':
+ *         description: Unauthorized, user not authenticated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized, user not authenticated.
+ *       '404':
+ *         description: Motherboard specification not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Motherboard specification not found.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/case/{caseId}:
+ *   post:
+ *     summary: Update case specification by ID
+ *     description: Update the case specification with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: caseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID of the case to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 description: Type of product specification (e.g., CASE)
+ *               brand:
+ *                 type: string
+ *                 description: Brand of the case
+ *               cabinet_type:
+ *                 type: string
+ *                 description: Type of cabinet
+ *               side_panel_type:
+ *                 type: string
+ *                 description: Type of side panel
+ *               color:
+ *                 type: string
+ *                 description: Color of the case
+ *               motherboard_supports:
+ *                 type: string
+ *                 description: Motherboard support details
+ *               internal_drive_size:
+ *                 type: string
+ *                 description: Internal drive size details
+ *               gpu_length:
+ *                 type: string
+ *                 description: Maximum GPU length supported
+ *               support_psu_size:
+ *                 type: string
+ *                 description: Supported PSU size
+ *               front_panel:
+ *                 type: string
+ *                 description: Front panel details
+ *               cpu_cooler_support_size:
+ *                 type: string
+ *                 description: CPU cooler support size
+ *             example:
+ *               product_specification_type: "TESST CASSE V@"
+ *               brand: "Thermaltake CSAS"
+ *               cabinet_type: "Full Tower"
+ *               side_panel_type: "Tempered Glass"
+ *               color: "BLACK"
+ *               motherboard_supports: "E-ATX, ATX, Micro ATX, Mini ITX"
+ *               internal_drive_size: "2 x 3.5\", 2 x 2.5\""
+ *               gpu_length: "440 mm"
+ *               support_psu_size: "ATX"
+ *               front_panel: "1 x USB 3.2 Gen 1 Type-A"
+ *               cpu_cooler_support_size: "175 mm"
+ *     responses:
+ *       '200':
+ *         description: Case specification updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request, missing or invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *       '401':
+ *         description: Unauthorized, user not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *       '404':
+ *         description: Case specification not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ */
 router.post(
   '/api/pc-component/processor/:processor_id',
   productController.upsertProcessorSpec,
 );
-router.get(
+router.post(
   '/api/pc-component/motherboard/:motherboard_id',
-  productController.getMotherboardById,
+  productController.upsertMotherboard,
 );
-router.get('/api/pc-component/case/:case_id', productController.getCaseById);
+router.post('/api/pc-component/case/:case_id', productController.upsertCase);
 router.get(
   '/api/pc-component/graphics-card/:gpu_id',
   productController.getGraphicsCardById,

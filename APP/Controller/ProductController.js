@@ -414,3 +414,35 @@ export async function upsertProcessorSpec(req, res, next) {
     t.rollback();
   }
 }
+
+export async function upsertMotherboard(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const motherboardId = req.params.motherboard_id;
+    const dataObj = req.body;
+    await productService.upsertMotherboard(motherboardId, dataObj);
+    const result = await productService.getMotherboardById(motherboardId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function upsertCase(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const caseId = req.params.case_id;
+    const dataObj = req.body;
+    await productService.upsertCase(caseId, dataObj);
+    const result = await productService.getCaseById(caseId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

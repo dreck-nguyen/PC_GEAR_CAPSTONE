@@ -1249,9 +1249,10 @@ group by pbp.pre_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*
 
   return autoGenList;
 }
-export async function upsertProcessorSpec(processorId, dataObj) {
+export async function upsertProcessorSpec(dataObj) {
   const {
     specification_id,
+    product_id,
     product_specification_type,
     brand,
     model,
@@ -1308,7 +1309,7 @@ export async function upsertProcessorSpec(processorId, dataObj) {
   const result = await SequelizeInstance.query(sqlQuery, {
     replacements: [
       specification_id,
-      processorId,
+      product_id,
       product_specification_type,
       brand,
       model,
@@ -1324,7 +1325,184 @@ export async function upsertProcessorSpec(processorId, dataObj) {
       power,
       chipset,
     ],
-    type: SequelizeInstance.QueryTypes.UPSERT, // Use UPSERT type for Sequelize
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+export async function upsertMotherboard(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    chipset,
+    spu_socket,
+    usb_details,
+    audio,
+    ethernet_controller,
+    wifi_antenna,
+    memory_slots,
+    memory_supports,
+    maximum_capacity,
+    channel_architecture,
+    sata,
+    m2,
+    raid_support,
+    expansion_slots,
+    air_cooling,
+    power_connectors,
+    audio_internal,
+    rom,
+    audio_codec,
+    bluetooth,
+    wifi,
+    form_factor,
+    brand,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.motherboard_specification (
+      specification_id,
+      product_id,
+      product_specification_type,
+      chipset,
+      spu_socket,
+      usb_details,
+      audio,
+      ethernet_controller,
+      wifi_antenna,
+      memory_slots,
+      memory_supports,
+      maximum_capacity,
+      channel_architecture,
+      sata,
+      m2,
+      raid_support,
+      expansion_slots,
+      air_cooling,
+      power_connectors,
+      audio_internal,
+      rom,
+      audio_codec,
+      bluetooth,
+      wifi,
+      form_factor,
+      brand
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+      product_id = EXCLUDED.product_id,
+      product_specification_type = EXCLUDED.product_specification_type,
+      chipset = EXCLUDED.chipset,
+      spu_socket = EXCLUDED.spu_socket,
+      usb_details = EXCLUDED.usb_details,
+      audio = EXCLUDED.audio,
+      ethernet_controller = EXCLUDED.ethernet_controller,
+      wifi_antenna = EXCLUDED.wifi_antenna,
+      memory_slots = EXCLUDED.memory_slots,
+      memory_supports = EXCLUDED.memory_supports,
+      maximum_capacity = EXCLUDED.maximum_capacity,
+      channel_architecture = EXCLUDED.channel_architecture,
+      sata = EXCLUDED.sata,
+      m2 = EXCLUDED.m2,
+      raid_support = EXCLUDED.raid_support,
+      expansion_slots = EXCLUDED.expansion_slots,
+      air_cooling = EXCLUDED.air_cooling,
+      power_connectors = EXCLUDED.power_connectors,
+      audio_internal = EXCLUDED.audio_internal,
+      rom = EXCLUDED.rom,
+      audio_codec = EXCLUDED.audio_codec,
+      bluetooth = EXCLUDED.bluetooth,
+      wifi = EXCLUDED.wifi,
+      form_factor = EXCLUDED.form_factor,
+      brand = EXCLUDED.brand
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      chipset,
+      spu_socket,
+      usb_details,
+      audio,
+      ethernet_controller,
+      wifi_antenna,
+      memory_slots,
+      memory_supports,
+      maximum_capacity,
+      channel_architecture,
+      sata,
+      m2,
+      raid_support,
+      expansion_slots,
+      air_cooling,
+      power_connectors,
+      audio_internal,
+      rom,
+      audio_codec,
+      bluetooth,
+      wifi,
+      form_factor,
+      brand,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+
+export async function upsertCase(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    cabinet_type,
+    side_panel_type,
+    color,
+    motherboard_supports,
+    internal_drive_size,
+    gpu_length,
+    support_psu_size,
+    front_panel,
+    cpu_cooler_support_size,
+  } = dataObj;
+ const sqlQuery = `
+    INSERT INTO public.case_specification 
+    (specification_id, product_id, product_specification_type, brand, cabinet_type, side_panel_type, color, motherboard_supports, internal_drive_size, gpu_length, support_psu_size, front_panel, cpu_cooler_support_size) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        cabinet_type = EXCLUDED.cabinet_type,
+        side_panel_type = EXCLUDED.side_panel_type,
+        color = EXCLUDED.color,
+        motherboard_supports = EXCLUDED.motherboard_supports,
+        internal_drive_size = EXCLUDED.internal_drive_size,
+        gpu_length = EXCLUDED.gpu_length,
+        support_psu_size = EXCLUDED.support_psu_size,
+        front_panel = EXCLUDED.front_panel,
+        cpu_cooler_support_size = EXCLUDED.cpu_cooler_support_size
+  `;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      cabinet_type,
+      side_panel_type,
+      color,
+      motherboard_supports,
+      internal_drive_size,
+      gpu_length,
+      support_psu_size,
+      front_panel,
+      cpu_cooler_support_size,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
   });
 
   return result;

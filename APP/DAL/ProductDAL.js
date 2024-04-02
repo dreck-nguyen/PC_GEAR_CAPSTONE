@@ -904,7 +904,7 @@ FROM
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN processor_specification ps  on p.product_id = ps.product_id 
+INNER JOIN processor_specification ps on p.product_id = ps.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
 `;
@@ -997,7 +997,7 @@ FROM
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN graphics_specification gs  on p.product_id = gs.product_id 
+INNER JOIN graphics_specification gs on p.product_id = gs.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
 `;
@@ -1028,7 +1028,7 @@ FROM
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN ram_specification rs  on p.product_id = rs.product_id 
+INNER JOIN ram_specification rs on p.product_id = rs.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, rs.product_id, rs.specification_id
 `;

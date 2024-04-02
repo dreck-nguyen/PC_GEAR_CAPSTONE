@@ -1630,6 +1630,125 @@ router.get(
  *       '500':
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/pc-component/ram/{ram_id}:
+ *   post:
+ *     summary: Update RAM information by ID
+ *     description: Update RAM information with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: ram_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 252d452b-5b6d-4a87-9213-b43f6cac9999
+ *         description: ID of the RAM to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 enum: [RAM]
+ *                 example: RAM
+ *               brand:
+ *                 type: string
+ *                 example: TEAMGROUP
+ *               warranty:
+ *                 type: string
+ *                 example: 3.00
+ *               memory:
+ *                 type: string
+ *                 example: 32 GB (1 x 32 GB)
+ *               ram_type:
+ *                 type: string
+ *                 example: DDR4-3200 MHz
+ *               cas_latency:
+ *                 type: string
+ *                 example: CL16
+ *               dimm_type:
+ *                 type: string
+ *                 example: 260-PIN
+ *               voltage:
+ *                 type: string
+ *                 example: 1.5
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
+/**
+ * @swagger
+ * /api/pc-component/storage/{storage_id}:
+ *   post:
+ *     summary: Update Storage information by ID
+ *     description: Update Storage information with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: storage_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 252d452b-5b6d-4a87-9213-b43f6cac9999
+ *         description: ID of the storage to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 enum: [STORAGE]
+ *                 example: STORAGE
+ *               brand:
+ *                 type: string
+ *                 example: Samsung
+ *               model:
+ *                 type: string
+ *                 example: EVO 970
+ *               type:
+ *                 type: string
+ *                 example: SSD
+ *               interface_type:
+ *                 type: string
+ *                 example: PCIe 3.0 x4
+ *               form_factor:
+ *                 type: string
+ *                 example: M.2-2280
+ *               capacity:
+ *                 type: string
+ *                 example: 1 TB
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.post(
   '/api/pc-component/processor/:processor_id',
   productController.upsertProcessorSpec,
@@ -1643,10 +1762,10 @@ router.post(
   '/api/pc-component/graphics-card/:gpu_id',
   productController.upsertGraphicsCard,
 );
-router.get('/api/pc-component/ram/:ram_id', productController.getRamById);
-router.get(
+router.post('/api/pc-component/ram/:ram_id', productController.upsertRam);
+router.post(
   '/api/pc-component/storage/:storage_id',
-  productController.getStorageById,
+  productController.upsertStorage,
 );
 router.get(
   '/api/pc-component/auto-gen/:auto_gen_id',

@@ -364,3 +364,15 @@ export async function upsertGraphicsCard(gpuId, dataObj) {
   dataObj.product_id = gpuId;
   await productDAL.upsertGraphicsCard(dataObj);
 }
+
+export async function upsertRam(ramId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = ramId;
+  await productDAL.upsertRam(dataObj);
+}
+
+export async function upsertStorage(storageId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = storageId;
+  await productDAL.upsertStorage(dataObj);
+}

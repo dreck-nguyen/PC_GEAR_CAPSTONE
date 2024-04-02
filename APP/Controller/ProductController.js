@@ -461,3 +461,34 @@ export async function upsertGraphicsCard(req, res, next) {
     t.rollback();
   }
 }
+export async function upsertRam(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const ramId = req.params.ram_id;
+    const dataObj = req.body;
+    await productService.upsertRam(ramId, dataObj);
+    const result = await productService.getRamById(ramId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function upsertStorage(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const storageId = req.params.storage_id;
+    const dataObj = req.body;
+    await productService.upsertStorage(storageId, dataObj);
+    const result = await productService.getStorageById(storageId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

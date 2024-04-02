@@ -1561,3 +1561,96 @@ export async function upsertGraphicsCard(dataObj) {
 
   return result;
 }
+
+export async function upsertRam(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    warranty,
+    memory,
+    ram_type,
+    cas_latency,
+    dimm_type,
+    voltage,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.ram_specification 
+    (specification_id, product_id, product_specification_type, brand, warranty, memory, ram_type, cas_latency, dimm_type, voltage) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        warranty = EXCLUDED.warranty,
+        memory = EXCLUDED.memory,
+        ram_type = EXCLUDED.ram_type,
+        cas_latency = EXCLUDED.cas_latency,
+        dimm_type = EXCLUDED.dimm_type,
+        voltage = EXCLUDED.voltage
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      warranty,
+      memory,
+      ram_type,
+      cas_latency,
+      dimm_type,
+      voltage,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+
+export async function upsertStorage(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    model,
+    type,
+    interface_type,
+    form_factor,
+    capacity,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.storage_specification 
+    (specification_id, product_id, product_specification_type, brand, model, "type", form_factor, capacity, "interface") 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        model = EXCLUDED.model,
+        "type" = EXCLUDED."type",
+        form_factor = EXCLUDED.form_factor,
+        capacity = EXCLUDED.capacity,
+        "interface" = EXCLUDED.interface
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      model,
+      type,
+      form_factor,
+      capacity,
+      interface_type,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}

@@ -3203,11 +3203,57 @@ router.delete(
  *             example:
  *               error: "Internal server error"
  */
+/**
+ * @swagger
+ * /api/user/order-status/{order_id}:
+ *   put:
+ *     summary: Update Order Status by ID
+ *     description: Update the status of an order with the specified ID.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - ORDER SECTION
+ *     parameters:
+ *       - in: path
+ *         name: order_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: da7dcd6d-4d7d-48c4-9111-ae6b0309c5d4
+ *         description: ID of the order to update the status
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status_id:
+ *                 type: string
+ *                 format: uuid
+ *                 example: b56803ff-b2cd-42e8-8171-d2459e92b58f
+ *                 description: ID of the new status
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.get('/api/auth/user/order', orderController.getOrderByUserId);
 router.post('/api/auth/user/order', orderController.createOrderByUser);
-router.put('/api/order/:orderId', orderController.updateOrderStatus);
 router.get('/api/auth/user/order/:orderId', orderController.getOrderById);
 router.get('/api/user/order-status', orderController.getOrderStatus);
+router.put(
+  '/api/user/order-status/:orderId',
+  orderController.updateOrderStatus,
+);
 router.get(
   '/api/auth/user/order-status/:orderStatusId',
   orderController.getOrderStatusByStatusId,

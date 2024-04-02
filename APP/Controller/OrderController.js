@@ -82,9 +82,6 @@ export async function updateOrderStatus(req, res, next) {
 }
 export async function getOrderStatus(req, res, next) {
   try {
-    // const loginUser = req.loginUser;
-    // if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
-    throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await orderStatusService.getOrderStatus();
     res.status(200).send(result);
     next();

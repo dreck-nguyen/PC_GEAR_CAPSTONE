@@ -446,3 +446,18 @@ export async function upsertCase(req, res, next) {
     t.rollback();
   }
 }
+export async function upsertGraphicsCard(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const gpuId = req.params.gpu_id;
+    const dataObj = req.body;
+    await productService.upsertGraphicsCard(gpuId, dataObj);
+    const result = await productService.getGraphicsCardById(gpuId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}

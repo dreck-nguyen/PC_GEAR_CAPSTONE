@@ -1469,7 +1469,7 @@ export async function upsertCase(dataObj) {
     front_panel,
     cpu_cooler_support_size,
   } = dataObj;
- const sqlQuery = `
+  const sqlQuery = `
     INSERT INTO public.case_specification 
     (specification_id, product_id, product_specification_type, brand, cabinet_type, side_panel_type, color, motherboard_supports, internal_drive_size, gpu_length, support_psu_size, front_panel, cpu_cooler_support_size) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -1501,6 +1501,60 @@ export async function upsertCase(dataObj) {
       support_psu_size,
       front_panel,
       cpu_cooler_support_size,
+    ],
+    type: SequelizeInstance.QueryTypes.UPSERT,
+  });
+
+  return result;
+}
+
+export async function upsertGraphicsCard(dataObj) {
+  const {
+    specification_id,
+    product_id,
+    product_specification_type,
+    brand,
+    chipset,
+    memory,
+    benchmark,
+    max_power_consumption,
+    base_clock_speed,
+    length,
+    cooler_type,
+    interface_type,
+  } = dataObj;
+
+  const sqlQuery = `
+    INSERT INTO public.graphics_specification 
+    (specification_id, product_id, product_specification_type, brand, chipset, memory, benchmark, max_power_consumption, base_clock_speed, length, cooler_type, interface) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (product_id) DO UPDATE SET
+        product_specification_type = EXCLUDED.product_specification_type,
+        brand = EXCLUDED.brand,
+        chipset = EXCLUDED.chipset,
+        memory = EXCLUDED.memory,
+        benchmark = EXCLUDED.benchmark,
+        max_power_consumption = EXCLUDED.max_power_consumption,
+        base_clock_speed = EXCLUDED.base_clock_speed,
+        length = EXCLUDED.length,
+        cooler_type = EXCLUDED.cooler_type,
+        interface = EXCLUDED.interface
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [
+      specification_id,
+      product_id,
+      product_specification_type,
+      brand,
+      chipset,
+      memory,
+      benchmark,
+      max_power_consumption,
+      base_clock_speed,
+      length,
+      cooler_type,
+      interface_type,
     ],
     type: SequelizeInstance.QueryTypes.UPSERT,
   });

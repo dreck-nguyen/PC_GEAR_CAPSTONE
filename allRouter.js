@@ -1563,6 +1563,73 @@ router.get(
  *                   type: string
  *                   description: Error message
  */
+/**
+ * @swagger
+ * /api/pc-component/graphics-card/{gpu_id}:
+ *   post:
+ *     summary: Update graphics card specification by ID
+ *     description: Update the graphics card specification with the specified ID.
+ *     tags:
+ *       - PC COMPONENT SECTION
+ *     parameters:
+ *       - in: path
+ *         name: gpu_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: 6313edd7-5ad3-4014-930b-eb6e638b9999
+ *         description: ID of the graphics card to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_specification_type:
+ *                 type: string
+ *                 enum: [GRAPHICS_CARD]
+ *                 example: GRAPHICS_CARD
+ *               brand:
+ *                 type: string
+ *                 example: MSI
+ *               chipset:
+ *                 type: string
+ *                 example: GeForce RTX 3050
+ *               memory:
+ *                 type: string
+ *                 example: 8 GB (GDDR6)
+ *               benchmark:
+ *                 type: string
+ *                 example: 39647.00
+ *               max_power_consumption:
+ *                 type: integer
+ *                 example: 252
+ *               base_clock_speed:
+ *                 type: integer
+ *                 example: 1552
+ *               length:
+ *                 type: string
+ *                 example: 213.00
+ *               cooler_type:
+ *                 type: string
+ *                 example: 2 x Fan
+ *               interface_type:
+ *                 type: string
+ *                 example: PCIe 4.0 x 10
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 router.post(
   '/api/pc-component/processor/:processor_id',
   productController.upsertProcessorSpec,
@@ -1572,9 +1639,9 @@ router.post(
   productController.upsertMotherboard,
 );
 router.post('/api/pc-component/case/:case_id', productController.upsertCase);
-router.get(
+router.post(
   '/api/pc-component/graphics-card/:gpu_id',
-  productController.getGraphicsCardById,
+  productController.upsertGraphicsCard,
 );
 router.get('/api/pc-component/ram/:ram_id', productController.getRamById);
 router.get(

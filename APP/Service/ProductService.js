@@ -358,3 +358,9 @@ export async function upsertCase(caseId, dataObj) {
   dataObj.product_id = caseId;
   await productDAL.upsertCase(dataObj);
 }
+
+export async function upsertGraphicsCard(gpuId, dataObj) {
+  dataObj.specification_id = uuidv4();
+  dataObj.product_id = gpuId;
+  await productDAL.upsertGraphicsCard(dataObj);
+}

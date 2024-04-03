@@ -2535,6 +2535,14 @@ router.post('/api/user/register', userController.registerUser);
  *                 format: uuid
  *                 nullable: true
  *                 description: The ID of the psu used in the personal PC build.
+ *               ram_quantity:
+ *                 type: int
+ *                 example: 1
+ *                 description: The ID of the psu used in the personal PC build.
+ *               storage_quantity:
+ *                 type: int
+ *                 example: 1
+ *                 description: The ID of the psu used in the personal PC build.
  *     responses:
  *       200:
  *         description: Personal PC build created successfully.

@@ -4,7 +4,7 @@ export async function getCartUser(userId) {
   const sqlQuery = `
  select 
   c.*,
-   ARRAY_AGG(
+  ci.*,
     JSONB_BUILD_OBJECT(
       'cart_item_id', ci.cart_item_id,
       'product_id', ci.product_id,
@@ -13,8 +13,7 @@ export async function getCartUser(userId) {
       'unit_price', TO_CHAR(p.unit_price, 'FM999,999,999'),
       'created_at', ci.created_at,
       'images', pg.images
-    )
-  ) AS product_list,
+    ) AS product_detail,
   sum(ci.quantity) as product_total,
   ci.personal_build_pc_id,
   to_json(upb.*) as build_pc_details 
@@ -43,9 +42,9 @@ left join
   on 1=1 
   and upb.user_pc_build_id  = ci.personal_build_pc_id 
 where 1=1 
-and c.user_id ='${userId}'
+and c.user_id = '${userId}'
 group by 
-  c.cart_id,ci.personal_build_pc_id,upb.*
+  c.cart_id,ci.personal_build_pc_id,upb.*,ci.*,ci.cart_item_id,p.name,p.unit_price,pg.images
 `;
 
   const userCart = await SequelizeInstance.query(sqlQuery, {

@@ -308,9 +308,14 @@ left join (
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
@@ -332,9 +337,14 @@ left join (
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
@@ -356,9 +366,14 @@ left join (
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
@@ -380,9 +395,14 @@ left join (
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
@@ -405,9 +425,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		ms.*
 	from
@@ -434,9 +459,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		ps.*
 	from
@@ -463,9 +493,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		cs.*
 	from
@@ -492,9 +527,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		gs.*
 	from
@@ -521,9 +561,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		rs.*
 	from
@@ -550,9 +595,14 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
+		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
+		p.discount,
+		p.sold,
+		c."name" as category_name,
+		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
 		ss.*
 	from

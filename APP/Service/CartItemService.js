@@ -27,12 +27,15 @@ export async function createCartItemByUserPcBuild(loginUser, userPcBuildId) {
     loginUser.user_id,
     userPcBuildId,
   );
+  const [countTotal] = await cartItemDAL.countItemsInCart(userPcBuildId);
 
   if (!existingCartItem) {
-    return await cartItemDAL.createCartItemByUserPcBuild(
+    const [result] = await cartItemDAL.createCartItemByUserPcBuild(
       cart_id,
       userPcBuildId,
+      countTotal.total > 0 ? countTotal.total : 1,
     );
+    return result;
   } else return existingCartItem;
 }
 export async function deleteCartItem(cartItemId) {

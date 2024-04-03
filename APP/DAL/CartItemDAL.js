@@ -9,14 +9,18 @@ export async function createCartItem(product) {
   });
 }
 
-export async function createCartItemByUserPcBuild(cartId, userPcBuildId) {
+export async function createCartItemByUserPcBuild(
+  cartId,
+  userPcBuildId,
+  countTotal,
+) {
   const sqlQuery = `
-    INSERT INTO public.cart_item (cart_item_id, cart_id, created_at, personal_build_pc_id) 
-    VALUES (gen_random_uuid(), :cart_id, now(), :userPcBuildId)
+    INSERT INTO public.cart_item (cart_item_id, cart_id, created_at, personal_build_pc_id, quantity) 
+    VALUES (gen_random_uuid(), :cart_id, now(), :userPcBuildId, :countTotal)
     RETURNING *;
   `;
   const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: { cart_id: cartId, userPcBuildId: userPcBuildId },
+    replacements: { cart_id: cartId, userPcBuildId: userPcBuildId, countTotal },
     type: SequelizeInstance.QueryTypes.INSERT,
     raw: true,
   });
@@ -62,6 +66,74 @@ export async function getCartItemByUserPcBuild(userId, pcBuildId) {
  select * from cart c 
   inner join cart_item ci on c.cart_id = ci.cart_id
   where c.user_id = '${userId}' and ci.personal_build_pc_id = '${pcBuildId}'
+  `;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function countItemsInCart(pcBuildId) {
+  const sqlQuery = `
+ with base as (
+    SELECT 
+        case 
+            when motherboard_id is not null then 1
+            else 0 
+        end as motherboard_count,
+        case 
+            when processor_id is not null then 1
+            else 0 
+        end as processor_count,
+        case 
+            when cpu_cooler_id is not null then 1
+            else 0 
+        end as cpu_cooler_count,
+        case 
+            when case_id is not null then 1
+            else 0 
+        end as case_count,
+        case 
+            when gpu_id is not null then 1
+            else 0 
+        end as gpu_count,
+        case 
+            when ram_id is not null then ram_quantity
+            else 0 
+        end as ram_count,
+        case 
+            when storage_id is not null then storage_quantity
+            else 0 
+        end as storage_count,
+        case 
+            when case_cooler_id is not null then 1
+            else 0 
+        end as case_cooler_count,
+        case 
+            when monitor_id is not null then 1
+            else 0 
+        end as monitor_count,
+        case 
+            when psu_id is not null then 1
+            else 0 
+        end as psu_count 
+    FROM public.user_pc_build
+    WHERE user_pc_build_id = '${pcBuildId}'
+)
+SELECT
+    SUM(motherboard_count) + 
+    SUM(processor_count) + 
+    SUM(cpu_cooler_count) + 
+    SUM(case_count) + 
+    SUM(gpu_count) + 
+    SUM(ram_count) + 
+    SUM(storage_count) + 
+    SUM(case_cooler_count) + 
+    SUM(monitor_count) + 
+    SUM(psu_count) AS total
+FROM
+    base
   `;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

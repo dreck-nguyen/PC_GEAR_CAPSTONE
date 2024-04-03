@@ -291,26 +291,16 @@ export async function getPersonalBuildPc(userId) {
 	upb.ram_id,
 	to_json(rs.*) as ram_specification,
 	upb.storage_id,
-	to_json(ss.*) as storage_specification
-,
-	upb.case_cooler_id
-,
-	to_json(case_cooler.*) as case_cooler
-,
-	upb.monitor_id
-,
-	to_json(monitor.*) as monitor
-,
-	upb.cpu_cooler_id
-,
-	to_json(cpu_cooler.*) as cpu_cooler
-,
-	upb.psu_id
-,
-	to_json(psu.*) as psu
-,
-	upb.ram_quantity
-,
+	to_json(ss.*) as storage_specification,
+	upb.case_cooler_id,
+	to_json(case_cooler.*) as case_cooler,
+	upb.monitor_id,
+	to_json(monitor.*) as monitor,
+	upb.cpu_cooler_id,
+	to_json(cpu_cooler.*) as cpu_cooler,
+	upb.psu_id,
+	to_json(psu.*) as psu,
+	upb.ram_quantity,
 	upb.storage_quantity
 from
 	public.user_pc_build upb

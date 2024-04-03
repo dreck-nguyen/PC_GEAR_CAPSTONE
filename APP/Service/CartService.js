@@ -67,7 +67,7 @@ export async function createCart(loginUser, cartObject) {
   }
 }
 export async function getUserCart(userId) {
-  const [userCart] = await cartDAL.getCartUser(userId);
+  const userCart = await cartDAL.getCartUser(userId);
   return userCart;
 }
 

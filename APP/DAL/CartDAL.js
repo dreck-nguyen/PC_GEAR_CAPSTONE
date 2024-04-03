@@ -199,16 +199,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		ms.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on
@@ -233,16 +228,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		ps.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on
@@ -267,16 +257,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		cs.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on
@@ -301,16 +286,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		gs.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on
@@ -335,16 +315,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		rs.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on
@@ -369,16 +344,11 @@ left join
 	select
 		p.product_id as primary_product_id,
 		p."name",
-		p.description,
 		p.unit_price,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		p.discount,
-		p.sold,
-		c."name" as category_name,
-		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links,
-		ss.*
+		ARRAY_AGG(pg.image) as image_links
 	from
 		product p
 	left outer join category c on

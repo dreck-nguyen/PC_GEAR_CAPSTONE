@@ -246,15 +246,11 @@ public.user_pc_build upb
 left join (
   SELECT 
   p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.unit_price,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links
+		p."name",
+		p.unit_price,
+		TO_CHAR(p.unit_price,
+		'FM999,999,999') as price,
+		ARRAY_AGG(pg.image) as image_links
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
@@ -268,15 +264,11 @@ and psu.primary_product_id = upb.psu_id
 left join (
   SELECT 
   p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.unit_price,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links
+		p."name",
+		p.unit_price,
+		TO_CHAR(p.unit_price,
+		'FM999,999,999') as price,
+		ARRAY_AGG(pg.image) as image_links
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
@@ -290,15 +282,11 @@ and case_cooler.primary_product_id = upb.case_cooler_id
 left join (
   SELECT 
   p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.unit_price,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links
+		p."name",
+		p.unit_price,
+		TO_CHAR(p.unit_price,
+		'FM999,999,999') as price,
+		ARRAY_AGG(pg.image) as image_links
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
@@ -312,15 +300,11 @@ and case_cooler.primary_product_id = upb.monitor_id
 left join (
   SELECT 
   p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.unit_price,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links
+		p."name",
+		p.unit_price,
+		TO_CHAR(p.unit_price,
+		'FM999,999,999') as price,
+		ARRAY_AGG(pg.image) as image_links
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
@@ -335,15 +319,11 @@ LEFT JOIN
 (
 SELECT 
   p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.unit_price,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
+		p."name",
+		p.unit_price,
+		TO_CHAR(p.unit_price,
+		'FM999,999,999') as price,
+		ARRAY_AGG(pg.image) as image_links,
   ms.*
 FROM 
   product p

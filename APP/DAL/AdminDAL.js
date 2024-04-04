@@ -31,3 +31,33 @@ export async function getUsers() {
   });
   return userList;
 }
+export async function getStaffRole() {
+  const sqlQuery = `
+  select * from user_role ur where role = 'STAFF'
+`;
+  const userList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return userList;
+}
+
+export async function registerStaff(dataObj) {
+  const { user_id, email, hashed_password, role_id } = dataObj;
+  const sqlQuery = `
+  INSERT INTO public."user" (user_id, email, "password", role_id, created_at) 
+  VALUES(:user_id, :email, :password, :role_id, now())
+    RETURNING *;
+`;
+  const userList = await SequelizeInstance.query(sqlQuery, {
+    replacements: {
+      user_id: user_id,
+      email: email,
+      password: hashed_password,
+      role_id: role_id,
+    },
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
+  return userList;
+}

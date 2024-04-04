@@ -7,8 +7,13 @@ import * as orderStatusService from '../Service/OrderStatusService.js';
 export async function getUsersOrder(req, res, next) {
   try {
     const loginUser = req.loginUser;
-    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
-      throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
+      throw new Error(
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
+      );
     const result = await orderService.getUsersOrder();
     res.status(200).send(result);
     next();

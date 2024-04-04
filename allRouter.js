@@ -16,23 +16,6 @@ import * as shippingAddressController from './APP/Controller/ShippingAddressCont
 import * as pcBuilderController from './APP/Controller/PcBuilderController.js';
 const router = express.Router();
 // PC BUILD SECTION
-/**
- * @swagger
- * /api/auth/staff/pc-build-auto:
- *   get:
- *     summary: Endpoint for automated PC build
- *     security:
- *       -  BearerAuth: []
- *     tags:
- *       - STAFF AUTHENTICATION
- *     description: Retrieve a randomly generated PC build.
- *     responses:
- *       '200':
- *         description: A successful response
- *       '500':
- *         description: An internal server error occurred
- */
-router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 
 // ADMIN SECTION
 /**
@@ -282,6 +265,39 @@ router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/auth/admin/create-staff:
+ *   post:
+ *     summary: Create staff member (Admin)
+ *     description: Create a new staff member account by an admin user.
+ *     tags:
+ *       - ADMIN SECTION
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The username of the new staff member.
+ *                 example: johndoe
+ *               password:
+ *                 type: string
+ *                 description: The password of the new staff member.
+ *                 example: pass123
+ *     responses:
+ *       200:
+ *         description: Successfully created staff member.
+ *       401:
+ *         description: Unauthorized, admin not authenticated.
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/api/admin/login', admController.loginAdmin);
 router.get('/api/auth/admin/list/user', admController.getUsers);
 router.get('/api/auth/admin/cart', cartController.getUsersCart);
@@ -293,6 +309,7 @@ router.get(
   orderStatusController.getOrderStatus,
 );
 router.get('/api/auth/admin/dashboard', orderStatusController.getDashboard);
+router.post('/api/auth/admin/create-staff', admController.registerStaff);
 
 // PRODUCT SECTION
 /**
@@ -3481,7 +3498,7 @@ router.delete(
  *     summary: Staff Login
  *     description: Authenticate staff member and generate access token.
  *     tags:
- *       - STAFF AUTHENTICATION
+ *       - STAFF SECTION
  *     requestBody:
  *       required: true
  *       content:
@@ -3507,7 +3524,43 @@ router.delete(
  *       500:
  *         description: Internal Server Error
  */
+/**
+ * @swagger
+ * /api/auth/staff/order:
+ *   get:
+ *     summary: Get orders for staff member
+ *     description: Retrieve orders associated with the authenticated staff member.
+ *     tags:
+ *       - STAFF SECTION
+ *     security:
+ *       -  BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved orders.
+ *       401:
+ *         description: Unauthorized, user not authenticated.
+ *       500:
+ *         description: Internal Server Error
+ */
+/**
+ * @swagger
+ * /api/auth/staff/pc-build-auto:
+ *   get:
+ *     summary: Endpoint for automated PC build
+ *     security:
+ *       -  BearerAuth: []
+ *     tags:
+ *       - STAFF SECTION
+ *     description: Retrieve a randomly generated PC build.
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *       '500':
+ *         description: An internal server error occurred
+ */
+router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 router.post('/api/staff/login', userController.loginStaff);
+router.get('/api/auth/staff/order', orderController.getUsersOrder);
 
 /**
  * @swagger
@@ -3548,12 +3601,12 @@ router.post(
 /**
  * @swagger
  * paths:
- *   /api/auth/user/information:
+ *   /api/auth/information:
  *     put:
  *       summary: Update user information
  *       description: Update the information of the authenticated user.
  *       tags:
- *         - USER SECTION
+ *         - COMMON SECTION
  *       security:
  *         - BearerAuth: []
  *       requestBody:
@@ -3590,6 +3643,6 @@ router.post(
  *         '500':
  *           description: Internal Server Error
  */
-router.put('/api/auth/user/information', userController.updateUserInfo);
+router.put('/api/auth/information', userController.updateUserInfo);
 
 export default router;

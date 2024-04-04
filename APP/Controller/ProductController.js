@@ -46,6 +46,13 @@ export async function getProductById(req, res, next) {
 
 export async function getProductsByCategory(req, res, next) {
   try {
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
+      throw new Error(
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
+      );
     const categoryId = req.params.categoryId;
     const products = await productService.getProductsByCategory(categoryId);
     res.send(products);
@@ -57,9 +64,12 @@ export async function updateProductById(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
       throw new Error(
-        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const productId = req.params.productId;
     const product = req.body;
@@ -77,14 +87,14 @@ export async function updateProductById(req, res, next) {
 export async function createProduct(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
-    // const image = req.file || [];
-    // console.log(image);
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER)) {
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
       throw new Error(
-        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
-    }
 
     const product = req.body;
     console.log(product);
@@ -102,11 +112,13 @@ export async function createProductImage(req, res, next) {
   try {
     const loginUser = req.loginUser;
     console.log(loginUser);
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER)) {
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
       throw new Error(
-        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
-    }
     const images = req.file;
     console.log(images);
     const productId = req.params.productId;
@@ -125,9 +137,12 @@ export async function deleteProductById(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
       throw new Error(
-        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const productId = req.params.productId;
     await productService.deleteProductByID(productId);
@@ -143,9 +158,12 @@ export async function deleteProductsById(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    if (commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+    if (
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
+    )
       throw new Error(
-        `YOUR ROLE MUST HIGHER THAN ${commonEnums.USER_ROLE.USER}`,
+        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const productIds = req.body.productIds;
     await productService.deleteProductsByID(productIds);

@@ -4,6 +4,7 @@ import * as admService from '../Service/AdminService.js';
 import dotenv from 'dotenv';
 import * as commonEnums from '../Common/CommonEnums.js';
 import * as commonFunction from '../Common/CommonFunction.js';
+import { SequelizeInstance } from '../utility/DbHelper.js';
 dotenv.config();
 
 const router = express.Router();
@@ -42,5 +43,21 @@ export async function getUsers(req, res, next) {
   } catch (e) {
     console.log(e);
     res.send(e);
+  }
+}
+export async function registerStaff(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN))
+      throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
+    const dataObj = req.body;
+    const users = await admService.registerStaff(dataObj);
+    res.status(200).send(users);
+    t.commit();
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+    t.rollback();
   }
 }

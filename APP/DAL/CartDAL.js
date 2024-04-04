@@ -4,23 +4,19 @@ export async function getCartUser(userId) {
   const sqlQuery = `
  select
 	c.*,
-	JSONB_BUILD_OBJECT(
-      'cart_item_id',
-	ci.cart_item_id,
-	'product_id',
-	ci.product_id,
-	'product_name',
-	p.name,
-	'quantity',
-	ci.quantity,
-	'unit_price',
-	TO_CHAR(p.unit_price,
-	'FM999,999,999'),
-	'created_at',
-	ci.created_at,
-	'images',
-	pg.images
-    ) as product_detail,
+	
+  ci.*,
+  ARRAY_AGG(
+    JSONB_BUILD_OBJECT(
+      'cart_item_id', ci.cart_item_id,
+      'product_id', ci.product_id,
+      'product_name', p.name,
+      'quantity', ci.quantity,
+      'unit_price', TO_CHAR(p.unit_price, 'FM999,999,999'),
+      'created_at', ci.created_at,
+      'images', pg.images
+     )
+  ) AS product_list,
 	sum(ci.quantity) as product_total,
 	ci.personal_build_pc_id,
 	to_json(upb.*) as build_pc_details

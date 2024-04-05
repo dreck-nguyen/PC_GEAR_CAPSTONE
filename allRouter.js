@@ -3652,6 +3652,8 @@ router.put('/api/auth/information', userController.updateUserInfo);
  *     post:
  *       summary: Create Payment URL
  *       description: Creates a payment URL for the given order details
+ *       tags:
+ *         - VNPAY SECTION
  *       requestBody:
  *         required: true
  *         content:

@@ -419,7 +419,7 @@ left join (
   ) cpu_cooler
 on
 	1 = 1
-	and case_cooler.primary_product_id = upb.cpu_cooler_id
+	and cpu_cooler.primary_product_id = upb.cpu_cooler_id
 left join 
 (
 	select

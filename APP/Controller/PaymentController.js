@@ -115,7 +115,6 @@ export async function getVnpayIpn(req, res) {
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
   const t = await SequelizeInstance.transaction();
-
   try {
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -138,7 +137,6 @@ export async function getVnpayReturn(req, res) {
 
     if (secureHash === signed) {
       console.log(vnp_Params);
-
       await orderService.updateOrderPaymentStatus(orderId, true);
       res.send({ code: vnp_Params['vnp_ResponseCode'], success: true });
     } else {

@@ -46,13 +46,6 @@ export async function getProductById(req, res, next) {
 
 export async function getProductsByCategory(req, res, next) {
   try {
-    if (
-      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
-      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
-    )
-      throw new Error(
-        `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
-      );
     const categoryId = req.params.categoryId;
     const products = await productService.getProductsByCategory(categoryId);
     res.send(products);

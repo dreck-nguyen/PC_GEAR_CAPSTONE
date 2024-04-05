@@ -109,6 +109,25 @@ export async function createOrderByUser(orderObject) {
     total: orderObject.total,
   });
 }
+export async function updateOrderPaymentStatus(orderId, stage) {
+  const sqlQuery = `
+    UPDATE
+      public."order"
+    SET
+      payment_date = now(),
+      vnpay_status = :stage
+    WHERE
+      order_id = :orderId
+  `;
+
+  const orderDetail = await SequelizeInstance.query(sqlQuery, {
+    replacements: { orderId, stage },
+    type: SequelizeInstance.QueryTypes.UPDATE,
+    raw: true,
+  });
+
+  return orderDetail;
+}
 
 export async function updateOrderStatus(orderId, statusId) {
   await Order.update(

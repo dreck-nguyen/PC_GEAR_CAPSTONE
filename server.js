@@ -7,6 +7,10 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import jwt from 'jsonwebtoken';
 import * as userService from './APP/Service/UserService.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 const specs = swaggerJSDoc(options);
 const app = express();
@@ -75,6 +79,8 @@ app.use(function (err, req, res, next) {
   });
   next();
 });
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(function (req, res, next) {
   const err = new Error('Not Found');

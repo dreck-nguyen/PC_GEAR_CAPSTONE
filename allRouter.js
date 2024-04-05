@@ -3644,5 +3644,55 @@ router.post(
  *           description: Internal Server Error
  */
 router.put('/api/auth/information', userController.updateUserInfo);
+// VN_PAY SECTION
+/**
+ * @swagger
+ * paths:
+ *   /create_payment_url:
+ *     post:
+ *       summary: Create Payment URL
+ *       description: Creates a payment URL for the given order details
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 amount:
+ *                   type: integer
+ *                   description: The amount of the payment
+ *                   example: 82622000
+ *                 bankCode:
+ *                   type: string
+ *                   description: The bank code for the payment
+ *                   example: NCB
+ *                 orderId:
+ *                   type: string
+ *                   description: The ID of the order
+ *                   example: f415f1db-908f-4044-811e-702e6afd7990
+ *                 orderDescription:
+ *                   type: string
+ *                   description: The description of the order
+ *                   example: Order description here
+ *                 orderType:
+ *                   type: string
+ *                   description: The type of the order
+ *                   example: SomeOrderType
+ *                 language:
+ *                   type: string
+ *                   description: The language for the payment page
+ *                   example: vn
+ *       responses:
+ *         '200':
+ *           description: Successful operation
+ *         '400':
+ *           description: Invalid request body
+ *         '500':
+ *           description: Internal server error
+ */
+router.post('/create_payment_url', paymentController.createPaymentUrl);
+router.get('/vnpay_ipn', paymentController.getVnpayIpn);
+router.get('/order/vnpay_return', paymentController.getVnpayReturn);
 
 export default router;

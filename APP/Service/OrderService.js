@@ -203,3 +203,7 @@ export async function createOrderByUser(loginUser, cartObject) {
 export async function updateOrderStatus(orderId, statusId) {
   await orderDAL.updateOrderStatus(orderId, statusId);
 }
+
+export async function updateOrderPaymentStatus(orderId, stage) {
+  await orderDAL.updateOrderPaymentStatus(orderId, stage);
+}

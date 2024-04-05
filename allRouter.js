@@ -3059,64 +3059,7 @@ router.delete(
  *             example:
  *               error: Internal server error
  */
-/**
- * @swagger
- * /api/order/{orderId}:
- *   put:
- *     summary: Update order status
- *     description: Update the status of an order by providing the orderId in the path and the new status_id in the request body.
- *     tags:
- *       - ORDER SECTION
- *     parameters:
- *       - in: path
- *         name: orderId
- *         required: true
- *         description: The ID of the order to update.
- *         schema:
- *           type: string
- *           format: uuid
- *           example:  0d5a8629-9aaf-4fe0-9b4b-7fd627d9177c
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               status_id:
- *                 type: string
- *                 format: uuid
- *                 description: The ID of the new status for the order.
- *                 example: b56803ff-b2cd-42e8-8171-d2459e92b58f
- *             required:
- *               - status_id
- *     responses:
- *       '200':
- *         description: A successful response indicating the order status has been updated.
- *         content:
- *           application/json:
- *             example:
- *               orderId: "0d5a8629-9aaf-4fe0-9b4b-7fd627d9177c"
- *               status_id: "b56803ff-b2cd-42e8-8171-d2459e92b58f"
- *       '404':
- *         description: The specified order ID was not found.
- *         content:
- *           application/json:
- *             example:
- *               error: Order not found
- *       '400':
- *         description: Bad request, missing or invalid parameters.
- *         content:
- *           application/json:
- *             example:
- *               error: Bad request, missing or invalid parameters.
- *       '500':
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             example:
- *               error: Internal server error
- */
+
 /**
  * @swagger
  * /api/auth/user/order/{orderId}:
@@ -3202,8 +3145,8 @@ router.delete(
  * @swagger
  * /api/user/order-status:
  *   get:
- *     summary: Get order status for the authenticated user
- *     description: Retrieve the order status for the authenticated user.
+ *     summary: Get order status for the authenticated user / staff/ admin
+ *     description: Retrieve the order status for the authenticated user / staff/ admin
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -3261,15 +3204,30 @@ router.delete(
  *                 description: ID of the new status
  *     responses:
  *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
+ *         description: A successful response indicating the order status has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               orderId: "0d5a8629-9aaf-4fe0-9b4b-7fd627d9177c"
+ *               status_id: "b56803ff-b2cd-42e8-8171-d2459e92b58f"
  *       '404':
- *         description: Not Found
+ *         description: The specified order ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Order not found
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
  *       '500':
- *         description: Internal Server Error
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
  */
 router.get('/api/auth/user/order', orderController.getOrderByUserId);
 router.post('/api/auth/user/order', orderController.createOrderByUser);

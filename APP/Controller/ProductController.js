@@ -145,7 +145,7 @@ export async function deleteProductById(req, res, next) {
         `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const productId = req.params.productId;
-    await productService.deleteProductByID(productId);
+    // await productService.deleteProductByID(productId);
     res.status(200).send({ message: 'PRODUCT DELETE SUCCESS' });
     await t.commit();
   } catch (error) {
@@ -166,7 +166,7 @@ export async function deleteProductsById(req, res, next) {
         `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const productIds = req.body.productIds;
-    await productService.deleteProductsByID(productIds);
+    // await productService.deleteProductsByID(productIds);
     res.status(200).send({ message: 'PRODUCTS DELETE SUCCESS' });
     await t.commit();
   } catch (error) {

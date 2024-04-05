@@ -79,8 +79,6 @@ LEFT OUTER JOIN
     product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
-ORDER BY 
-    p.product_id
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
@@ -115,8 +113,6 @@ WHERE
   p."name" like '%${productName}%'
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
-ORDER BY 
-    p.product_id
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {

@@ -59,9 +59,7 @@ from
 export async function getOrderByUserId(userId) {
   const sqlQuery = `
 select 
-  o.order_id
-  , o.user_id 
-  , o.shipping_fee
+  o.*
   , os.status_detail 
   , p.payment_method 
   , array_agg(jsonb_build_object(

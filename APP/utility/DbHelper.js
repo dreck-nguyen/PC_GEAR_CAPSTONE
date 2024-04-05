@@ -135,7 +135,7 @@ const OrderStatus = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    status_details: {
+    status_detail: {
       type: DataTypes.STRING(255),
     },
     updated_at: {

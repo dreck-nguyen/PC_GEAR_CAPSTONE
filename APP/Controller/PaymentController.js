@@ -8,6 +8,7 @@ import dateFormat from 'dateformat';
 import moment from 'moment';
 import querystring from 'qs';
 import crypto from 'crypto';
+import { SequelizeInstance } from '../utility/DbHelper.js';
 dotenv.config();
 
 export async function getPayment(req, res, next) {
@@ -113,6 +114,8 @@ export async function getVnpayIpn(req, res) {
 
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
+  const t = await SequelizeInstance.transaction();
+
   try {
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -135,13 +138,16 @@ export async function getVnpayReturn(req, res) {
 
     if (secureHash === signed) {
       console.log(vnp_Params);
+
       await orderService.updateOrderPaymentStatus(orderId, true);
       res.send({ code: vnp_Params['vnp_ResponseCode'], success: true });
     } else {
       await orderService.updateOrderPaymentStatus(orderId, false);
       res.send({ code: '97', success: false });
     }
+    t.commit();
   } catch (e) {
+    t.rollback();
     console.log(e);
     res.send(e);
   }

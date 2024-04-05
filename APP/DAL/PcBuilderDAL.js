@@ -390,7 +390,7 @@ left join (
   ) monitor
 on
 	1 = 1
-	and case_cooler.primary_product_id = upb.monitor_id
+	and monitor.primary_product_id = upb.monitor_id
 left join (
 	select
 		p.product_id as primary_product_id,

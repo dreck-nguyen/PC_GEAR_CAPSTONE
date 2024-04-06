@@ -202,8 +202,8 @@ export async function getCartItemByUser(userId, cartItemIds) {
   const sqlQuery = `
   select 
   ci.product_id,
-  p.unit_price,
-  ci.quantity,
+  p.unit_price::numeric,
+  ci.quantity::numeric,
   ci.personal_build_pc_id,
   to_json(upb.*) as build_pc
 from 

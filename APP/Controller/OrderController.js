@@ -62,7 +62,6 @@ export async function createOrderByUser(req, res, next) {
     const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send(result);
     t.commit();
-    next();
   } catch (error) {
     t.rollback();
     console.log(error);

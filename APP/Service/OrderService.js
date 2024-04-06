@@ -28,10 +28,11 @@ export async function createOrderByUser(loginUser, cartObject) {
     .map((e) => e.cart_item_id)
     .join(',');
   const cart = await cartItemDAL.getCartItemByUser(userId, cartItems);
+
   for (const cartItem of cart) {
     if (cartItem.product_id) {
       quantity += cartItem.quantity;
-      total += cartItem.unit_price;
+      total += Number(cartItem.unit_price);
 
       const orderDetails = {
         order_detail_id: uuidv4(),
@@ -197,7 +198,7 @@ export async function createOrderByUser(loginUser, cartObject) {
   await orderDAL.createOrderByUser(cartObject);
   for (const cartItem of cartObject.cartItemList) {
     console.log(cartItem.cart_item_id);
-    await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
+    // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
   }
 }
 export async function updateOrderStatus(orderId, statusId) {

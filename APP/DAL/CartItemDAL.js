@@ -247,7 +247,7 @@ left join (
   SELECT 
   p.product_id as primary_product_id,
 		p."name",
-		p.unit_price,
+		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		ARRAY_AGG(pg.image) as image_links
@@ -265,7 +265,7 @@ left join (
   SELECT 
   p.product_id as primary_product_id,
 		p."name",
-		p.unit_price,
+		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		ARRAY_AGG(pg.image) as image_links
@@ -283,7 +283,7 @@ left join (
   SELECT 
   p.product_id as primary_product_id,
 		p."name",
-		p.unit_price,
+		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		ARRAY_AGG(pg.image) as image_links
@@ -296,12 +296,12 @@ GROUP BY
   p.product_id, c.category_id, pb.product_brand_id
   ) monitor
 on 1 = 1
-and case_cooler.primary_product_id = upb.monitor_id
+and monitor.primary_product_id = upb.monitor_id
 left join (
   SELECT 
   p.product_id as primary_product_id,
 		p."name",
-		p.unit_price,
+		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		ARRAY_AGG(pg.image) as image_links
@@ -314,13 +314,13 @@ GROUP BY
   p.product_id, c.category_id, pb.product_brand_id
   ) cpu_cooler
 on 1 = 1
-and case_cooler.primary_product_id = upb.cpu_cooler_id
+and cpu_cooler.primary_product_id = upb.cpu_cooler_id
 LEFT JOIN 
 (
 SELECT 
   p.product_id as primary_product_id,
 		p."name",
-		p.unit_price,
+		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
 		ARRAY_AGG(pg.image) as image_links,
@@ -341,7 +341,7 @@ LEFT JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    p.unit_price,
+    p.unit_price::numeric,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
@@ -365,7 +365,7 @@ LEFT JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    p.unit_price,
+    p.unit_price::numeric,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
@@ -389,7 +389,7 @@ LEFT JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    p.unit_price,
+    p.unit_price::numeric,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
@@ -413,7 +413,7 @@ LEFT JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    p.unit_price,
+    p.unit_price::numeric,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,
@@ -437,7 +437,7 @@ LEFT JOIN
     p.product_id as primary_product_id,
     p."name",
     p.description,
-    p.unit_price,
+    p.unit_price::numeric,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
     p.discount,
     p.sold,

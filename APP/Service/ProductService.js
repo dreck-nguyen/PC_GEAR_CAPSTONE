@@ -270,7 +270,6 @@ export async function getAutoGen(dataObj) {
 }
 export async function getRandomOne(dataObj) {
   let result = await productDAL.getAutoGen();
-
   if (dataObj) {
     result = result
       .filter((e) => {

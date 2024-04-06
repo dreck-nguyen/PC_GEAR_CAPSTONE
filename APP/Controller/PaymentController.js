@@ -37,12 +37,13 @@ export async function createPaymentUrl(req, res, next) {
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
     var orderId = req.body.orderId;
-    var amount = Number(req.body.amount);
-    var bankCode = req.body.bankCode;
+    const [order] = await orderService.getOrdersByOrderId(orderId);
+    var amount = order.total;
+    var bankCode = 'NCB';
 
-    var orderInfo = req.body.orderDescription;
-    var orderType = req.body.orderType;
-    var locale = req.body.language;
+    var orderInfo = 'PAYMENT ONLINE';
+    var orderType = '130000';
+    var locale = 'vn';
     if (locale === null || locale === '') {
       locale = 'vn';
     }

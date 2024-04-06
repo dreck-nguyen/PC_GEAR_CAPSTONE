@@ -208,3 +208,7 @@ export async function updateOrderStatus(orderId, statusId) {
 export async function updateOrderPaymentStatus(orderId, stage) {
   await orderDAL.updateOrderPaymentStatus(orderId, stage);
 }
+
+export async function getOrdersByOrderId(orderId) {
+  return await orderDAL.getOrdersByOrderId(orderId);
+}

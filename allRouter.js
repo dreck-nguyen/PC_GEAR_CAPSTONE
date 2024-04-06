@@ -3619,30 +3619,10 @@ router.put('/api/auth/information', userController.updateUserInfo);
  *             schema:
  *               type: object
  *               properties:
- *                 amount:
- *                   type: integer
- *                   description: The amount of the payment
- *                   example: 82622000
- *                 bankCode:
- *                   type: string
- *                   description: The bank code for the payment
- *                   example: NCB
  *                 orderId:
  *                   type: string
  *                   description: The ID of the order
  *                   example: f415f1db-908f-4044-811e-702e6afd7990
- *                 orderDescription:
- *                   type: string
- *                   description: The description of the order
- *                   example: Order description here
- *                 orderType:
- *                   type: string
- *                   description: The type of the order
- *                   example: SomeOrderType
- *                 language:
- *                   type: string
- *                   description: The language for the payment page
- *                   example: vn
  *       responses:
  *         '200':
  *           description: Successful operation

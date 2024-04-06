@@ -179,3 +179,20 @@ group by o.order_id,os.status_id,p.payment_id
 
   return orderDetail;
 }
+export async function getOrdersByOrderId(orderId) {
+  const sqlQuery = `
+select 
+  o.total::numeric
+from 
+  "order" o
+where
+  o.order_id = '${orderId}'
+`;
+
+  const orderDetail = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return orderDetail;
+}

@@ -215,3 +215,8 @@ export async function updateOrderPaymentStatus(orderId, stage) {
 export async function getOrdersByOrderId(orderId) {
   return await orderDAL.getOrdersByOrderId(orderId);
 }
+
+export async function deleteOrderAndOrderDetailByOrderByID(orderId) {
+  await orderDAL.deleteOrderByOrderBy(orderId);
+  await orderDetailDAL.deleteOrderDetailByOrderBy(orderId);
+}

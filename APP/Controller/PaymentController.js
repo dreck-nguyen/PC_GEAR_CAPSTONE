@@ -22,6 +22,7 @@ export async function getPayment(req, res, next) {
 }
 
 export async function createPaymentUrl(req, res, next) {
+  var orderId = req.body.orderId;
   try {
     var ipAddr =
       req.headers['x-forwarded-for'] ||
@@ -33,10 +34,8 @@ export async function createPaymentUrl(req, res, next) {
     var secretKey = process.env.VNPAY_SECRETKEY || config.get('vnp_HashSecret');
     var vnpUrl = process.env.VNPAY_URL || config.get('vnp_Url');
     var returnUrl = process.env.VNPAY_RETURNURL || config.get('vnp_ReturnUrl');
-
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
-    var orderId = req.body.orderId;
     const [order] = await orderService.getOrdersByOrderId(orderId);
     var amount = order.total;
     var bankCode = 'NCB';
@@ -76,6 +75,7 @@ export async function createPaymentUrl(req, res, next) {
 
     res.send(vnpUrl);
   } catch (e) {
+    await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);
     res.send(e);
   }
@@ -98,16 +98,18 @@ export async function getVnpayIpn(req, res) {
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+    var orderId = vnp_Params['vnp_TxnRef'];
 
     if (secureHash === signed) {
-      var orderId = vnp_Params['vnp_TxnRef'];
       var rspCode = vnp_Params['vnp_ResponseCode'];
       console.log(vnp_Params);
       res.status(200).json({ RspCode: '00', Message: 'success' });
     } else {
+      await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
       res.status(200).json({ RspCode: '97', Message: 'Fail checksum' });
     }
   } catch (e) {
+    await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);
     res.send(e);
   }

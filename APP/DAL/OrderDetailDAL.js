@@ -1,4 +1,4 @@
-import { OrderDetail } from '../utility/DbHelper.js';
+import { OrderDetail, SequelizeInstance } from '../utility/DbHelper.js';
 
 export async function createOrderDetail(orderItem) {
   await OrderDetail.create({
@@ -8,4 +8,18 @@ export async function createOrderDetail(orderItem) {
     quantity: orderItem.quantity,
     unit_price: orderItem.unit_price,
   });
+}
+
+export async function deleteOrderDetailByOrderBy(orderId) {
+  const sqlQuery = `
+DELETE FROM order_item
+WHERE  order_id='${orderId}'
+`;
+
+  const orderDetail = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+    raw: true,
+  });
+
+  return orderDetail;
 }

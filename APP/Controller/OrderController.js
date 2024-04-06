@@ -58,9 +58,9 @@ export async function createOrderByUser(req, res, next) {
     if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
-    await orderService.createOrderByUser(loginUser, cartObject);
-    const result = await orderService.getOrderByUserId(loginUser);
-    res.status(200).send(result);
+    const orderId = await orderService.createOrderByUser(loginUser, cartObject);
+    // const result = await orderService.getOrderByUserId(loginUser);
+    res.status(200).send({ orderId });
     t.commit();
   } catch (error) {
     t.rollback();

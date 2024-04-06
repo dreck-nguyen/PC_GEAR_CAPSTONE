@@ -462,14 +462,14 @@ group by upb.user_pc_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*, case_cooler.*,
 where 1 = 1
 and c.user_id = '${userId}'
  AND ci.cart_item_id = any  (
-        SELECT UNNEST(STRING_TO_ARRAY('${cartItemIds}', ',')::uuid[])
-    )
-    GROUP BY 
-    upb.*,
-      ci.product_id,
-      ci.quantity,
-      ci.personal_build_pc_id,
-      p.unit_price;
+      SELECT UNNEST(STRING_TO_ARRAY('${cartItemIds}', ','))::uuid
+  )
+GROUP BY 
+  upb.*,
+  ci.product_id,
+  ci.quantity,
+  ci.personal_build_pc_id,
+  p.unit_price;
   `;
 
   const result = await SequelizeInstance.query(sqlQuery, {

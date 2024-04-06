@@ -28,7 +28,7 @@ export async function createOrderByUser(loginUser, cartObject) {
     .map((e) => e.cart_item_id)
     .join(',');
   const cart = await cartItemDAL.getCartItemByUser(userId, cartItems);
-
+  console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~`, cart);
   for (const cartItem of cart) {
     if (cartItem.product_id) {
       quantity += cartItem.quantity;

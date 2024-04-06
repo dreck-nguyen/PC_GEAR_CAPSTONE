@@ -4,7 +4,6 @@ export async function getCartUser(userId) {
   const sqlQuery = `
  select
 	c.*,
-	
   ci.*,
   ARRAY_AGG(
     JSONB_BUILD_OBJECT(
@@ -160,7 +159,7 @@ left join (
   ) monitor
 on
 	1 = 1
-	and case_cooler.primary_product_id = upb.monitor_id
+	and monitor.primary_product_id = upb.monitor_id
 left join (
 	select
 		p.product_id as primary_product_id,
@@ -189,7 +188,7 @@ left join (
   ) cpu_cooler
 on
 	1 = 1
-	and case_cooler.primary_product_id = upb.cpu_cooler_id
+	and cpu_cooler.primary_product_id = upb.cpu_cooler_id
 left join 
 (
 	select

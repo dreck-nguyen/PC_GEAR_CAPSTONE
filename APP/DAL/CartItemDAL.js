@@ -479,3 +479,17 @@ GROUP BY
 
   return result;
 }
+
+export async function deleteByBuildPc(userPcBuildId) {
+  const sqlQuery = `
+      DELETE FROM cart_item
+      WHERE personal_build_pc_id = :userPcBuildId
+    `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { userPcBuildId },
+    type: SequelizeInstance.QueryTypes.DELETE,
+  });
+
+  return result;
+}

@@ -1,4 +1,5 @@
 import * as userDAL from '../DAL/UserDAL.js';
+import * as cartItemDAL from '../DAL/CartItemDAL.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
@@ -97,6 +98,7 @@ export async function getPersonalBuildPc(userId) {
 }
 
 export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
+  await cartItemDAL.deleteByBuildPc(userPcBuildId);
   return await pcBuildDAL.deletePersonalBuildPc(
     loginUser.user_id,
     userPcBuildId,

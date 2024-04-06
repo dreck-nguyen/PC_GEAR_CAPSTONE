@@ -23,5 +23,5 @@ export async function updateBrand(productBrandId, productBrand) {
   return result;
 }
 export async function deleteBrand(productBrandId) {
-  // await brandDAL.deleteBrand(productBrandId);
+  await brandDAL.deleteBrand(productBrandId);
 }

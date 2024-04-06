@@ -5,7 +5,6 @@ import { SequelizeInstance } from '../utility/DbHelper.js';
 dotenv.config();
 
 const router = express.Router();
-// const secret_key = process.env.SECRET_KEY;
 
 export async function getCategoryBreadcrumb(req, res, next) {
   try {

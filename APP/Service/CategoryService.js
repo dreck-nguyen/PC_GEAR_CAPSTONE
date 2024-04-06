@@ -10,8 +10,9 @@ export async function getCategory(categoryId) {
 }
 
 export async function deleteCategory(categoryId) {
-  // const categories = await categoryDAL.deleteCategory(categoryId);
-  return true;
+  const categories = await categoryDAL.deleteCategory(categoryId);
+  // return true;
+  return categories;
 }
 
 export async function getCategoryBreadcrumb() {

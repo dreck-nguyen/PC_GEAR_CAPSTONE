@@ -197,7 +197,7 @@ export async function createOrderByUser(loginUser, cartObject) {
   await orderDAL.createOrderByUser(cartObject);
   for (const cartItem of cartObject.cartItemList) {
     console.log(cartItem.cart_item_id);
-    // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
+    await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
   }
 }
 export async function updateOrderStatus(orderId, statusId) {

@@ -97,11 +97,11 @@ export async function getPersonalBuildPc(userId) {
 }
 
 export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
-  // return await pcBuildDAL.deletePersonalBuildPc(
-  //   loginUser.user_id,
-  //   userPcBuildId,
-  // );
-  return true;
+  return await pcBuildDAL.deletePersonalBuildPc(
+    loginUser.user_id,
+    userPcBuildId,
+  );
+  // return true;
 }
 
 export async function updateUserAvatar(loginUser, image) {

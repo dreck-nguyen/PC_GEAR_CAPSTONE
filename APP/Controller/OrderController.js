@@ -33,7 +33,7 @@ export async function getUsersOrderByOrderId(req, res, next) {
       throw new Error(
         `${commonEnums.USER_ROLE.STAFF} || ${commonEnums.USER_ROLE.ADMIN} ONLY`,
       );
-    const orderId = req.query.orderId;
+    const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
     res.status(200).send(result);
     next();

@@ -95,7 +95,7 @@ left outer join
   and sa.address_id = o.address_id
 --  and sa.user_id = o.user_id
 where 1 = 1
-  o.user_id = '${userId}'
+  and o.user_id = '${userId}'
 group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
   sa.recipient_name ,
   sa.street_address ,sa.city 
@@ -182,7 +182,7 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
-where 
+where 1 = 1
   and o.order_id = '${orderId}'
 group by o.order_id,os.status_id,p.payment_id
 `;

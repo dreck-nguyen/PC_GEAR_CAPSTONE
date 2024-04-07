@@ -1,4 +1,5 @@
 import * as commonEnums from '../Common/CommonEnums.js';
+const PURPOSE = commonEnums.PURPOSE;
 export function checkRole(loginUser, roleName) {
   console.log(loginUser, roleName);
   return loginUser.role === roleName;

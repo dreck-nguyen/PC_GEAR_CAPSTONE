@@ -116,7 +116,7 @@ export async function getStorageById(storageId) {
 
 // TODO
 export async function getProcessor(dataObj) {
-  let result = await getProductProcessor();
+  let result = await productDAL.getProcessor();
 
   if (dataObj?.purpose)
     result = commonFunction.filterByPurpose(result, dataObj.purpose);

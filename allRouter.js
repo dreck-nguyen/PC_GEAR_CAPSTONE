@@ -907,6 +907,10 @@ router.delete(
  *               type: string
  *               description: The type of RAM.
  *               example: DDR4-2133 MHz
+ *         purpose:
+ *           type: string
+ *           description: The purpose of this component GAMING OR OFFICE.
+ *           example: GAMING || OFFICE || null
  */
 router.post('/api/pc-component/processor', productController.getProcessor);
 router.post('/api/pc-component/motherboard', productController.getMotherboard);

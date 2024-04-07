@@ -213,8 +213,12 @@ select
   o.total::numeric
 from 
   "order" o
-where
-  o.order_id = '${orderId}'
+inner join payment p
+ on 1 =1 
+ and o.payment_id = p.payment_id 
+where 1=1
+  and o.order_id = '${orderId}'
+  and p.payment_method != 'COD'
 `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {

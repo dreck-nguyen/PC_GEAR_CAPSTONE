@@ -37,6 +37,7 @@ export async function createPaymentUrl(req, res, next) {
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
     const [order] = await orderService.getOrdersByOrderId(orderId);
+    if (!order) throw new Error('YOUR PAYMENT METHOD NOT VNPAY');
     var amount = order.total;
     var bankCode = 'NCB';
 

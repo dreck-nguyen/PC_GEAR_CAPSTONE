@@ -74,7 +74,7 @@ export async function createPaymentUrl(req, res, next) {
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
     console.log(vnpUrl);
 
-    res.send(vnpUrl);
+    res.send({ vnpUrl });
   } catch (e) {
     await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);

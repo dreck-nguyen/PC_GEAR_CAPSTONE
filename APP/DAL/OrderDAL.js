@@ -218,7 +218,7 @@ inner join payment p
  and o.payment_id = p.payment_id 
 where 1=1
   and o.order_id = '${orderId}'
-  and p.payment_method != 'COD'
+  and p.payment_method = 'VN PAY'
 `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {

@@ -27,7 +27,7 @@ export async function getUsersOrderByOrderId(req, res, next) {
   try {
     const loginUser = req.loginUser;
     if (
-      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF) ||
+      !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF) &&
       !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN)
     )
       throw new Error(

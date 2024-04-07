@@ -3552,6 +3552,8 @@ router.delete(
  *     tags:
  *       - STAFF SECTION
  *     description: Retrieves details of a specific order by its ID.
+ *     security:
+ *       -  BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: orderId

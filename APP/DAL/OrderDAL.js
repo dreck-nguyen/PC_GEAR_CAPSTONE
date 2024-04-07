@@ -162,42 +162,58 @@ export async function updateOrderStatus(orderId, statusId) {
 
 export async function getOrderById(orderId) {
   const sqlQuery = `
-select 
-  o.order_id
-  , u.user_id
-  , u.first_name 
-  , u.email 
-  , u.phone_number 
-  , o.shipping_fee
-  , os.status_detail 
-  , p.payment_method 
-  , array_agg(jsonb_build_object(
-  'order_detail_id', od.order_detail_id,
-  'product_id', od.product_id,
-  'quantity', od.quantity,
-  'unit_price', od.unit_price
-  )) as order_details,
-  o.quantity  as total_items,
-  o.total as total_price
-from 
+SELECT 
+  o.order_id,
+  u.user_id,
+  u.first_name,
+  u.email,
+  u.phone_number,
+  o.shipping_fee,
+  os.status_detail,
+  p.payment_method,
+  ARRAY_AGG(jsonb_build_object(
+      'order_detail_id', od.order_detail_id,
+      'product_id', od.product_id,
+      'product_name', p2."name",
+      'product_image', pg.image,
+      'quantity', od.quantity,
+      'unit_price', od.unit_price
+  )) AS order_details,
+  o.quantity AS total_items,
+  o.total AS total_price
+FROM 
   "order" o
-left join
+LEFT JOIN
   order_status os 
-  on 1=1
-  and o.status_id = os.status_id 
-left join 
+  ON 1 = 1
+  AND o.status_id = os.status_id 
+LEFT JOIN 
   payment p 
-  on 1=1
-  and o.payment_id = p.payment_id 
-left outer join
+  ON 1 = 1
+  AND o.payment_id = p.payment_id 
+LEFT OUTER JOIN
   order_detail od 
-  on 1=1
-  and o.order_id = od.order_id
-inner join public.user u 
-on u.user_id = o.user_id
-where 1 = 1
-  and o.order_id = '${orderId}'
-group by o.order_id,os.status_id,p.payment_id,u.user_id
+  ON 1 = 1
+  AND o.order_id = od.order_id
+INNER JOIN public.user u 
+  ON u.user_id = o.user_id
+LEFT JOIN product p2 
+  ON 1 = 1
+  AND p2.product_id = od.product_id 
+LEFT JOIN (
+    SELECT 
+      product_id,
+      MIN(image) AS image
+    FROM 
+      product_gallery
+    GROUP BY 
+      product_id
+) pg
+ON p2.product_id = pg.product_id
+WHERE 1 = 1
+  AND o.order_id = '${orderId}'
+GROUP BY o.order_id, os.status_id, p.payment_id, u.user_id;
+
 `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {

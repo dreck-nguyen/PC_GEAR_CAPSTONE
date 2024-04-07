@@ -303,7 +303,7 @@ router.get('/api/auth/admin/list/user', admController.getUsers);
 router.get('/api/auth/admin/cart', cartController.getUsersCart);
 router.get('/api/auth/admin/order', orderController.getUsersOrder);
 router.get('/api/auth/admin/payment', paymentController.getPayment);
-router.get('/api/auth/payment', paymentController.getPayment);
+router.get('/api/payment', paymentController.getPayment);
 router.get(
   '/api/auth/admin/order-status',
   orderStatusController.getOrderStatus,

@@ -203,6 +203,7 @@ export async function createOrderByUser(loginUser, cartObject) {
     console.log(cartItem.cart_item_id);
     // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
   }
+  return orderId;
 }
 export async function updateOrderStatus(orderId, statusId) {
   await orderDAL.updateOrderStatus(orderId, statusId);

@@ -119,7 +119,8 @@ export async function createOrderByUser(orderObject) {
     quantity: orderObject.quantity,
     total: orderObject.total,
     // address_id: orderItem.address_id,
-    address_id: orderItem?.address_id || '1f41abde-ebad-4fa5-868e-2cfab685a370',
+    address_id:
+      orderObject?.address_id || '1f41abde-ebad-4fa5-868e-2cfab685a370',
   });
 }
 export async function updateOrderPaymentStatus(orderId, stage) {

@@ -283,7 +283,7 @@ export async function getRandomOne(dataObj) {
     result = result
       .filter((e) => {
         return dataObj?.price_range
-          ? e.total_price <= dataObj?.price_range
+          ? e.total_price <= Number(dataObj?.price_range)
           : true;
       })
       .filter((e) => {

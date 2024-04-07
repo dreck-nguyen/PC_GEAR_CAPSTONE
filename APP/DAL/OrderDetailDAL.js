@@ -1,6 +1,7 @@
 import { OrderDetail, SequelizeInstance } from '../utility/DbHelper.js';
 
 export async function createOrderDetail(orderItem) {
+  console.log(`insert order detail`, orderItem);
   await OrderDetail.create({
     order_detail_id: orderItem.order_detail_id,
     order_id: orderItem.order_id,

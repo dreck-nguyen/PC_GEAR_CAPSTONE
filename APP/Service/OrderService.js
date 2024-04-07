@@ -29,10 +29,11 @@ export async function createOrderByUser(loginUser, cartObject) {
     .join(',');
   const cart = await cartItemDAL.getCartItemByUser(userId, cartItems);
   console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~`, cart);
+  if (!cart.length) return;
   for (const cartItem of cart) {
     if (cartItem.product_id) {
-      quantity += cartItem.quantity;
-      total += Number(cartItem.unit_price);
+      quantity += Number(cartItem.quantity);
+      total += Number(cartItem.unit_price * cartItem.quantity);
 
       const orderDetails = {
         order_detail_id: uuidv4(),
@@ -42,6 +43,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         unit_price: cartItem.unit_price,
       };
       await orderDetailDAL.createOrderDetail(orderDetails);
+      console.log(
+        `after insert into order detail`,
+        cartItem.unit_price * cartItem.quantity,
+        total,
+      );
     } else {
       console.log('````` BUILD PC');
       const preBuildPc = cartItem.build_pc;
@@ -102,7 +108,9 @@ export async function createOrderByUser(loginUser, cartObject) {
       }
       if (preBuildPc.ram_id) {
         quantity += preBuildPc.ram_quantity;
-        total += Number(preBuildPc.ram_specification.unit_price);
+        total += Number(
+          preBuildPc.ram_specification.unit_price * preBuildPc.ram_quantity,
+        );
         console.log(`5`, quantity, total);
 
         const orderDetails = {
@@ -116,7 +124,10 @@ export async function createOrderByUser(loginUser, cartObject) {
       }
       if (preBuildPc.storage_id) {
         quantity += preBuildPc.storage_quantity;
-        total += preBuildPc.storage_specification.unit_price;
+        total += Number(
+          preBuildPc.storage_specification.unit_price *
+            preBuildPc.storage_quantity,
+        );
         console.log(`6`, quantity, total);
 
         const orderDetails = {

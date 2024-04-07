@@ -15,6 +15,14 @@ export async function getAllProduct(req, res, next) {
     res.status(404).send(error);
   }
 }
+export async function getCommonRule(req, res, next) {
+  try {
+    const result = commonEnums.COMMON.RULE;
+    res.send(result);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
 export async function getProductByName(req, res, next) {
   try {
     const productName = req.query.productName;

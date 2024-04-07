@@ -3543,7 +3543,6 @@ router.get(
   '/api/auth/staff/order/:orderId',
   orderController.getOrderForStaffById,
 );
-
 /**
  * @swagger
  * paths:
@@ -3575,11 +3574,31 @@ router.get(
  *         '500':
  *           description: Internal Server Error
  */
+/**
+ * @swagger
+ * paths:
+ *   /api/get/common/rule:
+ *     get:
+ *       summary: Retrieve common rule for product filtering
+ *       description: Endpoint to fetch common rules for product filtering based on gaming and office purposes.
+ *       tags:
+ *         - COMMON SECTION
+ *       responses:
+ *         '200':
+ *           description: Successful response
+ *         '400':
+ *           description: Invalid request
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '500':
+ *           description: Internal Server Error
+ */
 router.post(
   '/api/auth/avatar',
   uploadCloud.single('image'),
   userController.updateUserAvatar,
 );
+router.get('/api/get/common/rule', productController.getCommonRule);
 /**
  * @swagger
  * paths:

@@ -3746,7 +3746,7 @@ router.put('/api/auth/information', userController.updateUserInfo);
 /**
  * @swagger
  * paths:
- *   /create_payment_url:
+ *   /api/create_payment_url:
  *     post:
  *       summary: Create Payment URL
  *       description: Creates a payment URL for the given order details
@@ -3771,7 +3771,7 @@ router.put('/api/auth/information', userController.updateUserInfo);
  *         '500':
  *           description: Internal server error
  */
-router.post('/create_payment_url', paymentController.createPaymentUrl);
+router.post('/api/create_payment_url', paymentController.createPaymentUrl);
 router.get('/vnpay_ipn', paymentController.getVnpayIpn);
 router.get('/order/vnpay_return', paymentController.getVnpayReturn);
 

@@ -282,6 +282,11 @@ export async function getRandomOne(dataObj) {
   if (dataObj) {
     result = result
       .filter((e) => {
+        return dataObj?.price_range
+          ? e.total_price <= dataObj?.price_range
+          : true;
+      })
+      .filter((e) => {
         if (dataObj.motherboardDetail && dataObj.motherboardDetail.chipset) {
           return (
             e.motherboard_specification.chipset ===

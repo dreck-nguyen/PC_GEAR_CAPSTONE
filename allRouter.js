@@ -911,6 +911,10 @@ router.delete(
  *           type: string
  *           description: The purpose of this component GAMING OR OFFICE.
  *           example: GAMING || OFFICE || null
+ *         price_range:
+ *           type: int
+ *           description: The limit range of budget.
+ *           example: 100000000
  */
 router.post('/api/pc-component/processor', productController.getProcessor);
 router.post('/api/pc-component/motherboard', productController.getMotherboard);

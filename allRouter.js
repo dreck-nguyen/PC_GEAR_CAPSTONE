@@ -3544,12 +3544,101 @@ router.delete(
  *       '500':
  *         description: An internal server error occurred
  */
+/**
+ * @swagger
+ * /api/auth/staff/order/{orderId}:
+ *   get:
+ *     summary: Get order details by ID
+ *     tags:
+ *       - STAFF SECTION
+ *     description: Retrieves details of a specific order by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         description: ID of the order to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Order not found
+ *       '500':
+ *         description: Internal Server Error
+ */
+/**
+ * @swagger
+ * /api/auth/staff/order-status/{order_id}:
+ *   put:
+ *     summary: Update Order Status by ID
+ *     description: Update the status of an order with the specified ID.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - STAFF SECTION
+ *     parameters:
+ *       - in: path
+ *         name: order_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: da7dcd6d-4d7d-48c4-9111-ae6b0309c5d4
+ *         description: ID of the order to update the status
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status_id:
+ *                 type: string
+ *                 format: uuid
+ *                 example: b56803ff-b2cd-42e8-8171-d2459e92b58f
+ *                 description: ID of the new status
+ *     responses:
+ *       '200':
+ *         description: A successful response indicating the order status has been updated.
+ *         content:
+ *           application/json:
+ *             example:
+ *               orderId: "0d5a8629-9aaf-4fe0-9b4b-7fd627d9177c"
+ *               status_id: "b56803ff-b2cd-42e8-8171-d2459e92b58f"
+ *       '404':
+ *         description: The specified order ID was not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Order not found
+ *       '400':
+ *         description: Bad request, missing or invalid parameters.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Bad request, missing or invalid parameters.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal server error
+ */
 router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 router.post('/api/staff/login', userController.loginStaff);
 router.get('/api/auth/staff/order', orderController.getUsersOrder);
 router.get(
   '/api/auth/staff/order/:orderId',
+  orderController.getUsersOrderByOrderId,
+);
+router.get(
+  '/api/auth/staff/order/:orderId',
   orderController.getOrderForStaffById,
+);
+router.put(
+  '/api/auth/staff/order-status/:orderId',
+  orderController.updateOrderStatus,
 );
 /**
  * @swagger

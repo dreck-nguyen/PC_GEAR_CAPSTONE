@@ -4,7 +4,10 @@ export async function getUsersOrder() {
   const sqlQuery = `
 select 
   o.order_id
-  , o.user_id 
+  , u.user_id
+  , u.first_name 
+  , u.email 
+  , u.phone_number 
   , o.shipping_fee
   , os.status_detail 
   , p.payment_method 
@@ -31,7 +34,10 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
-group by o.order_id,os.status_id,p.payment_id
+inner join public.user u
+on 1=1
+and u.user_id = o.user_id
+group by o.order_id,os.status_id,p.payment_id,u.user_id
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
@@ -158,7 +164,10 @@ export async function getOrderById(orderId) {
   const sqlQuery = `
 select 
   o.order_id
-  , o.user_id 
+  , u.user_id
+  , u.first_name 
+  , u.email 
+  , u.phone_number 
   , o.shipping_fee
   , os.status_detail 
   , p.payment_method 
@@ -184,9 +193,11 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
+inner join public.user u 
+on u.user_id = o.user_id
 where 1 = 1
   and o.order_id = '${orderId}'
-group by o.order_id,os.status_id,p.payment_id
+group by o.order_id,os.status_id,p.payment_id,u.user_id
 `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {

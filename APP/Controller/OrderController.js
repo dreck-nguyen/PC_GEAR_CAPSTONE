@@ -36,7 +36,6 @@ export async function getUsersOrderByOrderId(req, res, next) {
     const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });

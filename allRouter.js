@@ -3018,6 +3018,10 @@ router.delete(
  *                 type: string
  *                 format: uuid
  *                 description: ID of the payment method used
+ *               address_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: ID of the address user
  *               cartItemList:
  *                 type: array
  *                 description: List of items in the cart
@@ -3032,6 +3036,7 @@ router.delete(
  *               - shipping_fee
  *               - payment_id
  *               - cartItemList
+ *               - address_id
  *     responses:
  *       '201':
  *         description: A successful response indicating the order has been created.
@@ -3308,11 +3313,26 @@ router.get(
  *                 type: string
  *                 description: The country of the shipping address.
  *                 example: "VN"
+ *               district:
+ *                 type: string
+ *                 description: The recipient_phone address of the shipping address.
+ *                 example: "Dist 2"
+ *               ward:
+ *                 type: string
+ *                 description: The ward of the shipping address.
+ *                 example: "Long Thanh MY"
+ *               recipient_phone:
+ *                 type: string
+ *                 description: The recipient_phone of the shipping address.
+ *                 example: "090000000"
  *             required:
  *               - recipient_name
  *               - street_address
  *               - city
  *               - country
+ *               - district
+ *               - ward
+ *               - recipient_phone
  *     responses:
  *       '201':
  *         description: Successfully created. Returns the created shipping address.
@@ -3519,6 +3539,10 @@ router.delete(
 router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 router.post('/api/staff/login', userController.loginStaff);
 router.get('/api/auth/staff/order', orderController.getUsersOrder);
+router.get(
+  '/api/auth/staff/order/:orderId',
+  orderController.getOrderForStaffById,
+);
 
 /**
  * @swagger

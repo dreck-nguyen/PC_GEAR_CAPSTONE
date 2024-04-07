@@ -8,13 +8,15 @@ select
   , o.shipping_fee
   , os.status_detail 
   , p.payment_method 
-  , array_agg(jsonb_build_object(
+  , array_agg(
+  jsonb_build_object(
   'order_detail_id', od.order_detail_id,
   'product_id', od.product_id,
   'quantity', od.quantity,
   'unit_price', od.unit_price
   )) as order_details,
-  sum(od.quantity) as total_items
+  o.quantity  total_items,
+  o.total as total_price
 from 
   "order" o
 left join
@@ -68,7 +70,11 @@ select
   'quantity', od.quantity,
   'unit_price', od.unit_price
   )) as order_details,
-  sum(od.quantity) as total_items
+  sum(od.quantity) as total_items,
+  sa.recipient_name ,
+  sa.recipient_name ,
+  sa.street_address ,
+  sa.city 
 from 
   "order" o
 left join
@@ -83,9 +89,16 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
-where
+left outer join 
+  shipping_address sa
+  on 1 = 1
+  and sa.address_id = o.address_id
+--  and sa.user_id = o.user_id
+where 1 = 1
   o.user_id = '${userId}'
-group by o.order_id,os.status_id,p.payment_id
+group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
+  sa.recipient_name ,
+  sa.street_address ,sa.city 
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
@@ -105,6 +118,7 @@ export async function createOrderByUser(orderObject) {
     shipping_fee: orderObject.shipping_fee,
     quantity: orderObject.quantity,
     total: orderObject.total,
+    address_id: orderItem.address_id,
   });
 }
 export async function updateOrderPaymentStatus(orderId, stage) {
@@ -152,7 +166,8 @@ select
   'quantity', od.quantity,
   'unit_price', od.unit_price
   )) as order_details,
-  sum(od.quantity) as total_items
+  o.quantity  as total_items,
+  o.total as total_price
 from 
   "order" o
 left join
@@ -167,8 +182,8 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
-where
-  o.order_id = '${orderId}'
+where 
+  and o.order_id = '${orderId}'
 group by o.order_id,os.status_id,p.payment_id
 `;
 

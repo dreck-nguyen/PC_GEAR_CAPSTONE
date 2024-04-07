@@ -3,3 +3,8 @@ export const USER_ROLE = {
   USER: 'USER',
   STAFF: 'STAFF',
 };
+
+export const PURPOSE = {
+  GAMING: 'GAMING',
+  OFFICE: 'OFFICE',
+};

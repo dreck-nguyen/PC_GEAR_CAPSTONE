@@ -116,13 +116,16 @@ export async function getStorageById(storageId) {
 
 // TODO
 export async function getProcessor(dataObj) {
-  let result = await productDAL.getProcessor();
+  let result = await getProductProcessor();
 
-  if (dataObj?.motherboardDetail) {
-    result = result.filter(
-      (e) => e.chipset === dataObj.motherboardDetail.chipset,
+  if (dataObj?.purpose)
+    result = commonFunction.filterByPurpose(result, dataObj.purpose);
+
+  if (dataObj?.motherboardDetail)
+    result = commonFunction.filterByChipset(
+      result,
+      dataObj.motherboardDetail.chipset,
     );
-  }
 
   return result;
 }
@@ -162,6 +165,8 @@ export async function getCase(dataObj) {
 }
 export async function getGraphicsCard(dataObj) {
   let result = await productDAL.getGraphicsCard();
+  if (dataObj?.purpose)
+    result = commonFunction.filterByPurposeForGPU(result, dataObj.purpose);
 
   if (dataObj?.caseDetails) {
     const minLength = commonFunction.extractNumberFromString(
@@ -174,6 +179,8 @@ export async function getGraphicsCard(dataObj) {
 }
 export async function getRam(dataObj) {
   let result = await productDAL.getRam();
+  if (dataObj?.purpose)
+    result = commonFunction.filterByPurposeForRAM(result, dataObj.purpose);
 
   if (dataObj?.motherboardDetail && dataObj.motherboardDetail.memory_supports) {
     const supportedRamTypes = dataObj.motherboardDetail.memory_supports;
@@ -187,6 +194,8 @@ export async function getRam(dataObj) {
 }
 export async function getStorage(dataObj) {
   let result = await productDAL.getStorage();
+  if (dataObj?.purpose)
+    result = commonFunction.filterByPurposeForStorage(result, dataObj.purpose);
 
   if (dataObj?.storageDetail && dataObj.storageDetail.interface) {
     const desiredInterface = dataObj.storageDetail.interface;

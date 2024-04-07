@@ -113,6 +113,9 @@ const Order = sequelize.define(
     payment_id: {
       type: DataTypes.UUID,
     },
+    address_id: {
+      type: DataTypes.UUID,
+    },
     shipping_fee: {
       type: DataTypes.DECIMAL(18, 2),
     },

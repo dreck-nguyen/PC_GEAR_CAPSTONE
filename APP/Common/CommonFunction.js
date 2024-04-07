@@ -1,3 +1,4 @@
+import * as commonEnums from '../Common/CommonEnums.js';
 export function checkRole(loginUser, roleName) {
   console.log(loginUser, roleName);
   return loginUser.role === roleName;
@@ -52,4 +53,148 @@ export function getProductIds(jsonObject) {
   const productIds = filteredEntries.map(([key, value]) => value);
 
   return productIds;
+}
+
+export function filterByPurpose(processors, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGaming(processors);
+    case PURPOSE.OFFICE:
+      return filterForOffice(processors);
+    default:
+      return processors;
+  }
+}
+
+export function filterForGaming(processors) {
+  return processors.filter((processor) => {
+    return (
+      processor.core_quantity > 4 &&
+      processor.threads_quantity > 8 &&
+      processor.clock_speed >= 3.5
+    );
+  });
+}
+
+export function filterForOffice(processors) {
+  return processors.filter((processor) => {
+    return (
+      processor.core_quantity > 2 &&
+      processor.threads_quantity > 8 &&
+      processor.power <= 200 &&
+      (processor.socket.includes('LGA') || processor.socket.includes('AM4'))
+    );
+  });
+}
+
+export function filterByChipset(processors, chipset) {
+  return processors.filter((processor) => processor.chipset === chipset);
+}
+
+export function filterByPurposeForGPU(gpus, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForGPU(gpus);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForGPU(gpus);
+    default:
+      return gpus;
+  }
+}
+export function filterForGamingForGPU(gpus) {
+  return gpus.filter((gpu) => {
+    return (
+      gpu.vram >= 8 &&
+      gpu['interface'].includes('PCIe 4.0') &&
+      gpu.benchmark >= 8000
+    );
+  });
+}
+
+function checkRamType(ramType, minimumSpeed) {
+  const speedMatch = ramType.match(/(\d+)\s*MHz/);
+
+  if (speedMatch && speedMatch[1]) {
+    const ramTypeInMHz = parseInt(speedMatch[1], 10);
+    return ramTypeInMHz >= minimumSpeed;
+  }
+
+  return false;
+}
+export function filterForOfficeForGPU(gpus) {
+  return gpus;
+}
+export function filterByPurposeForRAM(rams, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForRAM(rams);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForRAM(rams);
+    default:
+      return rams;
+  }
+}
+export function filterForGamingForRAM(rams) {
+  const minimumSpeed = 4000;
+  return rams.filter((ram) => {
+    return (
+      ram.memory.includes('16 GB ') ||
+      ram.memory.includes('32 GB ') ||
+      checkRamType(ram.ram_type, minimumSpeed)
+    );
+  });
+}
+export function filterForOfficeForRAM(rams) {
+  const minimumSpeed = 3000;
+  return rams.filter((ram) => {
+    return (
+      ram.memory.includes('8 GB') ||
+      ram.memory.includes('16 GB') ||
+      ram.memory.includes('32 GB') ||
+      checkRamType(ram.ram_type, minimumSpeed)
+    );
+  });
+}
+function convertStorageToGB(capacity) {
+  const conversionTable = {
+    TB: 1024, // 1 TB = 1024 GB
+    GB: 1, // 1 GB = 1 GB
+  };
+
+  const match = capacity.match(/^(\d+)\s*(TB|GB)$/);
+  if (match && match[1] && match[2]) {
+    const amount = parseInt(match[1], 10);
+    const unit = match[2];
+    return amount * conversionTable[unit];
+  }
+
+  return null; // Return null if capacity format is invalid
+}
+export function filterByPurposeForStorage(storages, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForStorage(storages);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForStorage(storages);
+    default:
+      return storages;
+  }
+}
+export function filterForGamingForStorage(storages) {
+  return storages.filter((storage) => {
+    return (
+      storage['interface'].includes('SATA') ||
+      storage['interface'].includes('NVMe') ||
+      convertStorageToGB(storage.capacity) >= 500
+    );
+  });
+}
+export function filterForOfficeForStorage(storages) {
+  return storages.filter((storage) => {
+    return (
+      storage.type.includes('SSD') ||
+      storage.type.includes('HDD') ||
+      convertStorageToGB(storage.capacity) >= 500
+    );
+  });
 }

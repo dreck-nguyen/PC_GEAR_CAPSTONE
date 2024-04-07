@@ -7,7 +7,7 @@ export async function getShippingAddress(userId) {
 
 export async function createShippingAddress(userId, dataObj) {
   dataObj.address_id = uuidv4();
-  const result = await shippingAddressDAL.createShippingAddress(
+  const [result] = await shippingAddressDAL.createShippingAddress(
     userId,
     dataObj,
   );

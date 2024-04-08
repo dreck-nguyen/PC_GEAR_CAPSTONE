@@ -139,6 +139,54 @@ export async function getMotherboardSpecification() {
 
   return motherboardSpecification;
 }
+export async function insertPreBuildPcBulk(data) {
+  try {
+    const sqlQuery = `
+    INSERT INTO public.pre_build_pc (
+      pre_build_id
+      , motherboard_id
+      , processor_id
+      , case_id
+      , gpu_id
+      , ram_id
+      , storage_id
+      , created_by
+    ) 
+    VALUES ${data.map(() => '(?,?,?,?,?,?,?,?)').join(',')};
+    `;
+
+    const replacements = data.reduce((acc, combine) => {
+      const {
+        pre_build_id,
+        motherboard_id,
+        processor_id,
+        case_id,
+        gpu_id,
+        ram_id,
+        storage_id,
+        user_id,
+      } = combine;
+      return acc.concat([
+        pre_build_id,
+        motherboard_id,
+        processor_id,
+        case_id,
+        gpu_id,
+        ram_id,
+        storage_id,
+        user_id,
+      ]);
+    }, []);
+
+    await SequelizeInstance.query(sqlQuery, {
+      replacements,
+      type: SequelizeInstance.QueryTypes.INSERT,
+      raw: true,
+    });
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function insertPreBuildPc(combine) {
   const sqlQuery = `
@@ -172,7 +220,7 @@ export async function insertPreBuildPc(combine) {
 
 export async function clearPreBuildPC() {
   const sqlQuery = `
-  DELETE FROM public.pre_build_pc WHERE pre_build_id=gen_random_uuid();
+  DELETE FROM public.pre_build_pc WHERE 1 = 1;
   `;
   await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.DELETE,

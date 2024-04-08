@@ -32,8 +32,9 @@ export function extractNumberFromString(str) {
   return matches ? parseFloat(matches[0]) : null;
 }
 export function extractNumberFromCpuCoolerSupportSize(cpuCoolerSupportSize) {
-  const matches = cpuCoolerSupportSize.split('/')[1].match(/\d+(\.\d+)?/);
-  return matches ? parseFloat(matches[0] + 'mm') : null;
+  const regex = /[0-9]+(?:\.[0-9]+)?/g;
+  const numbers = cpuCoolerSupportSize.match(regex);
+  return numbers ? numbers.map(Number) : [];
 }
 export function hasFrequency(frequencyList, targetFrequency) {
   const [ramType, ramFreq] = targetFrequency.split('-');
@@ -54,6 +55,24 @@ export function getProductIds(jsonObject) {
   const productIds = filteredEntries.map(([key, value]) => value);
 
   return productIds;
+}
+function checkRamType(ramType, minimumSpeed) {
+  const speedMatch = ramType.match(/(\d+)\s*MHz/);
+
+  if (speedMatch && speedMatch[1]) {
+    const ramTypeInMHz = parseInt(speedMatch[1], 10);
+    return ramTypeInMHz >= minimumSpeed;
+  }
+
+  return false;
+}
+
+export async function checkPurpose(purpose) {
+  return purpose === PURPOSE.GAMING
+    ? PURPOSE.GAMING
+    : purpose === PURPOSE.OFFICE
+    ? PURPOSE.OFFICE
+    : null;
 }
 
 export function filterByPurpose(processors, purpose) {
@@ -103,25 +122,16 @@ export function filterByPurposeForGPU(gpus, purpose) {
   }
 }
 export function filterForGamingForGPU(gpus) {
+  console.log(gpus);
   return gpus.filter((gpu) => {
     return (
-      gpu.vram >= 8 &&
+      gpu.VRAM >= 8 &&
       gpu['interface'].includes('PCIe 4.0') &&
       gpu.benchmark >= 8000
     );
   });
 }
 
-function checkRamType(ramType, minimumSpeed) {
-  const speedMatch = ramType.match(/(\d+)\s*MHz/);
-
-  if (speedMatch && speedMatch[1]) {
-    const ramTypeInMHz = parseInt(speedMatch[1], 10);
-    return ramTypeInMHz >= minimumSpeed;
-  }
-
-  return false;
-}
 export function filterForOfficeForGPU(gpus) {
   return gpus;
 }
@@ -198,4 +208,109 @@ export function filterForOfficeForStorage(storages) {
       convertStorageToGB(storage.capacity) >= 500
     );
   });
+}
+// Duplicated for 1 Object
+
+export function filterByPurposeForObject(processor, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForObject(processor);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForObject(processor);
+    default:
+      return processor;
+  }
+}
+
+export function filterForGamingForObject(processor) {
+  return (
+    processor.core_quantity > 4 &&
+    processor.threads_quantity > 8 &&
+    processor.clock_speed >= 3.5
+  );
+}
+
+export function filterForOfficeForObject(processor) {
+  return (
+    processor.core_quantity > 2 &&
+    processor.threads_quantity > 8 &&
+    processor.power <= 200 &&
+    (processor.socket.includes('LGA') || processor.socket.includes('AM4'))
+  );
+}
+
+export function filterByPurposeForGPUForObject(gpu, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForGPUForObject(gpu);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForGPUForObject(gpu);
+    default:
+      return gpu;
+  }
+}
+export function filterForGamingForGPUForObject(gpu) {
+  return (
+    gpu.VRAM >= 8 &&
+    gpu['interface'].includes('PCIe 4.0') &&
+    gpu.benchmark >= 8000
+  );
+}
+
+export function filterForOfficeForGPUForObject(gpus) {
+  return gpus ? true : false;
+}
+export function filterByPurposeForRAMForObject(ram, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForRAMForObject(ram);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForRAMForObject(ram);
+    default:
+      return ram;
+  }
+}
+export function filterForGamingForRAMForObject(ram) {
+  const minimumSpeed = 4000;
+
+  return (
+    ram.memory.includes('16 GB ') ||
+    ram.memory.includes('32 GB ') ||
+    checkRamType(ram.ram_type, minimumSpeed)
+  );
+}
+export function filterForOfficeForRAMForObject(ram) {
+  const minimumSpeed = 3000;
+
+  return (
+    ram.memory.includes('8 GB') ||
+    ram.memory.includes('16 GB') ||
+    ram.memory.includes('32 GB') ||
+    checkRamType(ram.ram_type, minimumSpeed)
+  );
+}
+
+export function filterByPurposeForStorageForObject(storage, purpose) {
+  switch (purpose) {
+    case PURPOSE.GAMING:
+      return filterForGamingForStorageForObject(storage);
+    case PURPOSE.OFFICE:
+      return filterForOfficeForStorageForObject(storage);
+    default:
+      return storage;
+  }
+}
+export function filterForGamingForStorageForObject(storage) {
+  return (
+    storage['interface'].includes('SATA') ||
+    storage['interface'].includes('NVMe') ||
+    convertStorageToGB(storage.capacity) >= 500
+  );
+}
+export function filterForOfficeForStorageForObject(storage) {
+  return (
+    storage.type.includes('SSD') ||
+    storage.type.includes('HDD') ||
+    convertStorageToGB(storage.capacity) >= 500
+  );
 }

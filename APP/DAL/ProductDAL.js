@@ -1201,8 +1201,9 @@ group by
   return ramList;
 }
 
-export async function getAutoGen() {
-  const sqlQuery = `
+export async function getAutoGen(priceRange) {
+  let sqlQuery = `
+with base as(
 select
 	pbp.pre_build_id,
 	pbp.motherboard_id,
@@ -1222,7 +1223,7 @@ SUM(ps.unit_price::numeric) +
 SUM(cs.unit_price::numeric) +
 SUM(gs.unit_price::numeric) +
 SUM(rs.unit_price::numeric) +
-SUM(ss.unit_price::numeric) as total_price
+SUM(ss.unit_price::numeric) as total_price_pre_format
 from
 	public.pre_build_pc pbp
 inner join 
@@ -1437,7 +1438,16 @@ group by
 	gs.*,
 	rs.*,
 	ss.*
+)
+select
+	*,
+  TO_CHAR(base.total_price_pre_format,
+		'FM999,999,999') as total_price
+from
+	base
 `;
+  if (priceRange > 0)
+    sqlQuery += `where 1=1 and total_price_pre_format <= ${priceRange}`;
   const autoGenList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

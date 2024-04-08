@@ -6,45 +6,35 @@ export async function pcBuilderService(userId) {
   //   caseCoolerSpecification
   const caseCoolerSpecification =
     await pcBuilderDAL.getCaseCoolerSpecification();
-  result.push({ caseCoolerSpecification });
 
   // getCaseSpecification
-  const getCaseSpecification = await pcBuilderDAL.getCaseSpecification();
-  result.push({ getCaseSpecification });
+  const caseSpecification = await pcBuilderDAL.getCaseSpecification();
 
   //   getCoolerSpecification
   const coolerSpecification = await pcBuilderDAL.getCoolerSpecification();
-  result.push({ coolerSpecification });
 
   //   getGraphicsSpecification
   const graphicsSpecification = await pcBuilderDAL.getGraphicsSpecification();
-  result.push({ graphicsSpecification });
 
   //   getMonitorSpecification
   const monitorSpecification = await pcBuilderDAL.getMonitorSpecification();
-  result.push({ monitorSpecification });
 
   //   getPowerSupplySpecification
   const powerSupplySpecification =
     await pcBuilderDAL.getPowerSupplySpecification();
-  result.push({ powerSupplySpecification });
 
   //   getProcessorSpecification
   const processorSpecification = await pcBuilderDAL.getProcessorSpecification();
-  result.push({ processorSpecification });
 
   //   getStorageSpecification
   const storageSpecification = await pcBuilderDAL.getStorageSpecification();
-  result.push({ storageSpecification });
 
   //   getRamSpecification
   const ramSpecification = await pcBuilderDAL.getRamSpecification();
-  result.push({ ramSpecification });
 
   //   getMotherboardSpecification
   const motherboardSpecification =
     await pcBuilderDAL.getMotherboardSpecification();
-  result.push({ motherboardSpecification });
 
   const preBuildPc = motherboardSpecification.reduce((acc, curr) => {
     const rs = {};
@@ -72,51 +62,25 @@ export async function pcBuilderService(userId) {
 
     rs['ram_details'] = ramDetails;
 
-    const regex = /(\d+\s*x\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\([^)]+\))/g;
-
     // Storage Section
-    const m2 = [
-      ...curr.m2.match(regex),
-      curr.m2.replace(`${curr.m2.match(regex)},`, ''),
-    ];
-
-    const interfaceRegex = /\(([^)]+)\)/;
-
-    const interfaceComponent = m2
-      .map((item) => {
-        const match = item.match(interfaceRegex);
-        return match ? match[1].trim() : null;
-      })
-      .map((e) => {
-        let rs = e;
-        if (e.includes(', SATA III')) {
-          rs = e.replace(', SATA III', '');
-        }
-        return rs;
-      });
+    const m2 = curr.m2.split(' x ')[1];
 
     const storage = {
       quantity: Number(curr.sata.split('x')[0].trim()),
       type: curr.sata.split('x')[1].trim(),
       m2: m2,
-      interface: interfaceComponent,
     };
     rs['storage'] = storage;
 
-    const mediumCase = getCaseSpecification.filter(
-      (caseSpec) => caseSpec.cabinet_type === 'ATX Mid Tower',
+    const caseFit = caseSpecification.filter((e) =>
+      e.motherboard_supports.includes(curr.form_factor),
     );
-
-    const extendedCase = getCaseSpecification.filter(
-      (caseSpec) => caseSpec.cabinet_type === 'E-ATX',
-    );
-    const caseFit = extendedCase.length ? extendedCase : mediumCase;
 
     const ramSpec = ramSpecification.filter((ram) =>
       ramDetails.details.includes(ram.ram_type),
     );
-    const storageSpec = storageSpecification.filter((storage) =>
-      interfaceComponent.includes(storage.interface),
+    const storageSpec = storageSpecification.filter(
+      (storage) => storage.interface === m2,
     );
 
     const processorSpec = processorSpecification.filter(
@@ -193,37 +157,57 @@ export async function pcBuilderService(userId) {
     console.log(`~~~~~caseCoolerSpecification`, caseCoolerSpecification.length);
     console.log(`~~~~~caseCoolerSpecification`, monitorSpecification.length);
     const combinations = [];
-    for (const processor of processorsFit) {
-      for (const cas of casFit) {
-        for (const gpu of gpuFit) {
-          for (const ram of ramFit) {
-            for (const storage of storageFit) {
-              const combination = {
-                pre_build_id: uuidv4(),
-                motherboard_id: curr.product_id || null,
-                processor_id: processor.product_id || null,
-                case_id: cas || null,
-                gpu_id: gpu.gpu_id || null,
-                ram_id: ram || null,
-                storage_id: storage || null,
-              };
-              combinations.push(combination);
+    if (
+      processorsFit.length &&
+      cpuCoolerFit.length &&
+      casFit.length &&
+      gpuFit.length &&
+      ramFit.length &&
+      storageFit.length &&
+      caseCoolerSpecification.length &&
+      monitorSpecification.length
+    )
+      for (const processor of processorsFit) {
+        for (const cas of casFit) {
+          for (const gpu of gpuFit) {
+            for (const ram of ramFit) {
+              for (const storage of storageFit) {
+                const combination = {
+                  pre_build_id: uuidv4(),
+                  motherboard_id: curr.product_id || null,
+                  processor_id: processor.product_id || null,
+                  case_id: cas || null,
+                  gpu_id: gpu.gpu_id || null,
+                  ram_id: ram || null,
+                  storage_id: storage || null,
+                };
+                combinations.push(combination);
+              }
             }
           }
         }
       }
-    }
     rs['combinations'] = combinations;
     console.log(combinations.length);
-    acc.push(rs);
+    if (combinations.length > 0) {
+      acc.push(rs);
+    }
     return acc;
   }, []);
   await pcBuilderDAL.clearPreBuildPC();
+  console.log(`INSERTING AUTO GEN `);
+
+  const insertData = [];
+
   for (const preBuild of preBuildPc) {
-    console.log(preBuild.combinations.length);
     for (const combine of preBuild.combinations) {
-      combine['user_id'] = userId;
-      await pcBuilderDAL.insertPreBuildPc(combine);
+      if (combine) {
+        combine['user_id'] = userId;
+        insertData.push(combine);
+      }
     }
   }
+  console.log(insertData.length);
+  await pcBuilderDAL.insertPreBuildPcBulk(insertData);
+  // Await all insertions simultaneously
 }

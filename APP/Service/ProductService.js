@@ -278,81 +278,114 @@ export async function getAutoGen(dataObj) {
   return result;
 }
 export async function getRandomOne(dataObj) {
-  let result = await productDAL.getAutoGen();
+  const priceRange = dataObj?.price_range || 0;
+  const purpose = commonFunction.checkPurpose(dataObj?.purpose || '');
+  let result = await productDAL.getAutoGen(priceRange);
   if (dataObj) {
-    result = result
-      .filter((e) => {
-        return dataObj?.price_range
-          ? e.total_price <= Number(dataObj?.price_range)
-          : true;
-      })
-      .filter((e) => {
-        if (dataObj.motherboardDetail && dataObj.motherboardDetail.chipset) {
-          return (
-            e.motherboard_specification.chipset ===
-            dataObj.motherboardDetail.chipset
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (
-          dataObj.motherboardDetail &&
-          dataObj.motherboardDetail.memory_supports
-        ) {
-          return commonFunction.hasFrequency(
-            dataObj.motherboardDetail.memory_supports,
-            e.ram_specification.ram_type,
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.caseDetails && dataObj.caseDetails.gpu_length) {
-          return (
-            commonFunction.extractNumberFromString(
-              dataObj.caseDetails.gpu_length,
-            ) >= Number(e.gpu_specification.length)
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.gpuDetail && dataObj.gpuDetail.length) {
-          return (
-            commonFunction.extractNumberFromString(
-              e.case_specification.gpu_length,
-            ) >= Number(dataObj.gpuDetail.length)
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.processorDetails && dataObj.processorDetails.chipset) {
-          return (
-            e.motherboard_specification.chipset ===
-            dataObj.processorDetails.chipset
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.storageDetail && dataObj.storageDetail.interface) {
-          return e.motherboard_specification.sata.includes(
-            dataObj.storageDetail.interface,
-          );
-        }
-        return true;
-      })
-      .filter((e) => {
-        if (dataObj.ramDetails && dataObj.ramDetails.ram_type) {
-          return commonFunction.hasFrequency(
-            e.motherboard_specification.memory_supports,
-            dataObj.ramDetails.ram_type,
-          );
-        }
-        return true;
-      });
+    result = result.filter((e) => {
+      const motherboardDetail = dataObj.motherboardDetail;
+      const caseDetails = dataObj.caseDetails;
+      const gpuDetail = dataObj.gpuDetail;
+      const processorDetails = dataObj.processorDetails;
+      const storageDetail = dataObj.storageDetail;
+      const ramDetails = dataObj.ramDetails;
+
+      // Filter conditions for motherboard chipset
+      if (
+        motherboardDetail &&
+        motherboardDetail.chipset &&
+        e.motherboard_specification.chipset !== motherboardDetail.chipset
+      ) {
+        return false;
+      }
+
+      // Filter conditions for motherboard memory support
+      if (
+        motherboardDetail &&
+        motherboardDetail.memory_supports &&
+        !commonFunction.hasFrequency(
+          motherboardDetail.memory_supports,
+          e.ram_specification.ram_type,
+        )
+      ) {
+        return false;
+      }
+
+      // Filter conditions for case GPU length
+      if (
+        caseDetails &&
+        caseDetails.gpu_length &&
+        commonFunction.extractNumberFromString(caseDetails.gpu_length) <
+          Number(e.gpu_specification.length)
+      ) {
+        return false;
+      }
+
+      // Filter conditions for GPU length
+      if (
+        gpuDetail &&
+        gpuDetail.length &&
+        commonFunction.extractNumberFromString(
+          e.case_specification.gpu_length,
+        ) < Number(gpuDetail.length)
+      ) {
+        return false;
+      }
+
+      // Filter conditions for processor chipset
+      if (
+        processorDetails &&
+        processorDetails.chipset &&
+        e.motherboard_specification.chipset !== processorDetails.chipset
+      ) {
+        return false;
+      }
+
+      // Filter conditions for storage interface
+      if (
+        storageDetail &&
+        storageDetail.interface &&
+        !e.motherboard_specification.sata.includes(storageDetail.interface)
+      ) {
+        return false;
+      }
+
+      // Filter conditions for RAM type
+      if (
+        ramDetails &&
+        ramDetails.ram_type &&
+        !commonFunction.hasFrequency(
+          e.motherboard_specification.memory_supports,
+          ramDetails.ram_type,
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+  if (purpose !== null) {
+    result = result.filter((e) => {
+      const storage = commonFunction.filterByPurposeForStorageForObject(
+        e.storage_specification,
+        dataObj.purpose,
+      );
+      const ram = commonFunction.filterByPurposeForRAMForObject(
+        e.ram_specification,
+        dataObj.purpose,
+      );
+      const graphicCard = commonFunction.filterByPurposeForGPUForObject(
+        e.gpu_specification,
+        dataObj.purpose,
+      );
+      const processor = commonFunction.filterByPurposeForObject(
+        e.processor_specification,
+        dataObj.purpose,
+      );
+      console.log(`${storage} ,${ram}, ${graphicCard} , ${processor}`);
+      return storage && ram && graphicCard && processor;
+    });
   }
 
   const randomIndex = Math.floor(Math.random() * result.length);

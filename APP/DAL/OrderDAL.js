@@ -19,7 +19,8 @@ select
   'unit_price', od.unit_price
   )) as order_details,
   o.quantity  total_items,
-  o.total as total_price,
+  TO_CHAR(o.total,
+	'FM999,999,999') as total_price,
   sa.recipient_name ,
   sa.recipient_name ,
   sa.street_address ,
@@ -88,6 +89,8 @@ select
   'unit_price', od.unit_price
   )) as order_details,
   sum(od.quantity) as total_items,
+  TO_CHAR(o.total,
+	'FM999,999,999') as total_price,
   sa.recipient_name ,
   sa.recipient_name ,
   sa.street_address ,
@@ -190,7 +193,8 @@ SELECT
       'unit_price', od.unit_price
   )) AS order_details,
   o.quantity AS total_items,
-  o.total AS total_price
+ TO_CHAR(o.total,
+	'FM999,999,999') as total_price
 FROM 
   "order" o
 LEFT JOIN

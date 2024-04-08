@@ -19,7 +19,11 @@ select
   'unit_price', od.unit_price
   )) as order_details,
   o.quantity  total_items,
-  o.total as total_price
+  o.total as total_price,
+  sa.recipient_name ,
+  sa.recipient_name ,
+  sa.street_address ,
+  sa.city 
 from 
   "order" o
 left join
@@ -37,7 +41,14 @@ left outer join
 inner join public.user u
 on 1=1
 and u.user_id = o.user_id
-group by o.order_id,os.status_id,p.payment_id,u.user_id
+left outer join 
+  shipping_address sa
+  on 1 = 1
+  and sa.address_id = o.address_id
+  and sa.user_id = o.user_id
+group by o.order_id,os.status_id,p.payment_id,u.user_id,sa.recipient_name ,
+  sa.recipient_name ,
+  sa.street_address ,sa.city 
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
@@ -99,7 +110,7 @@ left outer join
   shipping_address sa
   on 1 = 1
   and sa.address_id = o.address_id
---  and sa.user_id = o.user_id
+  and sa.user_id = o.user_id
 where 1 = 1
   and o.user_id = '${userId}'
 group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
@@ -124,7 +135,6 @@ export async function createOrderByUser(orderObject) {
     shipping_fee: orderObject.shipping_fee,
     quantity: orderObject.quantity,
     total: orderObject.total,
-    // address_id: orderItem.address_id,
     address_id:
       orderObject?.address_id || '1f41abde-ebad-4fa5-868e-2cfab685a370',
   });

@@ -72,8 +72,8 @@ export async function generateChart() {
   const sqlQuery = `
 SELECT 
     month,
-    TO_CHAR(monthly_total, 'FM999,999,999') AS monthly_total,
-    TO_CHAR(SUM(monthly_total), 'FM999,999,999') AS total
+    TO_CHAR(SUM(monthly_total), 'FM999,999,999,999,999') AS monthly_total,
+    TO_CHAR(SUM(monthly_total), 'FM999,999,999,999,999') AS total
 FROM (
     SELECT 
         EXTRACT(MONTH FROM o.created_at) AS month,
@@ -86,7 +86,7 @@ FROM (
         EXTRACT(MONTH FROM o.created_at)
 ) AS monthly_totals
 GROUP BY 
-    month, monthly_total
+    month
 ORDER BY 
     month;
 `;

@@ -991,6 +991,8 @@ LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN processor_specification ps on p.product_id = ps.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
+ORDER BY 
+  p.unit_price ASC
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -1031,6 +1033,8 @@ group by
 	pb.product_brand_id,
 	ms.product_id,
 	ms.specification_id
+ORDER BY 
+  p.unit_price ASC
 `;
 
   const motherBoardList = await SequelizeInstance.query(sqlQuery, {
@@ -1071,6 +1075,8 @@ group by
 	pb.product_brand_id,
 	cs.product_id,
 	cs.specification_id
+ORDER BY 
+  p.unit_price ASC
 `;
 
   const caseList = await SequelizeInstance.query(sqlQuery, {
@@ -1111,6 +1117,8 @@ group by
 	pb.product_brand_id,
 	gs.product_id,
 	gs.specification_id
+ORDER BY 
+  p.unit_price ASC
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
@@ -1151,6 +1159,8 @@ group by
 	pb.product_brand_id,
 	rs.product_id,
 	rs.specification_id
+ORDER BY 
+  p.unit_price ASC
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
@@ -1191,6 +1201,8 @@ group by
 	pb.product_brand_id,
 	ss.product_id,
 	ss.specification_id
+  ORDER BY 
+  p.unit_price ASC
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
@@ -1447,7 +1459,7 @@ from
 	base
 `;
   if (priceRange > 0)
-    sqlQuery += `where 1=1 and total_price_pre_format <= ${priceRange}`;
+    sqlQuery += `where 1=1 and total_price_pre_format <= ${priceRange} and total_price_pre_format >= (${priceRange} / 2)`;
   const autoGenList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

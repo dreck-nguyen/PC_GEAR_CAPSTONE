@@ -16,7 +16,6 @@ export async function getUsersOrder(req, res, next) {
       );
     const result = await orderService.getUsersOrder();
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -48,7 +47,6 @@ export async function getOrderByUserId(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -67,7 +65,6 @@ export async function getOrderForStaffById(req, res, next) {
     const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -81,7 +78,6 @@ export async function getOrderById(req, res, next) {
     const orderId = req.params.orderId;
     const result = await orderService.getOrderById(orderId);
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -114,7 +110,6 @@ export async function updateOrderStatus(req, res, next) {
     await orderService.updateOrderStatus(orderId, statusId);
     res.status(200).send({ message: 'UPDATE STATUS DONE' });
     t.commit();
-    next();
   } catch (error) {
     t.rollback();
     console.log(error);
@@ -125,7 +120,6 @@ export async function getOrderStatus(req, res, next) {
   try {
     const result = await orderStatusService.getOrderStatus();
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -142,7 +136,6 @@ export async function getOrderStatusByStatusId(req, res, next) {
       orderStatusId,
     );
     res.status(200).send(result);
-    next();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });

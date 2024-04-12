@@ -1,10 +1,7 @@
 // // DbHelper.js
 
-// import pkg from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
-
-// const { Pool } = pkg;
 
 const DB_HOST = process.env.DB_HOST;
 const DB_PORT = process.env.DB_PORT;
@@ -25,16 +22,6 @@ console.log(
   DB_PASSWORD,
 );
 
-// const pool = new Pool({
-//   host: DB_HOST,
-//   port: DB_PORT,
-//   database: DB_DATABASE,
-//   user: DB_USER,
-//   password: DB_PASSWORD,
-// });
-
-// export { pool };
-
 import { Sequelize, DataTypes } from 'sequelize';
 
 // Create a Sequelize instance
@@ -46,15 +33,21 @@ const sequelize = new Sequelize({
   password: DB_PASSWORD,
   database: DB_DATABASE,
   sync: false,
+  dialectOptions: {
+    connectTimeout: 90000,
+  },
 });
-sequelize
-  .authenticate()
-  .then(() => {
+
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
     console.log('Connection has been established successfully.');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+testConnection();
 // tbl.Category
 const Category = sequelize.define(
   'Category',

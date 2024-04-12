@@ -85,6 +85,8 @@ select
   , array_agg(jsonb_build_object(
   'order_detail_id', od.order_detail_id,
   'product_id', od.product_id,
+  'product_name', p2."name" ,
+  'product_img', pg.image  ,
   'quantity', od.quantity,
   'unit_price', od.unit_price
   )) as order_details,
@@ -109,6 +111,12 @@ left outer join
   order_detail od 
   on 1=1
   and o.order_id = od.order_id
+inner join product p2 
+on 1=1
+and p2.product_id = od.product_id 
+inner join product_gallery pg 
+on 1=1
+and pg.product_id = od.product_id 
 left outer join 
   shipping_address sa
   on 1 = 1

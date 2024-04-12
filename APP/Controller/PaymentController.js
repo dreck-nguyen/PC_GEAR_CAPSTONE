@@ -1,10 +1,6 @@
 import * as paymentService from '../Service/PaymentService.js';
-import * as commonFunction from '../Common/CommonFunction.js';
-import * as commonEnums from '../Common/CommonEnums.js';
 import * as orderService from '../Service/OrderService.js';
 import dotenv from 'dotenv';
-import config from 'config';
-import dateFormat from 'dateformat';
 import moment from 'moment';
 import querystring from 'qs';
 import crypto from 'crypto';
@@ -30,10 +26,10 @@ export async function createPaymentUrl(req, res, next) {
       req.socket.remoteAddress ||
       req.connection.socket.remoteAddress;
 
-    var tmnCode = process.env.VNPAY_TMNCODE || config.get('vnp_TmnCode');
-    var secretKey = process.env.VNPAY_SECRETKEY || config.get('vnp_HashSecret');
-    var vnpUrl = process.env.VNPAY_URL || config.get('vnp_Url');
-    var returnUrl = process.env.VNPAY_RETURNURL || config.get('vnp_ReturnUrl');
+    var tmnCode = process.env.VNPAY_TMNCODE;
+    var secretKey = process.env.VNPAY_SECRETKEY;
+    var vnpUrl = process.env.VNPAY_URL;
+    var returnUrl = process.env.VNPAY_RETURNURL;
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
     const [order] = await orderService.getOrdersByOrderId(orderId);
@@ -92,10 +88,10 @@ export async function getVnpayIpn(req, res) {
 
     vnp_Params = sortObject(vnp_Params);
 
-    var tmnCode = process.env.VNPAY_TMNCODE || config.get('vnp_TmnCode');
-    var secretKey = process.env.VNPAY_SECRETKEY || config.get('vnp_HashSecret');
-    var vnpUrl = process.env.VNPAY_URL || config.get('vnp_Url');
-    var returnUrl = process.env.VNPAY_RETURNURL || config.get('vnp_ReturnUrl');
+    var tmnCode = process.env.VNPAY_TMNCODE;
+    var secretKey = process.env.VNPAY_SECRETKEY;
+    var vnpUrl = process.env.VNPAY_URL;
+    var returnUrl = process.env.VNPAY_RETURNURL;
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
@@ -128,10 +124,10 @@ export async function getVnpayReturn(req, res) {
 
     vnp_Params = sortObject(vnp_Params);
 
-    var tmnCode = process.env.VNPAY_TMNCODE || config.get('vnp_TmnCode');
-    var secretKey = process.env.VNPAY_SECRETKEY || config.get('vnp_HashSecret');
-    var vnpUrl = process.env.VNPAY_URL || config.get('vnp_Url');
-    var returnUrl = process.env.VNPAY_RETURNURL || config.get('vnp_ReturnUrl');
+    var tmnCode = process.env.VNPAY_TMNCODE;
+    var secretKey = process.env.VNPAY_SECRETKEY;
+    var vnpUrl = process.env.VNPAY_URL;
+    var returnUrl = process.env.VNPAY_RETURNURL;
 
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);

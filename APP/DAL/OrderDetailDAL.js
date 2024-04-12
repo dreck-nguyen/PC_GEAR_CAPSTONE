@@ -14,7 +14,7 @@ export async function createOrderDetail(orderItem) {
 export async function deleteOrderDetailByOrderBy(orderId) {
   const sqlQuery = `
 DELETE FROM order_item
-WHERE  order_id='${orderId}'
+WHERE order_id='${orderId}'
 `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {

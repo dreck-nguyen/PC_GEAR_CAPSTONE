@@ -817,43 +817,7 @@ router.delete(
  *       404:
  *         description: Storage information not found
  *
- * /api/pc-component/auto-gen:
- *   post:
- *     summary: Get auto-generated information
- *     description: Retrieve auto-generated information for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with auto-generated information
- *       404:
- *         description: Auto-generated information not found
- *
- * /api/pc-component/random/auto-gen:
- *   post:
- *     summary: Get auto-generated information
- *     description: Retrieve auto-generated information for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with auto-generated information
- *       404:
- *         description: Auto-generated information not found
  */
-
 /**
  * @swagger
  * components:
@@ -872,13 +836,21 @@ router.delete(
  *               type: string
  *               description: The memory support of the motherboard.
  *               example: "DDR4 2133, 2400, 2666, 2800, 3733, 3800, 4133, 4266, 4333, 4400, 4600, 4733 MHz"
+ *             motherboard_id:
+ *               type: string
+ *               description: The ID of the motherboard.
+ *               example: "5444e504-0569-4cae-8306-8a48daefb5d1"
  *         caseDetails:
  *           type: object
  *           properties:
  *             gpu_length:
  *               type: string
  *               description: The GPU length supported by the case.
- *               example: 365 mm / 14.37"
+ *               example: "365 mm / 14.37\""
+ *             case_id:
+ *               type: string
+ *               description: The ID of the computer case.
+ *               example: "4eb3a010-ae8c-4235-b47a-3ec4dfdd66bf"
  *         gpuDetail:
  *           type: object
  *           properties:
@@ -886,6 +858,10 @@ router.delete(
  *               type: number
  *               description: The length of the graphics card.
  *               example: 358
+ *             gpu_id:
+ *               type: string
+ *               description: The ID of the gpu.
+ *               example: "6313edd7-5ad3-4014-930b-eb6e638be819"
  *         processorDetails:
  *           type: object
  *           properties:
@@ -893,6 +869,10 @@ router.delete(
  *               type: string
  *               description: The chipset of the processor.
  *               example: AMD
+ *             proccessor_id:
+ *               type: string
+ *               description: The ID of the processor.
+ *               example: "6313edd7-5ad3-4014-930b-eb6e638be806"
  *         storageDetail:
  *           type: object
  *           properties:
@@ -900,6 +880,10 @@ router.delete(
  *               type: string
  *               description: The interface of the storage.
  *               example: SATA III
+ *             storage_id:
+ *               type: string
+ *               description: The ID of the storage.
+ *               example: "386533d3-c19c-46bb-9cd1-cbcc2ac7f611"
  *         ramDetails:
  *           type: object
  *           properties:
@@ -907,12 +891,16 @@ router.delete(
  *               type: string
  *               description: The type of RAM.
  *               example: DDR4-2133 MHz
+ *             ram_id:
+ *               type: string
+ *               description: The ID of the RAM.
+ *               example: "b1db9bd8-cc18-455e-b485-d7f5993709f3"
  *         purpose:
  *           type: string
  *           description: The purpose of this component GAMING OR OFFICE.
  *           example: GAMING || OFFICE || null
  *         price_range:
- *           type: int
+ *           type: integer
  *           description: The limit range of budget.
  *           example: 100000000
  */
@@ -925,11 +913,11 @@ router.post(
 );
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
-router.post('/api/pc-component/auto-gen', productController.getAutoGen);
-router.post(
-  '/api/pc-component/random/auto-gen',
-  productController.getRandomOne,
-);
+// router.post('/api/pc-component/auto-gen', productController.getAutoGen);
+// router.post(
+//   '/api/pc-component/random/auto-gen',
+//   productController.getRandomOne,
+// );
 
 //
 /**

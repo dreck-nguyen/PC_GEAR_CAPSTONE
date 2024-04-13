@@ -116,93 +116,45 @@ export async function getStorageById(storageId) {
 
 // TODO
 export async function getProcessor(dataObj) {
-  let result = await productDAL.getProcessor();
-
-  if (dataObj?.purpose)
-    result = commonFunction.filterByPurpose(result, dataObj.purpose);
-
-  if (dataObj?.motherboardDetail)
-    result = commonFunction.filterByChipset(
-      result,
-      dataObj.motherboardDetail.chipset,
-    );
-
+  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  let result = await productDAL.getProcessor(motherboardId);
   return result;
 }
 export async function getMotherboard(dataObj) {
-  let result = await productDAL.getMotherboard();
-
-  if (dataObj) {
-    result = result.filter((e) => {
-      const hasMatchingChipset =
-        !dataObj.processorDetails.chipset ||
-        dataObj.processorDetails.chipset === e.chipset ||
-        '';
-      const hasMatchingRAMFrequency =
-        !dataObj.ramDetails ||
-        commonFunction.hasFrequency(
-          e.memory_supports,
-          dataObj.ramDetails.ram_type,
-        );
-
-      return hasMatchingChipset && hasMatchingRAMFrequency;
-    });
-  }
-
+  const storageId = dataObj.storageDetail?.storage_id || null;
+  const ramId = dataObj.ramDetails?.ram_id || null;
+  const caseId = dataObj.caseDetails?.case_id || null;
+  const processorId = dataObj.processorDetails?.processor_id || null;
+  let result = await productDAL.getMotherboard(
+    storageId,
+    ramId,
+    caseId,
+    processorId,
+  );
   return result;
 }
 export async function getCase(dataObj) {
-  let result = await productDAL.getCase();
-
-  if (dataObj?.gpuDetail?.length) {
-    const minLength = Number(dataObj.gpuDetail.length);
-    result = result.filter(
-      (e) => commonFunction.extractNumberFromString(e.gpu_length) >= minLength,
-    );
-  }
-
+  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  const gpuId = dataObj.motherboardDetail?.gpu_id || null;
+  let result = await productDAL.getCase(motherboardId, gpuId);
   return result;
 }
 export async function getGraphicsCard(dataObj) {
-  let result = await productDAL.getGraphicsCard();
-  if (dataObj?.purpose)
-    result = commonFunction.filterByPurposeForGPU(result, dataObj.purpose);
-
-  if (dataObj?.caseDetails) {
-    const minLength = commonFunction.extractNumberFromString(
-      dataObj.caseDetails.gpu_length,
-    );
-    result = result.filter((e) => minLength >= Number(e.length));
-  }
-
+  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  let result = await productDAL.getGraphicsCard(motherboardId);
   return result;
 }
 export async function getRam(dataObj) {
-  let result = await productDAL.getRam();
-  if (dataObj?.purpose)
-    result = commonFunction.filterByPurposeForRAM(result, dataObj.purpose);
-
-  if (dataObj?.motherboardDetail && dataObj.motherboardDetail.memory_supports) {
-    const supportedRamTypes = dataObj.motherboardDetail.memory_supports;
-    result = result.filter((e) =>
-      commonFunction.hasFrequency(supportedRamTypes, e.ram_type),
-    );
-  }
+  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  let result = await productDAL.getRam(motherboardId);
 
   console.log(result);
   return result;
 }
 export async function getStorage(dataObj) {
-  let result = await productDAL.getStorage();
-  if (dataObj?.purpose)
-    result = commonFunction.filterByPurposeForStorage(result, dataObj.purpose);
+  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
 
-  if (dataObj?.storageDetail && dataObj.storageDetail.interface) {
-    const desiredInterface = dataObj.storageDetail.interface;
-    result = result.filter((e) => e.interface.includes(desiredInterface));
-  }
-
-  console.log(result);
+  let result = await productDAL.getStorage(motherboardId);
   return result;
 }
 export async function getAutoGen(dataObj) {

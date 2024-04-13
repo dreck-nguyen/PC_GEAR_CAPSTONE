@@ -970,9 +970,8 @@ group by
 }
 
 //
-export async function getProcessor() {
-  const sqlQuery = `
-SELECT 
+export async function getProcessor(motherboardId) {
+  let sqlQuery = `SELECT 
   p.product_id,
   p."name",
   p.description,
@@ -985,17 +984,21 @@ SELECT
   ps.*
 FROM 
   product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN processor_specification ps on p.product_id = ps.product_id 
+LEFT JOIN category c ON c.category_id = p.category_id
+LEFT JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+LEFT JOIN product_gallery pg ON pg.product_id = p.product_id
+INNER JOIN processor_specification ps ON p.product_id = ps.product_id
+LEFT JOIN motherboard_support_processor msp ON ps.model = msp.support_proccessor_type
+    AND ps.model_number BETWEEN msp.support_proccessor_min_seq AND msp.support_proccessor_max_seq
+WHERE 
+  (:motherboardId IS NULL OR msp.motherboard_id = :motherboardId)
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
 ORDER BY 
-  p.unit_price ASC
-`;
+  p.unit_price ASC;`;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1003,51 +1006,98 @@ ORDER BY
   return processorList;
 }
 
-export async function getMotherboard() {
-  const sqlQuery = `
-select
+export async function getMotherboard(storageId, ramId, caseId, processorId) {
+  let sqlQuery = `
+SELECT
 	p.product_id,
 	p."name",
 	p.description,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
+	TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
 	p.discount,
 	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
+	c."name" AS category_name,
+	pb.product_brand_name AS brand_name,
+	ARRAY_AGG(pg.image) AS image_links,
 	ms.*
-from
+FROM
 	product p
-left outer join category c on
+LEFT OUTER JOIN category c ON
 	c.category_id = p.category_id
-left outer join product_brand pb on
+LEFT OUTER JOIN product_brand pb ON
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+LEFT OUTER JOIN product_gallery pg ON
 	pg.product_id = p.product_id
-inner join motherboard_specification ms on
+INNER JOIN motherboard_specification ms ON
 	p.product_id = ms.product_id
-group by
+`;
+
+  if (storageId)
+    sqlQuery += `inner join (
+  select ss.interface  from storage_specification ss 
+  inner join storage_interface si 
+  on 1=1
+  and si.id = ss.interface 
+  where ss.product_id = :storageId) s
+  on 1=1
+  and ms.storage_interface = s.interface`;
+
+  if (ramId)
+    sqlQuery += `
+  inner join motherboard_support_ram msr 
+  on 1=1
+  and ms.product_id = msr.motherboard_id
+  inner join ram_specification rs 
+  on 1=1
+  and rs.product_id  = :ramId
+  and rs.ram_type = msr.support_ram_type 
+  and rs.ram_speed <= msr.support_max_ram_seq 
+  and rs.ram_speed >= msr.support_min_ram_seq`;
+
+  if (caseId)
+    sqlQuery += `
+    inner join case_form_factor cff
+  on 1=1
+  and cff.product_id = :caseId
+  and ms.form_factor = cff.form_factor_id `;
+
+  if (processorId)
+    sqlQuery += `
+  inner join (
+  select motherboard_id  from processor_specification ps 
+  inner join proccessor_model pm 
+  on 1=1
+  and ps.model = pm.id
+  inner join motherboard_support_processor msp 
+  on 1=1
+  and msp.support_proccessor_type = pm.id
+  and msp.support_proccessor_min_seq <= ps.model_number 
+  and msp.support_proccessor_max_seq >= ps.model_number
+  and ps.product_id = :processorId) proccessor_support
+  on 1=1
+  and proccessor_support.motherboard_id = ms.product_id `;
+
+  sqlQuery += `
+GROUP BY
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,
 	ms.product_id,
 	ms.specification_id
 ORDER BY 
-  p.unit_price ASC
-`;
+  p.unit_price ASC`;
 
-  const motherBoardList = await SequelizeInstance.query(sqlQuery, {
+  const motherboardList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { storageId, ramId, caseId, processorId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
 
-  return motherBoardList;
+  return motherboardList;
 }
 
-export async function getCase() {
-  const sqlQuery = `
-select
+export async function getCase(motherboardId, gpuId) {
+  let sqlQuery = `
+  select
 	p.product_id,
 	p."name",
 	p.description,
@@ -1069,49 +1119,77 @@ left outer join product_gallery pg on
 	pg.product_id = p.product_id
 inner join case_specification cs on
 	p.product_id = cs.product_id
-group by
+`;
+  if (motherboardId)
+    sqlQuery += `
+  inner join (select cff.product_id  from motherboard_specification ms 
+  inner join case_form_factor cff
+  on 1=1
+  and ms.form_factor = cff.form_factor_id
+  and ms.product_id = :motherboardId) motherboard_supports 
+on 1=1
+and cs.product_id  = motherboard_supports.product_id
+`;
+  if (gpuId)
+    sqlQuery += `
+  inner join graphics_specification gs 
+on 1=1
+and gs.product_id  = :gpuId
+and gs.length <= cs.gpu_length 
+`;
+  sqlQuery += `
+  group by
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,
 	cs.product_id,
 	cs.specification_id
 ORDER BY 
-  p.unit_price ASC
+  p.unit_price asc
 `;
-
   const caseList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId, gpuId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
 
   return caseList;
 }
-
-export async function getGraphicsCard() {
-  const sqlQuery = `
-select
+export async function getGraphicsCard(motherBoardId) {
+  console.log(motherBoardId);
+  let sqlQuery = `
+SELECT
 	p.product_id,
 	p."name",
 	p.description,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
+	TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
 	p.discount,
 	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
+	c."name" AS category_name,
+	pb.product_brand_name AS brand_name,
+	ARRAY_AGG(pg.image) AS image_links,
 	gs.*
-from
+FROM
 	product p
-left outer join category c on
+LEFT OUTER JOIN category c ON
 	c.category_id = p.category_id
-left outer join product_brand pb on
+LEFT OUTER JOIN product_brand pb ON
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+LEFT OUTER JOIN product_gallery pg ON
 	pg.product_id = p.product_id
-inner join graphics_specification gs on
+INNER JOIN graphics_specification gs ON
 	p.product_id = gs.product_id
-group by
+`;
+
+  if (motherBoardId)
+    sqlQuery += `
+INNER JOIN motherboard_specification ms 
+ON ms.product_id = :motherBoardId 
+AND ms.gpu_interface = gs.gpu_interface 
+`;
+
+  sqlQuery += `
+GROUP BY
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,
@@ -1122,6 +1200,7 @@ ORDER BY
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherBoardId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1129,8 +1208,8 @@ ORDER BY
   return gpuList;
 }
 
-export async function getRam() {
-  const sqlQuery = `
+export async function getRam(motherboardId) {
+  let sqlQuery = `
 select
 	p.product_id,
 	p."name",
@@ -1153,6 +1232,18 @@ left outer join product_gallery pg on
 	pg.product_id = p.product_id
 inner join ram_specification rs on
 	p.product_id = rs.product_id
+`;
+  if (motherboardId)
+    sqlQuery += `
+  inner join motherboard_support_ram msr
+on 1=1
+and msr.motherboard_id = :motherboardId
+and msr.support_ram_type = rs.ram_type 
+and msr.support_min_ram_seq <= rs.ram_speed
+and msr.support_max_ram_seq >= rs.ram_speed
+`;
+
+  sqlQuery += `
 group by
 	p.product_id,
 	c.category_id,
@@ -1160,10 +1251,11 @@ group by
 	rs.product_id,
 	rs.specification_id
 ORDER BY 
-  p.unit_price ASC
+  p.unit_price asc
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1171,8 +1263,8 @@ ORDER BY
   return ramList;
 }
 
-export async function getStorage() {
-  const sqlQuery = `
+export async function getStorage(motherboardId) {
+  let sqlQuery = `
 select
 	p.product_id,
 	p."name",
@@ -1195,6 +1287,16 @@ left outer join product_gallery pg on
 	pg.product_id = p.product_id
 inner join storage_specification ss on
 	p.product_id = ss.product_id
+`;
+  if (motherboardId)
+    sqlQuery += `
+inner join motherboard_specification ms 
+on 1=1
+and ms.storage_interface = ss.interface 
+and ms.product_id  = :motherboardId
+`;
+
+  sqlQuery += `
 group by
 	p.product_id,
 	c.category_id,
@@ -1206,6 +1308,7 @@ group by
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

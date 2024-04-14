@@ -1127,6 +1127,9 @@ on
 inner join (
 	select
 		msr.motherboard_id,
+    msr.support_max_ram_seq,
+    msr.support_min_ram_seq,
+    msr.support_ram_type,
 		STRING_AGG(CONCAT(rt.ram_type ,
 		'|',
 		msr.support_min_ram_seq ,
@@ -1141,7 +1144,8 @@ on
 	group by
 		msr.motherboard_id,
 		msr.support_min_ram_seq,
-		msr.support_max_ram_seq
+		msr.support_max_ram_seq,
+    msr.support_ram_type
 ) msr 
   on
 	1 = 1
@@ -1160,9 +1164,6 @@ on
 
   if (ramId)
     sqlQuery += `
-  inner join motherboard_support_ram msr 
-  on 1=1
-  and ms.product_id = msr.motherboard_id
   inner join ram_specification rs 
   on 1=1
   and rs.product_id  = :ramId
@@ -1231,6 +1232,8 @@ group by
 	msr.ram_supports
 ORDER BY 
   p.unit_price ASC`;
+
+  console.log(`~~~~~~~~~~~~query here`, sqlQuery);
 
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
     replacements: { storageId, ramId, caseId, processorId },

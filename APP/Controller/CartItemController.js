@@ -9,7 +9,7 @@ export async function updateCartItemQuantity(req, res, next) {
       cartItemId,
       quantity,
     );
-    res.status(200).send(result);
+    res.status(200).send({ result });
     t.commit();
   } catch (error) {
     t.rollback();

@@ -73,7 +73,7 @@ export async function generateChart() {
 SELECT 
     month,
     TO_CHAR(SUM(monthly_total), 'FM999,999,999,999,999') AS monthly_total,
-    TO_CHAR(SUM(monthly_total), 'FM999,999,999,999,999') AS total
+    SUM(monthly_total) AS total
 FROM (
     SELECT 
         EXTRACT(MONTH FROM o.created_at) AS month,

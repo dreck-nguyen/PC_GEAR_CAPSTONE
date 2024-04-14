@@ -12,7 +12,10 @@ export async function getDashboard() {
     monthly_total,
   }));
 
-  const total = chart[0]?.total || 0;
+  const total = chart.reduce((acc, curr) => {
+    acc += Number(curr.total);
+    return acc;
+  }, 0);
 
   return { result, chart: chartMapped, total };
 }

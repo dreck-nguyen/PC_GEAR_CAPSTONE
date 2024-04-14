@@ -971,31 +971,63 @@ group by
 
 //
 export async function getProcessor(motherboardId) {
-  let sqlQuery = `SELECT 
-  p.product_id,
-  p."name",
-  p.description,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  ps.*
-FROM 
-  product p
-LEFT JOIN category c ON c.category_id = p.category_id
-LEFT JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT JOIN product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN processor_specification ps ON p.product_id = ps.product_id
-LEFT JOIN motherboard_support_processor msp ON ps.model = msp.support_proccessor_type
-    AND ps.model_number BETWEEN msp.support_proccessor_min_seq AND msp.support_proccessor_max_seq
-WHERE 
-  (:motherboardId IS NULL OR msp.motherboard_id = :motherboardId)
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
-ORDER BY 
-  p.unit_price ASC;`;
+  let sqlQuery = `
+  select
+	p.product_id,
+	p."name",
+	p.description,
+	TO_CHAR(p.unit_price,
+	'FM999,999,999') as unit_price,
+	p.discount,
+	p.sold,
+	c."name" as category_name,
+	pb.product_brand_name as brand_name,
+	ARRAY_AGG(pg.image) as image_links,
+	ps.specification_id,
+	ps.product_id,
+	ps.product_specification_type,
+	ps.brand,
+	pm.model || '-' || ps.model_number as model, 
+	ps.socket,
+	ps.micro_architecture,
+	ps.core_quantity,
+	ps.threads_quantity,
+	ps.clock_speed,
+	ps.boost_speed_max,
+	ps."cache",
+	ps.memory_support,
+	ps.channel_architecture,
+	ps.power,
+	ps.chipset
+from
+	product p
+left join category c on
+	c.category_id = p.category_id
+left join product_brand pb on
+	pb.product_brand_id = p.product_brand_id
+left join product_gallery pg on
+	pg.product_id = p.product_id
+inner join processor_specification ps on
+	p.product_id = ps.product_id
+left join motherboard_support_processor msp on
+	ps.model = msp.support_proccessor_type
+	and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
+inner join proccessor_model pm  
+on
+	1 = 1
+	and pm.id = ps.model
+where
+	(:motherboardId is null
+		or msp.motherboard_id = :motherboardId)
+group by
+	p.product_id,
+	c.category_id,
+	pb.product_brand_id,
+	ps.product_id,
+	ps.specification_id ,
+	pm.model
+order by
+	p.unit_price asc`;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherboardId },

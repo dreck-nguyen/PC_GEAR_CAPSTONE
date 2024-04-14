@@ -1050,7 +1050,37 @@ SELECT
 	c."name" AS category_name,
 	pb.product_brand_name AS brand_name,
 	ARRAY_AGG(pg.image) AS image_links,
-	ms.*
+	ms.specification_id,
+	ms.product_id,
+	ms.product_specification_type,
+	ms.chipset,
+	ms.spu_socket,
+	ms.usb_details,
+	ms.audio,
+	ms.ethernet_controller,
+	ms.wifi_antenna,
+	ms.memory_slots,
+	ms.memory_supports,
+	ms.channel_architecture,
+	ms.sata,
+	ms.m2,
+	ms.raid_support,
+	ms.expansion_slots,
+	ms.air_cooling,
+	ms.power_connectors,
+	ms.audio_internal,
+	ms.rom,
+	ms.audio_codec,
+	ms.bluetooth,
+	ms.wifi,
+	ms.form_factor,
+	ms.brand,
+	ms.gpu_interface,
+	ms.storage_interface,
+	gi.interface_type ,
+	si.storage_interface ,
+	msp.processor_supports,
+	msr.ram_supports
 FROM
 	product p
 LEFT OUTER JOIN category c ON
@@ -1060,7 +1090,62 @@ LEFT OUTER JOIN product_brand pb ON
 LEFT OUTER JOIN product_gallery pg ON
 	pg.product_id = p.product_id
 INNER JOIN motherboard_specification ms ON
-	p.product_id = ms.product_id
+p.product_id = ms.product_id
+inner join form_factor ff 
+  on
+	1 = 1
+	and ff.id = ms.form_factor
+inner join graphics_interface gi 
+  on
+	1 = 1
+	and gi.id = ms.gpu_interface
+inner join storage_interface si 
+  on
+	1 = 1
+	and si.id = ms.storage_interface
+inner join (
+	select
+		msp.motherboard_id,
+		STRING_AGG(CONCAT(pm.model,
+		'|',
+		msp.support_proccessor_min_seq,
+		'-',
+		msp.support_proccessor_max_seq),
+		'; ') as processor_supports
+	from
+		motherboard_support_processor msp
+	inner join proccessor_model pm 
+on
+		pm.id = msp.support_proccessor_type
+	group by
+		msp.motherboard_id,
+		msp.support_proccessor_min_seq,
+		msp.support_proccessor_max_seq) msp
+  on
+	1 = 1
+	and msp.motherboard_id = ms.product_id
+inner join (
+	select
+		msr.motherboard_id,
+		STRING_AGG(CONCAT(rt.ram_type ,
+		'|',
+		msr.support_min_ram_seq ,
+		'-',
+		msr.support_max_ram_seq ),
+		'; ') as ram_supports
+	from
+		motherboard_support_ram msr
+	inner join ram_type rt  
+on
+		rt.id = msr.support_ram_type
+	group by
+		msr.motherboard_id,
+		msr.support_min_ram_seq,
+		msr.support_max_ram_seq
+) msr 
+  on
+	1 = 1
+	and msr.motherboard_id = ms.product_id
 `;
 
   if (storageId)
@@ -1109,12 +1194,41 @@ INNER JOIN motherboard_specification ms ON
   and proccessor_support.motherboard_id = ms.product_id `;
 
   sqlQuery += `
-GROUP BY
-	p.product_id,
+group by
+  p.product_id,
 	c.category_id,
 	pb.product_brand_id,
+	ms.specification_id,
 	ms.product_id,
-	ms.specification_id
+	ms.product_specification_type,
+	ms.chipset,
+	ms.spu_socket,
+	ms.usb_details,
+	ms.audio,
+	ms.ethernet_controller,
+	ms.wifi_antenna,
+	ms.memory_slots,
+	ms.memory_supports,
+	ms.channel_architecture,
+	ms.sata,
+	ms.m2,
+	ms.raid_support,
+	ms.expansion_slots,
+	ms.air_cooling,
+	ms.power_connectors,
+	ms.audio_internal,
+	ms.rom,
+	ms.audio_codec,
+	ms.bluetooth,
+	ms.wifi,
+	ms.form_factor,
+	ms.brand,
+	ms.gpu_interface,
+	ms.storage_interface,
+	gi.interface_type,
+	si.storage_interface,
+	msp.processor_supports,
+	msr.ram_supports
 ORDER BY 
   p.unit_price ASC`;
 

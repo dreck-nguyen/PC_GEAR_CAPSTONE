@@ -13,7 +13,7 @@ export async function createOrderDetail(orderItem) {
 
 export async function deleteOrderDetailByOrderBy(orderId) {
   const sqlQuery = `
-DELETE FROM order_item
+DELETE FROM order_detail
 WHERE order_id='${orderId}'
 `;
 

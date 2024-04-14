@@ -117,7 +117,8 @@ export async function getStorageById(storageId) {
 // TODO
 export async function getProcessor(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
-  let result = await productDAL.getProcessor(motherboardId);
+  const processorBrandId = dataObj?.processor_brand_id || null;
+  let result = await productDAL.getProcessor(motherboardId, processorBrandId);
   return result;
 }
 export async function getMotherboard(dataObj) {
@@ -126,36 +127,44 @@ export async function getMotherboard(dataObj) {
   const caseId = dataObj?.caseDetails?.case_id || null;
   const processorId = dataObj?.processorDetails?.processor_id || null;
   console.log(storageId, ramId, caseId, processorId);
+  const motherboardBrandId = dataObj?.motherboard_brand_id || null;
   let result = await productDAL.getMotherboard(
     storageId,
     ramId,
     caseId,
     processorId,
+    motherboardBrandId,
   );
   return result;
 }
 export async function getCase(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
   const gpuId = dataObj?.motherboardDetail?.gpu_id || null;
-  let result = await productDAL.getCase(motherboardId, gpuId);
+  const caseBrandId = dataObj?.case_brand_id || null;
+  let result = await productDAL.getCase(motherboardId, gpuId, caseBrandId);
   return result;
 }
 export async function getGraphicsCard(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
-  let result = await productDAL.getGraphicsCard(motherboardId);
+  const gpuBrandId = dataObj?.gpu_brand_id || null;
+
+  let result = await productDAL.getGraphicsCard(motherboardId, gpuBrandId);
   return result;
 }
 export async function getRam(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
-  let result = await productDAL.getRam(motherboardId);
+  const ramBrandId = dataObj?.ram_brand_id || null;
+
+  let result = await productDAL.getRam(motherboardId, ramBrandId);
 
   console.log(result);
   return result;
 }
 export async function getStorage(dataObj) {
+  const storageBrandId = dataObj?.storage_brand_id || null;
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
 
-  let result = await productDAL.getStorage(motherboardId);
+  let result = await productDAL.getStorage(motherboardId, storageBrandId);
   return result;
 }
 export async function getAutoGen(dataObj) {

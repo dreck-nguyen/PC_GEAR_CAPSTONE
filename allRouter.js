@@ -895,6 +895,24 @@ router.delete(
  *               type: string
  *               description: The ID of the RAM.
  *               example: "b1db9bd8-cc18-455e-b485-d7f5993709f3"
+ *         processor_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
+ *         motherboard_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
+ *         case_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
+ *         gpu_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
+ *         ram_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
+ *         storage_brand_id:
+ *           type: string
+ *           example: "695d5492-7577-48d8-8742-7aa07681476e"
  *         purpose:
  *           type: string
  *           description: The purpose of this component GAMING OR OFFICE.

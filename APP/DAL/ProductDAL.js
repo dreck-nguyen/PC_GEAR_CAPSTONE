@@ -970,9 +970,9 @@ group by
 }
 
 //
-export async function getProcessor(motherboardId) {
+export async function getProcessor(motherboardId, brandId) {
   let sqlQuery = `
-  select
+select
 	p.product_id,
 	p."name",
 	p.description,
@@ -1019,6 +1019,10 @@ on
 where
 	(:motherboardId is null
 		or msp.motherboard_id = :motherboardId)
+    and 
+    (:brandId is null
+		  or p.product_brand_id = :brandId
+    )
 group by
 	p.product_id,
 	c.category_id,
@@ -1030,7 +1034,7 @@ order by
 	p.unit_price asc`;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId },
+    replacements: { motherboardId, brandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1038,7 +1042,13 @@ order by
   return processorList;
 }
 
-export async function getMotherboard(storageId, ramId, caseId, processorId) {
+export async function getMotherboard(
+  storageId,
+  ramId,
+  caseId,
+  processorId,
+  motherboardBrandId,
+) {
   let sqlQuery = `
 SELECT
 	p.product_id,
@@ -1195,6 +1205,10 @@ on
   and proccessor_support.motherboard_id = ms.product_id `;
 
   sqlQuery += `
+where
+(:motherboardBrandId is null
+		  or p.product_brand_id = :motherboardBrandId
+    ) 
 group by
   p.product_id,
 	c.category_id,
@@ -1236,7 +1250,7 @@ ORDER BY
   console.log(`~~~~~~~~~~~~query here`, sqlQuery);
 
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { storageId, ramId, caseId, processorId },
+    replacements: { storageId, ramId, caseId, processorId, motherboardBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1244,7 +1258,7 @@ ORDER BY
   return motherboardList;
 }
 
-export async function getCase(motherboardId, gpuId) {
+export async function getCase(motherboardId, gpuId, caseBrandId) {
   let sqlQuery = `
   select
 	p.product_id,
@@ -1287,6 +1301,10 @@ and gs.product_id  = :gpuId
 and gs.length <= cs.gpu_length 
 `;
   sqlQuery += `
+where
+(:caseBrandId is null
+		  or p.product_brand_id = :caseBrandId
+    ) 
   group by
 	p.product_id,
 	c.category_id,
@@ -1297,14 +1315,14 @@ ORDER BY
   p.unit_price asc
 `;
   const caseList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId, gpuId },
+    replacements: { motherboardId, gpuId, caseBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
 
   return caseList;
 }
-export async function getGraphicsCard(motherBoardId) {
+export async function getGraphicsCard(motherBoardId, gpuBrandId) {
   console.log(motherBoardId);
   let sqlQuery = `
 SELECT
@@ -1338,6 +1356,10 @@ AND ms.gpu_interface = gs.gpu_interface
 `;
 
   sqlQuery += `
+  where
+(:gpuBrandId is null
+		  or p.product_brand_id = :gpuBrandId
+    ) 
 GROUP BY
 	p.product_id,
 	c.category_id,
@@ -1349,7 +1371,7 @@ ORDER BY
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherBoardId },
+    replacements: { motherBoardId, gpuBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1357,7 +1379,7 @@ ORDER BY
   return gpuList;
 }
 
-export async function getRam(motherboardId) {
+export async function getRam(motherboardId, ramBrandId) {
   let sqlQuery = `
 select
 	p.product_id,
@@ -1393,6 +1415,10 @@ and msr.support_max_ram_seq >= rs.ram_speed
 `;
 
   sqlQuery += `
+where
+(:ramBrandId is null
+		  or p.product_brand_id = :ramBrandId
+    ) 
 group by
 	p.product_id,
 	c.category_id,
@@ -1404,7 +1430,7 @@ ORDER BY
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId },
+    replacements: { motherboardId, ramBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1412,7 +1438,7 @@ ORDER BY
   return ramList;
 }
 
-export async function getStorage(motherboardId) {
+export async function getStorage(motherboardId, storageBrandId) {
   let sqlQuery = `
 select
 	p.product_id,
@@ -1446,6 +1472,10 @@ and ms.product_id  = :motherboardId
 `;
 
   sqlQuery += `
+where
+(:storageBrandId is null
+		  or p.product_brand_id = :storageBrandId
+    ) 
 group by
 	p.product_id,
 	c.category_id,
@@ -1457,7 +1487,7 @@ group by
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId },
+    replacements: { motherboardId, storageBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

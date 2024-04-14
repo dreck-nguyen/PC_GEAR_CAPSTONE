@@ -116,15 +116,16 @@ export async function getStorageById(storageId) {
 
 // TODO
 export async function getProcessor(dataObj) {
-  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
   let result = await productDAL.getProcessor(motherboardId);
   return result;
 }
 export async function getMotherboard(dataObj) {
-  const storageId = dataObj.storageDetail?.storage_id || null;
-  const ramId = dataObj.ramDetails?.ram_id || null;
-  const caseId = dataObj.caseDetails?.case_id || null;
-  const processorId = dataObj.processorDetails?.processor_id || null;
+  const storageId = dataObj?.storageDetail?.storage_id || null;
+  const ramId = dataObj?.ramDetails?.ram_id || null;
+  const caseId = dataObj?.caseDetails?.case_id || null;
+  const processorId = dataObj?.processorDetails?.processor_id || null;
+  console.log(storageId, ramId, caseId, processorId);
   let result = await productDAL.getMotherboard(
     storageId,
     ramId,
@@ -134,25 +135,25 @@ export async function getMotherboard(dataObj) {
   return result;
 }
 export async function getCase(dataObj) {
-  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
-  const gpuId = dataObj.motherboardDetail?.gpu_id || null;
+  const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
+  const gpuId = dataObj?.motherboardDetail?.gpu_id || null;
   let result = await productDAL.getCase(motherboardId, gpuId);
   return result;
 }
 export async function getGraphicsCard(dataObj) {
-  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
   let result = await productDAL.getGraphicsCard(motherboardId);
   return result;
 }
 export async function getRam(dataObj) {
-  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
   let result = await productDAL.getRam(motherboardId);
 
   console.log(result);
   return result;
 }
 export async function getStorage(dataObj) {
-  const motherboardId = dataObj.motherboardDetail?.motherboard_id || null;
+  const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
 
   let result = await productDAL.getStorage(motherboardId);
   return result;

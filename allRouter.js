@@ -695,11 +695,11 @@ router.get(
   '/api/category/product/:categoryId',
   productController.getProductsByCategory,
 );
-router.post(
-  '/api/auth/staff/product/image/:productId',
-  uploadCloud.single('image'),
-  productController.createProductImage,
-);
+// router.post(
+//   '/api/auth/staff/product/image/:productId',
+//   uploadCloud.single('image'),
+//   productController.createProductImage,
+// );
 router.delete('/api/auth/staff/product/', productController.deleteProductsById);
 router.delete(
   '/api/auth/staff/product/:productId',
@@ -869,7 +869,7 @@ router.delete(
  *               type: string
  *               description: The chipset of the processor.
  *               example: AMD
- *             proccessor_id:
+ *             processor_id:
  *               type: string
  *               description: The ID of the processor.
  *               example: "6313edd7-5ad3-4014-930b-eb6e638be806"

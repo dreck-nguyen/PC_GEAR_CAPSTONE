@@ -7,10 +7,11 @@ export async function getUsersOrder() {
   return result;
 }
 
-export async function getOrderByUserId(loginUser) {
+export async function getOrderByUserId(loginUser, limit, offset) {
   const user_id = loginUser.user_id;
-  const result = await orderDAL.getOrderByUserId(user_id);
-  return result;
+  const count = await orderDAL.countUserOrder(user_id);
+  const result = await orderDAL.getOrderByUserId(user_id, limit, offset);
+  return { count, result, limit, offset };
 }
 export async function getOrderById(orderId) {
   const result = await orderDAL.getOrderById(orderId);
@@ -220,8 +221,8 @@ export async function updateOrderStatus(orderId, statusId) {
   await orderDAL.updateOrderStatus(orderId, statusId);
 }
 
-export async function updateOrderPaymentStatus(orderId, stage) {
-  await orderDAL.updateOrderPaymentStatus(orderId, stage);
+export async function updateOrderPaymentStatus(orderId, stage, message) {
+  await orderDAL.updateOrderPaymentStatus(orderId, stage, message);
 }
 
 export async function getOrdersByOrderId(orderId) {

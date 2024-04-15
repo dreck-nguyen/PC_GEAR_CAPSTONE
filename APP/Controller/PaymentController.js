@@ -32,8 +32,8 @@ export async function createPaymentUrl(req, res, next) {
     var returnUrl = process.env.VNPAY_RETURNURL;
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
+    if (!orderId) throw new Error('YOUR PAYMENT METHOD NOT VN PAY');
     const [order] = await orderService.getOrdersByOrderId(orderId);
-    if (!order) throw new Error('YOUR PAYMENT METHOD NOT VN PAY');
     var amount = order.total;
     var bankCode = 'NCB';
 
@@ -135,12 +135,15 @@ export async function getVnpayReturn(req, res) {
 
     const orderId = vnp_Params['vnp_TxnRef'];
 
+    console.log(`~~~~~~`, orderId);
     if (secureHash === signed) {
       console.log(vnp_Params);
-      await orderService.updateOrderPaymentStatus(orderId, true);
+      const code = vnp_Params['vnp_ResponseCode'];
+      const message = handleErrorCode(code);
+      await orderService.updateOrderPaymentStatus(orderId, true, message);
       res.send({ code: vnp_Params['vnp_ResponseCode'], success: true });
     } else {
-      await orderService.updateOrderPaymentStatus(orderId, false);
+      // await orderService.updateOrderPaymentStatus(orderId, false);
       res.send({ code: '97', success: false });
     }
     t.commit();
@@ -165,3 +168,62 @@ function sortObject(obj) {
   }
   return sorted;
 }
+function handleErrorCode(errorCode) {
+  let errorMessage = '';
+  switch (errorCode) {
+    case '00':
+      errorMessage = 'Transaction successful';
+      break;
+    case '07':
+      errorMessage =
+        'Transaction successful but flagged for suspicious activity.';
+      break;
+    case '09':
+      errorMessage =
+        "Transaction unsuccessful: Customer's card/account not registered for Internet Banking service.";
+      break;
+    case '10':
+      errorMessage =
+        "Transaction unsuccessful: Customer's authentication failed more than 3 times.";
+      break;
+    case '11':
+      errorMessage =
+        'Transaction unsuccessful: Payment waiting period expired. Please retry transaction.';
+      break;
+    case '12':
+      errorMessage =
+        "Transaction unsuccessful: Customer's card/account is locked.";
+      break;
+    case '13':
+      errorMessage =
+        'Transaction unsuccessful: Incorrect transaction authentication password (OTP) entered. Please retry transaction.';
+      break;
+    case '24':
+      errorMessage = 'Transaction canceled by customer.';
+      break;
+    case '51':
+      errorMessage =
+        "Transaction unsuccessful: Insufficient funds in customer's account.";
+      break;
+    case '65':
+      errorMessage =
+        "Transaction unsuccessful: Customer's account has exceeded daily transaction limit.";
+      break;
+    case '75':
+      errorMessage = 'Payment bank is under maintenance.';
+      break;
+    case '79':
+      errorMessage =
+        'Transaction unsuccessful: Customer entered incorrect payment password too many times. Please retry transaction.';
+      break;
+    case '99':
+      errorMessage =
+        'Other errors (errors not listed in the given error codes).';
+      break;
+    default:
+      errorMessage = 'Invalid error code';
+  }
+  return errorMessage;
+}
+
+// console.log(handleErrorCode(errorCode));

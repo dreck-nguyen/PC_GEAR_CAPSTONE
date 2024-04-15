@@ -1,5 +1,22 @@
 import { Order, SequelizeInstance } from '../utility/DbHelper.js';
+export async function countUserOrder(userId) {
+  const sqlQuery = `
+select 
+COUNT(*)
+from 
+  "order" o
+where user_id = :userId
+  ;
+`;
 
+  const userOrder = await SequelizeInstance.query(sqlQuery, {
+    replacements: { userId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return userOrder;
+}
 export async function getUsersOrder() {
   const sqlQuery = `
 select 
@@ -23,8 +40,8 @@ select
 	'FM999,999,999') as total_price,
   sa.recipient_name ,
   sa.recipient_name ,
-  sa.street_address ,
-  sa.city 
+  COALESCE (sa.street_address, o.street_address) as street_address ,
+  COALESCE (sa.city, o.district) as district
 from 
   "order" o
 left join
@@ -49,7 +66,8 @@ left outer join
   and sa.user_id = o.user_id
 group by o.order_id,os.status_id,p.payment_id,u.user_id,sa.recipient_name ,
   sa.recipient_name ,
-  sa.street_address ,sa.city 
+  sa.street_address ,sa.city
+  ;
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
@@ -76,7 +94,7 @@ from
   return orderStatus;
 }
 
-export async function getOrderByUserId(userId) {
+export async function getOrderByUserId(userId, limit, offset) {
   const sqlQuery = `
 select 
   o.*
@@ -126,7 +144,10 @@ where 1 = 1
   and o.user_id = '${userId}'
 group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
   sa.recipient_name ,
-  sa.street_address ,sa.city 
+  sa.street_address ,sa.city
+order by o.created_at desc
+limit ${limit}
+offset ${offset}
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
@@ -150,19 +171,20 @@ export async function createOrderByUser(orderObject) {
       orderObject?.address_id || '1f41abde-ebad-4fa5-868e-2cfab685a370',
   });
 }
-export async function updateOrderPaymentStatus(orderId, stage) {
+export async function updateOrderPaymentStatus(orderId, stage, message) {
   const sqlQuery = `
     UPDATE
       public."order"
     SET
       payment_date = now(),
-      vnpay_status = :stage
+      vnpay_status = :stage,
+      vnpay_message = :message
     WHERE
       order_id = :orderId
   `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {
-    replacements: { orderId, stage },
+    replacements: { orderId, stage, message },
     type: SequelizeInstance.QueryTypes.UPDATE,
     raw: true,
   });

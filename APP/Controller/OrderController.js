@@ -14,6 +14,7 @@ export async function getUsersOrder(req, res, next) {
       throw new Error(
         `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
+
     const result = await orderService.getUsersOrder();
     res.status(200).send(result);
   } catch (error) {
@@ -45,7 +46,13 @@ export async function getOrderByUserId(req, res, next) {
     const loginUser = req.loginUser;
     if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
-    const result = await orderService.getOrderByUserId(loginUser);
+    const limit = req.query.limit || 5;
+    const offset = req.query.offset || 0;
+    const result = await orderService.getOrderByUserId(
+      loginUser,
+      limit,
+      offset * limit,
+    );
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

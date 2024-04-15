@@ -2994,12 +2994,28 @@ router.delete(
  *       -  BearerAuth: []
  *     tags:
  *       - ORDER SECTION
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         description: Number of items to return per page.
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *       - in: query
+ *         name: offset
+ *         description: Number of items to skip before starting to collect the result set.
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 0
  *     produces:
  *       - application/json
  *     responses:
  *       200:
  *         description: Successful response
  *         schema:
+ *           $ref: '#/definitions/Order'
  *       400:
  *         description: Bad Request
  *       404:

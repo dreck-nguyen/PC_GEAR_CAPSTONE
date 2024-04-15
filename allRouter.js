@@ -3014,8 +3014,6 @@ router.delete(
  *     responses:
  *       200:
  *         description: Successful response
- *         schema:
- *           $ref: '#/definitions/Order'
  *       400:
  *         description: Bad Request
  *       404:

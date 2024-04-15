@@ -79,6 +79,7 @@ export async function createPaymentUrl(req, res, next) {
 }
 
 export async function getVnpayIpn(req, res) {
+  var orderId = vnp_Params['vnp_TxnRef'];
   try {
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -95,7 +96,6 @@ export async function getVnpayIpn(req, res) {
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
-    var orderId = vnp_Params['vnp_TxnRef'];
 
     if (secureHash === signed) {
       var rspCode = vnp_Params['vnp_ResponseCode'];
@@ -115,6 +115,7 @@ export async function getVnpayIpn(req, res) {
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
   const t = await SequelizeInstance.transaction();
+  const orderId = vnp_Params['vnp_TxnRef'];
   try {
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -132,8 +133,6 @@ export async function getVnpayReturn(req, res) {
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
-
-    const orderId = vnp_Params['vnp_TxnRef'];
 
     console.log(`~~~~~~`, orderId);
     if (secureHash === signed) {

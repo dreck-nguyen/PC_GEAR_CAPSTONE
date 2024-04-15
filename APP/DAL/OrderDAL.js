@@ -114,7 +114,13 @@ select
   sa.recipient_name ,
   sa.recipient_name ,
   sa.street_address ,
-  sa.city 
+  sa.city,
+  array_agg(jsonb_build_object('email', review.email,
+	'product_id', review.product_id,
+	'product_name', review.name,
+	'image_links', review.image,
+	'rating', review.rating,
+	'review', review.review)) as review_list
 from 
   "order" o
 left join
@@ -140,11 +146,46 @@ left outer join
   on 1 = 1
   and sa.address_id = o.address_id
   and sa.user_id = o.user_id
+left outer join (
+select
+	u.email,
+	od.product_id,
+	p.name,
+	pg.image,
+	od.rating,
+	od.review
+from
+	"order" o
+inner join order_detail od on
+	o.order_id = od.order_id
+inner join "user" u on
+	o.user_id = u.user_id
+inner join product p on
+	od.product_id = p.product_id
+left outer join (
+	select
+		product_id,
+		array_agg(image) as image
+	from
+		product_gallery
+	group by
+		product_id,
+		product_gallery_id
+) pg on
+	p.product_id = pg.product_id
+group by
+	u.email,
+	od.product_id ,
+	p.name,
+	pg.image,
+	od.rating,
+	od.review) review
+  on review.product_id = od.product_id
 where 1 = 1
   and o.user_id = '${userId}'
 group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
   sa.recipient_name ,
-  sa.street_address ,sa.city
+  sa.street_address ,sa.city,review.email, review.product_id, review.name, review.image, review.rating, review.review
 order by o.created_at desc
 limit ${limit}
 offset ${offset}

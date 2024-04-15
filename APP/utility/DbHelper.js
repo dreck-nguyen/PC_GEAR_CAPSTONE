@@ -112,6 +112,15 @@ const Order = sequelize.define(
     shipping_fee: {
       type: DataTypes.DECIMAL(18, 2),
     },
+    message: {
+      type: DataTypes.STRING(255),
+    },
+    street_address: {
+      type: DataTypes.STRING(255),
+    },
+    district: {
+      type: DataTypes.STRING(255),
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.NOW,

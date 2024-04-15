@@ -3649,7 +3649,7 @@ router.delete(
  *             example:
  *               error: Internal server error
  */
-router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
+// router.get('/api/auth/staff/pc-build-auto', pcBuilderController.pcAutoBuild);
 router.post('/api/staff/login', userController.loginStaff);
 router.get('/api/auth/staff/order', orderController.getUsersOrder);
 router.get(

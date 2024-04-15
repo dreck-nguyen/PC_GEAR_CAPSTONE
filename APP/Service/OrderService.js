@@ -10,7 +10,11 @@ export async function getUsersOrder() {
 export async function getOrderByUserId(loginUser, limit, offset) {
   const user_id = loginUser.user_id;
   const count = await orderDAL.countUserOrder(user_id);
-  const result = await orderDAL.getOrderByUserId(user_id, limit, offset);
+  const result = await orderDAL.getOrderByUserId(
+    user_id,
+    limit,
+    offset * limit,
+  );
   return { count, result, limit, offset };
 }
 export async function getOrderById(orderId) {

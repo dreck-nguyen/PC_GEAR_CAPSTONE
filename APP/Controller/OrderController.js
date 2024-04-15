@@ -51,7 +51,7 @@ export async function getOrderByUserId(req, res, next) {
     const result = await orderService.getOrderByUserId(
       loginUser,
       limit,
-      offset * limit,
+      offset,
     );
     res.status(200).send(result);
   } catch (error) {
@@ -99,7 +99,6 @@ export async function createOrderByUser(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     const orderId = await orderService.createOrderByUser(loginUser, cartObject);
-    // const result = await orderService.getOrderByUserId(loginUser);
     res.status(200).send({ orderId });
     t.commit();
   } catch (error) {

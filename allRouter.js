@@ -3209,6 +3209,8 @@ router.delete(
  * /api/auth/user/order-rating/{orderDetailId}:
  *   put:
  *     summary: Update order rating and review
+ *     tags:
+ *       - ORDER SECTION
  *     parameters:
  *       - in: path
  *         name: orderDetailId

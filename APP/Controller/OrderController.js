@@ -147,3 +147,26 @@ export async function getOrderStatusByStatusId(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
+export async function createOrderDetailRating(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    if (!commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.USER))
+      throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
+    const orderDetailId = req.params.orderDetailId;
+    const { rating, review } = req.body;
+    const result = await orderStatusService.createOrderDetailRating(
+      loginUser.user_id,
+      orderDetailId,
+      rating,
+      review,
+    );
+    res.status(200).send(result);
+    t.commit();
+  } catch (error) {
+    t.rollback();
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}

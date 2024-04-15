@@ -98,3 +98,24 @@ ORDER BY
 
   return chart;
 }
+export async function createOrderDetailRating(
+  userId,
+  orderDetailId,
+  rating,
+  review,
+) {
+  const sqlQuery = `
+    UPDATE public.order_detail 
+    SET rating = ?, review = ?
+    WHERE order_detail_id = ? 
+    AND order_id IN (SELECT order_id FROM "order" WHERE user_id = ?)
+    RETURNING *
+  `;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: [rating, review, orderDetailId, userId],
+    type: SequelizeInstance.QueryTypes.UPDATE,
+  });
+
+  return result;
+}

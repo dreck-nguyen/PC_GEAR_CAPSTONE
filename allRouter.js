@@ -3206,6 +3206,48 @@ router.delete(
  */
 /**
  * @swagger
+ * /api/auth/user/order-rating/{orderDetailId}:
+ *   put:
+ *     summary: Update order rating and review
+ *     parameters:
+ *       - in: path
+ *         name: orderDetailId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the order detail to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: integer
+ *                 format: int32
+ *                 minimum: 1
+ *                 maximum: 5
+ *                 description: The rating for the order
+ *               review:
+ *                 type: string
+ *                 description: The review for the order
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *       '400':
+ *         description: Invalid request body or parameters
+ *       '401':
+ *         description: Unauthorized - Token is missing or invalid
+ *       '404':
+ *         description: Order detail not found
+ *       '500':
+ *         description: Internal server error
+ *     security:
+ *       - BearerAuth: []
+ */
+/**
+ * @swagger
  * /api/user/order-status/{order_id}:
  *   put:
  *     summary: Update Order Status by ID
@@ -3273,6 +3315,10 @@ router.put(
 router.get(
   '/api/auth/user/order-status/:orderStatusId',
   orderController.getOrderStatusByStatusId,
+);
+router.put(
+  '/api/auth/user/order-rating/:orderDetailId',
+  orderController.createOrderDetailRating,
 );
 // SHIPPING ADDRESS
 /**

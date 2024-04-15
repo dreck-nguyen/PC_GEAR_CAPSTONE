@@ -27,3 +27,18 @@ export async function getOrderStatusByStatusId(userId, orderStatusId) {
   );
   return result;
 }
+
+export async function createOrderDetailRating(
+  userId,
+  orderDetailId,
+  rating,
+  review,
+) {
+  const [result] = await orderStatusDAL.createOrderDetailRating(
+    userId,
+    orderDetailId,
+    rating,
+    review,
+  );
+  return result;
+}

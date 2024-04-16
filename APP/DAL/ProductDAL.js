@@ -76,6 +76,7 @@ SELECT
     p.product_id,
     p."name",
     p.description,
+    p.product_brand_id,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
     p.discount,
     p.quantity,

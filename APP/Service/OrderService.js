@@ -1,7 +1,10 @@
 import * as orderDAL from '../DAL/OrderDAL.js';
+import * as userDAL from '../DAL/UserDAL.js';
 import * as orderDetailDAL from '../DAL/OrderDetailDAL.js';
 import * as cartItemDAL from '../DAL/CartItemDAL.js';
 import { v4 as uuidv4 } from 'uuid';
+
+import * as mailHelper from '../utility/MailHelper.js';
 export async function getUsersOrder() {
   const result = await orderDAL.getUsersOrder();
   return result;
@@ -24,6 +27,8 @@ export async function getOrderById(orderId) {
 
 export async function createOrderByUser(loginUser, cartObject) {
   const userId = loginUser.user_id;
+  const [user] = await userDAL.getUserById(userId);
+  if (!user) return;
   const orderId = uuidv4();
   cartObject.userId = userId;
   cartObject.orderId = orderId;
@@ -56,7 +61,8 @@ export async function createOrderByUser(loginUser, cartObject) {
     } else {
       console.log('````` BUILD PC');
       const preBuildPc = cartItem.build_pc;
-      if (preBuildPc.motherboard_id) {
+      if (preBuildPc.motherboard_id && preBuildPc.motherboard_specification) {
+        console.log(1);
         quantity += 1;
         total += preBuildPc.motherboard_specification.unit_price;
         console.log(`1`, quantity, total);
@@ -69,7 +75,9 @@ export async function createOrderByUser(loginUser, cartObject) {
         };
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
-      if (preBuildPc.processor_id) {
+      if (preBuildPc.processor_id && preBuildPc.processor_specification) {
+        console.log(1);
+
         quantity += 1;
         total += preBuildPc.processor_specification.unit_price;
         console.log(`2`, quantity, total);
@@ -84,6 +92,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.case_id) {
+        console.log(1);
+
         quantity += 1;
         total += preBuildPc.case_specification.unit_price;
         console.log(`3`, quantity, total);
@@ -98,6 +108,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.gpu_id) {
+        console.log(1);
+
         quantity += 1;
         total += preBuildPc.gpu_specification.unit_price;
         console.log(`4`, quantity, total);
@@ -112,6 +124,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.ram_id) {
+        console.log(1);
+
         quantity += preBuildPc.ram_quantity;
         total += Number(
           preBuildPc.ram_specification.unit_price * preBuildPc.ram_quantity,
@@ -128,6 +142,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.storage_id) {
+        console.log(1);
+
         quantity += preBuildPc.storage_quantity;
         total += Number(
           preBuildPc.storage_specification.unit_price *
@@ -145,6 +161,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.case_cooler_id) {
+        console.log(1);
+
         quantity += 1;
         total += preBuildPc.case_cooler.unit_price;
         console.log(`7`, quantity, total);
@@ -159,6 +177,8 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.monitor_id) {
+        console.log(1);
+
         console.log(`8`, quantity, total);
         console.log(preBuildPc.monitor);
         quantity += 1;
@@ -219,10 +239,38 @@ export async function createOrderByUser(loginUser, cartObject) {
     console.log(cartItem.cart_item_id);
     // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
   }
+  const message = mailHelper.orderPlaceMessage
+    .replace('[Customer Name]', user.user_name)
+    .replace('[Order Number]', orderId)
+    .replace('[Order Date]', new Date().toLocaleDateString())
+    .replace('[Total Amount]', total)
+    .replace('[Total Item]', quantity);
+
+  const mailOptions = {
+    to: user.email || 'hduy01012000@gmail.com',
+    html: message,
+  };
+
+  await mailHelper.sendMail(mailOptions);
   return orderId;
 }
-export async function updateOrderStatus(orderId, statusId) {
-  await orderDAL.updateOrderStatus(orderId, statusId);
+export async function updateOrderStatus(loginUser, orderId, statusId) {
+  let status = await orderDAL.getOrderStatus();
+  status = status.filter((e) => e.status_id === statusId)[0];
+  const [user] = await userDAL.getUserByOrder(orderId);
+  const message = mailHelper.orderUpdate
+    .replace('[Customer Name]', user.user_name)
+    .replace('[New Order Status]', status.status_detail)
+    .replace('[Order Number]', orderId)
+    .replace('[Brief Description of Update]', `Your order has been an update`)
+    .replace('[Staff Name]', loginUser.user_name)
+    .replace('[Staff Mail]', loginUser.email);
+  await orderDAL.updateOrderStatus(loginUser, orderId, statusId);
+  const mailOptions = {
+    to: user.email || 'hduy01012000@gmail.com',
+    html: message,
+  };
+  await mailHelper.sendMail(mailOptions);
 }
 
 export async function updateOrderPaymentStatus(orderId, stage, message) {

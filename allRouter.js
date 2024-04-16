@@ -3845,4 +3845,6 @@ router.post('/api/create_payment_url', paymentController.createPaymentUrl);
 router.get('/vnpay_ipn', paymentController.getVnpayIpn);
 router.get('/order/vnpay_return', paymentController.getVnpayReturn);
 
+router.get('/api/send-mail', paymentController.sendMail);
+
 export default router;

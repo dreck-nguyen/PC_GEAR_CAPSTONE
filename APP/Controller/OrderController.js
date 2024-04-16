@@ -111,9 +111,10 @@ export async function createOrderByUser(req, res, next) {
 export async function updateOrderStatus(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
+    const loginUser = req.loginUser;
     const orderId = req.params.orderId;
     const statusId = req.body.status_id;
-    await orderService.updateOrderStatus(orderId, statusId);
+    await orderService.updateOrderStatus(loginUser, orderId, statusId);
     res.status(200).send({ message: 'UPDATE STATUS DONE' });
     t.commit();
   } catch (error) {

@@ -5,6 +5,11 @@ import moment from 'moment';
 import querystring from 'qs';
 import crypto from 'crypto';
 import { SequelizeInstance } from '../utility/DbHelper.js';
+// import transporter from '../utility/MailHelper.js';
+import * as mailHelper from '../utility/MailHelper.js';
+import * as userDAL from '../DAL/UserDAL.js';
+dotenv.config();
+
 dotenv.config();
 
 export async function getPayment(req, res, next) {
@@ -133,13 +138,25 @@ export async function getVnpayReturn(req, res) {
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+    const [user] = await userDAL.getUserByOrder(orderId);
 
     console.log(`~~~~~~`, orderId);
     if (secureHash === signed) {
       console.log(vnp_Params);
       const code = vnp_Params['vnp_ResponseCode'];
       const message = handleErrorCode(code);
+      const messageMail = mailHelper.paymentConfirm
+        .replace('[Customer Name]', user.user_name)
+        .replace('[Order Number]', orderId)
+        .replace('[Payment Method]', `VN PAY`)
+        .replace('[Total Amount]', user.total)
+        .replace('[Payment Status]', message);
       await orderService.updateOrderPaymentStatus(orderId, true, message);
+      const mailOptions = {
+        to: user.email,
+        html: messageMail,
+      };
+      await mailHelper.sendMail(mailOptions);
       res.send({ code: vnp_Params['vnp_ResponseCode'], success: true });
     } else {
       // await orderService.updateOrderPaymentStatus(orderId, false);
@@ -226,3 +243,19 @@ function handleErrorCode(errorCode) {
 }
 
 // console.log(handleErrorCode(errorCode));
+export async function sendMail(req, res) {
+  try {
+    const email = process.env.FEATURE_MAIL;
+    // const pass = process.env.FEATURE_PASSWORD;
+    const mailOptions = {
+      from: 'noreplyemail@gmail.com',
+      to: 'hduy01012000@gmail.com',
+      subject: 'Test Email',
+      text: 'Hello, this is a test email!',
+    };
+    const result = await mailHelper.sendMail(mailOptions);
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+  }
+}

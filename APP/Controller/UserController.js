@@ -67,8 +67,8 @@ export async function registerUser(req, res, next) {
       });
       res.header('Authorization', `Bearer ${accessToken}`);
       const token = `Bearer ${accessToken}`;
-      res.send({ accessToken: token });
       await t.commit();
+      res.send({ accessToken: token });
     }
   } catch (error) {
     console.error(error);
@@ -83,8 +83,8 @@ export async function createPersonalBuildPc(req, res, next) {
     const loginUser = req.loginUser;
     const dataObj = req.body;
     const result = await userService.createPersonalBuildPc(loginUser, dataObj);
-    res.status(200).send(result);
     await t.commit();
+    res.status(200).send(result);
   } catch (error) {
     console.error(error);
     await t.rollback();
@@ -100,8 +100,8 @@ export async function deletePersonalBuildPc(req, res, next) {
       loginUser,
       userPcBuildId,
     );
-    res.status(200).send(result);
     await t.commit();
+    res.status(200).send(result);
   } catch (error) {
     console.error(error);
     await t.rollback();
@@ -127,7 +127,7 @@ export async function updateUserAvatar(req, res, next) {
     console.log(image);
     const [user] = await userService.updateUserAvatar(loginUser, image.path);
     res.status(201).send(user);
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.error(error);
@@ -141,7 +141,7 @@ export async function updateUserInfo(req, res, next) {
     const dataObj = req.body;
     const user = await userService.updateUserInfo(loginUser, dataObj);
     res.status(201).send(user);
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.error(error);

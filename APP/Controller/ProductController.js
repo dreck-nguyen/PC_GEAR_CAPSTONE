@@ -76,8 +76,8 @@ export async function updateProductById(req, res, next) {
     const product = req.body;
     console.log(product);
     const result = await productService.updateProductById(productId, product);
+    await await t.commit();
     res.status(200).send(result);
-    await t.commit();
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -100,8 +100,8 @@ export async function createProduct(req, res, next) {
     const product = req.body;
     console.log(product);
     const result = await productService.createProduct(product);
+    await await t.commit();
     res.status(201).send(result);
-    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: error.message });
@@ -126,8 +126,8 @@ export async function createProductImage(req, res, next) {
     await productService.createProductImage(productId, images.path);
     const result = await productService.getProductById(productId);
     if (!result) throw new Error('NO PRODUCT FOUND');
+    await await t.commit();
     res.status(200).send(result);
-    await t.commit();
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -147,8 +147,8 @@ export async function deleteProductById(req, res, next) {
       );
     const productId = req.params.productId;
     await productService.deleteProductByID(productId);
+    await await t.commit();
     res.status(200).send({ message: 'PRODUCT DELETE SUCCESS' });
-    await t.commit();
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -168,8 +168,8 @@ export async function deleteProductsById(req, res, next) {
       );
     const productIds = req.body.productIds;
     await productService.deleteProductsByID(productIds);
+    await await t.commit();
     res.status(200).send({ message: 'PRODUCTS DELETE SUCCESS' });
-    await t.commit();
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -426,7 +426,7 @@ export async function upsertProcessorSpec(req, res, next) {
     await productService.upsertProcessorSpec(processorId, dataObj);
     const result = await productService.getProcessorById(processorId);
     res.status(200).send(result);
-    t.commit();
+    await await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -442,7 +442,7 @@ export async function upsertMotherboard(req, res, next) {
     await productService.upsertMotherboard(motherboardId, dataObj);
     const result = await productService.getMotherboardById(motherboardId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -458,7 +458,7 @@ export async function upsertCase(req, res, next) {
     await productService.upsertCase(caseId, dataObj);
     const result = await productService.getCaseById(caseId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -473,7 +473,7 @@ export async function upsertGraphicsCard(req, res, next) {
     await productService.upsertGraphicsCard(gpuId, dataObj);
     const result = await productService.getGraphicsCardById(gpuId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -488,7 +488,7 @@ export async function upsertRam(req, res, next) {
     await productService.upsertRam(ramId, dataObj);
     const result = await productService.getRamById(ramId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -504,7 +504,7 @@ export async function upsertStorage(req, res, next) {
     await productService.upsertStorage(storageId, dataObj);
     const result = await productService.getStorageById(storageId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -520,7 +520,7 @@ export async function upsertCaseCooler(req, res, next) {
     await productService.upsertCaseCooler(caseCoolerId, dataObj);
     const result = await productService.getCaseCoolerById(caseCoolerId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -535,7 +535,7 @@ export async function upsertCpuCooler(req, res, next) {
     await productService.upsertCpuCooler(cpuCoolerId, dataObj);
     const result = await productService.getCpuCoolerById(cpuCoolerId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -551,7 +551,7 @@ export async function upsertPsu(req, res, next) {
     await productService.upsertPsu(psuId, dataObj);
     const result = await productService.getPowerSupplyById(psuId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -566,7 +566,7 @@ export async function upsertMonitor(req, res, next) {
     await productService.upsertMonitor(monitorId, dataObj);
     const result = await productService.getMonitorById(monitorId);
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });

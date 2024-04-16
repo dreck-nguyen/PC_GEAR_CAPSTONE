@@ -100,7 +100,7 @@ export async function createOrderByUser(req, res, next) {
     const cartObject = req.body;
     const orderId = await orderService.createOrderByUser(loginUser, cartObject);
     res.status(200).send({ orderId });
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error);
@@ -116,7 +116,7 @@ export async function updateOrderStatus(req, res, next) {
     const statusId = req.body.status_id;
     await orderService.updateOrderStatus(loginUser, orderId, statusId);
     res.status(200).send({ message: 'UPDATE STATUS DONE' });
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error);
@@ -164,7 +164,7 @@ export async function createOrderDetailRating(req, res, next) {
       review,
     );
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error);

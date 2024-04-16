@@ -53,8 +53,8 @@ export async function registerStaff(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.ADMIN} ONLY`);
     const dataObj = req.body;
     const users = await admService.registerStaff(dataObj);
+    await t.commit();
     res.status(200).send(users);
-    t.commit();
   } catch (e) {
     console.log(e);
     res.send(e);

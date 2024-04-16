@@ -27,8 +27,8 @@ export async function createBrand(req, res, next) {
   try {
     const productBrand = req.body;
     const result = await brandService.createBrand(productBrand);
-    res.status(200).send(result);
     await t.commit();
+    res.status(200).send(result);
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -42,8 +42,8 @@ export async function updateBrand(req, res, next) {
     const productBrandId = req.params.productBrandId;
     const productBrand = req.body;
     await brandService.updateBrand(productBrandId, productBrand);
-    res.status(200).send({ message: 'UPDATE BRAND SUCCESS' });
     await t.commit();
+    res.status(200).send({ message: 'UPDATE BRAND SUCCESS' });
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -56,8 +56,8 @@ export async function deleteBrand(req, res, next) {
   try {
     const productBrandId = req.params.productBrandId;
     await brandService.deleteBrand(productBrandId);
-    res.status(200).send({ message: 'DELETE BRAND SUCCESS' });
     await t.commit();
+    res.status(200).send({ message: 'DELETE BRAND SUCCESS' });
   } catch (error) {
     await t.rollback();
     console.log(error);

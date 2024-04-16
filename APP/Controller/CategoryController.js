@@ -53,8 +53,8 @@ export async function createCategory(req, res, next) {
   try {
     const category = req.body;
     const result = await categoryService.createCategory(category);
-    res.status(200).send(result);
     await t.commit();
+    res.status(200).send(result);
   } catch (error) {
     await t.rollback();
     console.log(error);
@@ -69,8 +69,8 @@ export async function updateCategory(req, res, next) {
 
     const category = req.body;
     const result = await categoryService.updateCategory(categoryId, category);
-    res.status(200).send(result);
     await t.commit();
+    res.status(200).send(result);
   } catch (error) {
     await t.rollback();
     console.log(error);

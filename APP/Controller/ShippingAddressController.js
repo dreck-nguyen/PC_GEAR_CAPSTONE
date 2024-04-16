@@ -29,7 +29,7 @@ export async function createShippingAddress(req, res, next) {
       dataObj,
     );
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -48,7 +48,7 @@ export async function updateShippingAddress(req, res, next) {
       dataObj,
     );
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -67,7 +67,7 @@ export async function deleteShippingAddress(req, res, next) {
       addressId,
     );
     res.status(200).send({ deletedRecord: result });
-    t.commit();
+    await t.commit();
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });

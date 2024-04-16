@@ -16,7 +16,7 @@ export async function pcAutoBuild(req, res, next) {
       );
     await pcBuilderService.pcBuilderService(loginUser.user_id);
     res.status(200).send('Pre-Build PC complete');
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error);

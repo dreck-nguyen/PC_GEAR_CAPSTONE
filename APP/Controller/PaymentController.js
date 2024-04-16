@@ -162,7 +162,7 @@ export async function getVnpayReturn(req, res) {
       // await orderService.updateOrderPaymentStatus(orderId, false);
       res.send({ code: '97', success: false });
     }
-    t.commit();
+    await t.commit();
   } catch (e) {
     t.rollback();
     console.log(e);

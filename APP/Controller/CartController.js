@@ -11,7 +11,7 @@ export async function createCart(req, res, next) {
       throw new Error(`${commonEnums.USER_ROLE.USER} ONLY`);
     const cartObject = req.body;
     await cartService.createCart(loginUser, cartObject);
-    t.commit();
+    await t.commit();
     const result = await cartService.getUserCart(loginUser.user_id);
     res.status(200).send(result);
   } catch (error) {
@@ -56,7 +56,7 @@ export async function uploadCartPcComponent(req, res, next) {
       loginUser.user_id,
       dataObj,
     );
-    t.commit();
+    await t.commit();
     res.status(200).send({ message: 'Add to cart successful' });
   } catch (error) {
     t.rollback();

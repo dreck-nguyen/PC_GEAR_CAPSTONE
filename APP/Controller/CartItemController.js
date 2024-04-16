@@ -10,7 +10,7 @@ export async function updateCartItemQuantity(req, res, next) {
       quantity,
     );
     res.status(200).send({ result });
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error.message);
@@ -23,7 +23,7 @@ export async function deleteCartItem(req, res, next) {
     const cartItemId = req.params.cartItemId;
     await cartItemService.deleteCartItem(cartItemId);
     res.status(200).send({ message: `DELETE CART ITEM ID : ${cartItemId}` });
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error.message);
@@ -40,7 +40,7 @@ export async function createCartItemByUserPcBuild(req, res, next) {
       userPcBuildId,
     );
     res.status(200).send(result);
-    t.commit();
+    await t.commit();
   } catch (error) {
     t.rollback();
     console.log(error.message);

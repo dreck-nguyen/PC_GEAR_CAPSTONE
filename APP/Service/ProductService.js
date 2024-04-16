@@ -22,8 +22,17 @@ export async function getPaginateProduct(limit, offset) {
   return { countProduct, productsWithDetails };
 }
 export async function getProductById(productId) {
+  // Fetch product details using the provided productId
   let productsWithDetails = await productDAL.getProductById(productId);
-  productsWithDetails[0].review_list = productsWithDetails[0].review_list[0];
+
+  // Check if the fetched product has a review_list property
+  if (productsWithDetails[0]?.review_list) {
+    // Assign the first review object to review_list, or an empty array if review_list is null or undefined
+    productsWithDetails[0].review_list =
+      productsWithDetails[0].review_list[0] || [];
+  }
+
+  // Return the modified product details
   return productsWithDetails;
 }
 export async function getProductsByCategory(categoryId) {

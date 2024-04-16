@@ -151,7 +151,7 @@ SELECT
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
     ARRAY_AGG(pg.image) AS image_links,
-    ARRAY_AGG(review.review_list) AS review_list
+    ARRAY_AGG(COALESCE(review.review_list, ARRAY[NULL]::jsonb[])) AS review_list
 FROM 
     product p
 LEFT OUTER JOIN 

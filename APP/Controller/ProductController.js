@@ -56,6 +56,7 @@ export async function getProductById(req, res, next) {
     const products = await productService.getProductById(productId);
     res.send(products);
   } catch (error) {
+    console.log(error);
     res.status(404).send(error);
   }
 }

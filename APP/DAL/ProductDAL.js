@@ -141,65 +141,67 @@ GROUP BY
 export async function getProductById(productId) {
   const sqlQuery = `
 SELECT 
-p.product_id,
-p."name",
-p.description,
-TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-p.discount,
-p.quantity,
-p.sold,
-c."name" AS category_name,
-pb.product_brand_name AS brand_name,
-ARRAY_AGG(pg.image) AS image_links,
-array_agg(jsonb_build_object('email', review.email,
-	'product_id', review.product_id,
-	'product_name', review.name,
-	'image_links', review.image,
-	'rating', review.rating,
-	'review', review.review)) as review_list
+    p.product_id,
+    p."name",
+    p.description,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links,
+    ARRAY_AGG(review.review_list) AS review_list
 FROM 
-product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-INNER JOIN product_gallery pg ON pg.product_id = p.product_id
-left outer join (
-select
-	u.email,
-	od.product_id,
-	p.name,
-	pg.image,
-	od.rating,
-	od.review
-from
-	"order" o
-inner join order_detail od on
-	o.order_id = od.order_id
-inner join "user" u on
-	o.user_id = u.user_id
-inner join product p on
-	od.product_id = p.product_id
-inner join (
-	select
-		product_id,
-		array_agg(image) as image
-	from
-		product_gallery
-	group by
-		product_id,
-		product_gallery_id
-) pg on
-	p.product_id = pg.product_id
-group by
-	u.email,
-	od.product_id ,
-	p.name,
-	pg.image,
-	od.rating,
-	od.review) review
-  on review.product_id = p.product_id
-WHERE p.product_id = '${productId}'
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+LEFT OUTER JOIN (
+    SELECT
+        od.product_id,
+        ARRAY_AGG(
+            jsonb_build_object(
+                'email', u.email,
+                'product_id', od.product_id,
+                'product_name', p.name,
+                'image_links', pg.image,
+                'rating', od.rating,
+                'review', od.review
+            )
+        ) AS review_list
+    FROM
+        "order" o
+    INNER JOIN 
+        order_detail od ON o.order_id = od.order_id
+    INNER JOIN 
+        "user" u ON o.user_id = u.user_id
+    INNER JOIN 
+        product p ON od.product_id = p.product_id
+    INNER JOIN (
+        SELECT
+            product_id,
+            ARRAY_AGG(image) AS image
+        FROM
+            product_gallery
+        GROUP BY
+            product_id
+    ) pg ON p.product_id = pg.product_id
+    WHERE 
+        p.product_id = '${productId}'
+    GROUP BY
+        od.product_id,
+        p.name
+) review ON review.product_id = p.product_id
+WHERE 
+    p.product_id = '${productId}'
 GROUP BY 
-p.product_id, c.category_id, pb.product_brand_id,review.email, review.product_id, review.name, review.image, review.rating, review.review
+    p.product_id, 
+    c.category_id, 
+    pb.product_brand_id;
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {

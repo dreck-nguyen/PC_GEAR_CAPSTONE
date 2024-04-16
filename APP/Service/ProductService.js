@@ -22,7 +22,8 @@ export async function getPaginateProduct(limit, offset) {
   return { countProduct, productsWithDetails };
 }
 export async function getProductById(productId) {
-  const productsWithDetails = await productDAL.getProductById(productId);
+  let productsWithDetails = await productDAL.getProductById(productId);
+  productsWithDetails[0].review_list = productsWithDetails[0].review_list[0];
   return productsWithDetails;
 }
 export async function getProductsByCategory(categoryId) {

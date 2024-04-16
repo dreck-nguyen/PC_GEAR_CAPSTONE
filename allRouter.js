@@ -1190,10 +1190,10 @@ router.get(
   '/api/pc-component/storage/:storage_id',
   productController.getStorageById,
 );
-router.get(
-  '/api/pc-component/auto-gen/:auto_gen_id',
-  productController.getAutoGenById,
-);
+// router.get(
+//   '/api/pc-component/auto-gen/:auto_gen_id',
+//   productController.getAutoGenById,
+// );
 router.get(
   '/api/pc-component/case-cooler/:case_cooler_id',
   productController.getCaseCoolerById,

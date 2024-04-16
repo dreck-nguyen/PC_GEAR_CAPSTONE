@@ -160,7 +160,7 @@ export async function getCartItemDetailsByID(cartItemId) {
   inner join product p on ci.product_id  = p.product_id 
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   where ci.cart_item_id = '${cartItemId}'
   GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ci.cart_item_id
@@ -255,7 +255,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id
   ) psu
@@ -273,7 +273,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id
   ) case_cooler
@@ -291,7 +291,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id
   ) monitor
@@ -309,7 +309,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id
   ) cpu_cooler
@@ -329,7 +329,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN motherboard_specification ms on p.product_id = ms.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
@@ -353,7 +353,7 @@ LEFT JOIN
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   INNER JOIN processor_specification ps ON p.product_id = ps.product_id 
   GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
@@ -377,7 +377,7 @@ LEFT JOIN
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   INNER JOIN case_specification cs ON p.product_id = cs.product_id 
   GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
@@ -401,7 +401,7 @@ LEFT JOIN
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   INNER JOIN graphics_specification gs ON p.product_id = gs.product_id 
   GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
@@ -425,7 +425,7 @@ LEFT JOIN
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   INNER JOIN ram_specification rs ON p.product_id = rs.product_id 
   GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id, rs.product_id, rs.specification_id
@@ -449,7 +449,7 @@ LEFT JOIN
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+  inner join product_gallery pg ON pg.product_id = p.product_id
   INNER JOIN storage_specification ss ON p.product_id = ss.product_id 
   GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id, ss.product_id, ss.specification_id

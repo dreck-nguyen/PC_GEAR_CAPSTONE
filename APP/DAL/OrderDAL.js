@@ -162,7 +162,7 @@ inner join "user" u on
 	o.user_id = u.user_id
 inner join product p on
 	od.product_id = p.product_id
-left outer join (
+inner join (
 	select
 		product_id,
 		array_agg(image) as image

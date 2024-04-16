@@ -39,7 +39,7 @@ LEFT OUTER JOIN
     category c ON c.category_id = p.category_id
 LEFT OUTER JOIN 
     product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN 
+INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
@@ -90,7 +90,7 @@ LEFT OUTER JOIN
     category c ON c.category_id = p.category_id
 LEFT OUTER JOIN 
     product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN 
+INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
@@ -122,7 +122,7 @@ LEFT OUTER JOIN
     category c ON c.category_id = p.category_id
 LEFT OUTER JOIN 
     product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN 
+INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 WHERE 
   p."name" like '%${productName}%'
@@ -161,7 +161,7 @@ FROM
 product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+INNER JOIN product_gallery pg ON pg.product_id = p.product_id
 left outer join (
 select
 	u.email,
@@ -178,7 +178,7 @@ inner join "user" u on
 	o.user_id = u.user_id
 inner join product p on
 	od.product_id = p.product_id
-left outer join (
+inner join (
 	select
 		product_id,
 		array_agg(image) as image
@@ -331,7 +331,7 @@ FROM
 product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN monitor_specification ms on p.product_id = ms.product_id 
 GROUP BY 
 p.product_id, c.category_id, pb.product_brand_id, ms.product_id ,ms.specification_id
@@ -362,7 +362,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN power_supply_specification pss on p.product_id = pss.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, pss.product_id, pss.specification_id
@@ -393,7 +393,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN cooler_specification cs  on p.product_id = cs.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
@@ -424,7 +424,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN case_cooler_specification ccs  on p.product_id = ccs.product_id 
 GROUP BY 
   p.product_id, c.category_id, pb.product_brand_id, ccs.product_id, ccs.specification_id
@@ -455,7 +455,7 @@ FROM
 product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN monitor_specification ms on p.product_id = ms.product_id
 WHERE P.product_id = '${monitorId}'
 GROUP BY 
@@ -487,7 +487,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN power_supply_specification pss on p.product_id = pss.product_id
 WHERE p.product_id = '${psuId}'
 GROUP BY 
@@ -519,7 +519,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN cooler_specification cs  on p.product_id = cs.product_id 
 WHERE p.product_id = '${cpuCoolerId}'
 GROUP BY 
@@ -551,7 +551,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN case_cooler_specification ccs  on p.product_id = ccs.product_id 
 WHERE p.product_id = '${caseCoolerId}'
 GROUP BY 
@@ -583,7 +583,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN processor_specification ps  on p.product_id = ps.product_id
 WHERE p.product_id = '${processorId}'
 GROUP BY 
@@ -615,7 +615,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN motherboard_specification ms on p.product_id = ms.product_id
 WHERE p.product_id = '${motherBoardId}'
 GROUP BY 
@@ -647,7 +647,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN case_specification cs on p.product_id = cs.product_id
 WHERE p.product_id = '${caseId}'
 GROUP BY 
@@ -679,7 +679,7 @@ FROM
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON pg.product_id = p.product_id
+inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN graphics_specification gs  on p.product_id = gs.product_id
 WHERE p.product_id = '${gpuId}'
 GROUP BY 
@@ -714,7 +714,7 @@ left outer join category c on
 	c.category_id = p.category_id
 left outer join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join ram_specification rs on
 	p.product_id = rs.product_id
@@ -756,7 +756,7 @@ left outer join category c on
 	c.category_id = p.category_id
 left outer join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join storage_specification ss on
 	p.product_id = ss.product_id
@@ -823,7 +823,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join motherboard_specification ms on
 		p.product_id = ms.product_id
@@ -857,7 +857,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join processor_specification ps on
 		p.product_id = ps.product_id
@@ -891,7 +891,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join case_specification cs on
 		p.product_id = cs.product_id
@@ -925,7 +925,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join graphics_specification gs on
 		p.product_id = gs.product_id
@@ -959,7 +959,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join ram_specification rs on
 		p.product_id = rs.product_id
@@ -993,7 +993,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join storage_specification ss on
 		p.product_id = ss.product_id
@@ -1062,7 +1062,7 @@ left join category c on
 	c.category_id = p.category_id
 left join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join processor_specification ps on
 	p.product_id = ps.product_id
@@ -1155,7 +1155,7 @@ LEFT OUTER JOIN category c ON
 	c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON
 	pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON
+inner join product_gallery pg ON
 	pg.product_id = p.product_id
 INNER JOIN motherboard_specification ms ON
 p.product_id = ms.product_id
@@ -1337,7 +1337,7 @@ left outer join category c on
 	c.category_id = p.category_id
 left outer join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join case_specification cs on
 	p.product_id = cs.product_id
@@ -1402,7 +1402,7 @@ LEFT OUTER JOIN category c ON
 	c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON
 	pb.product_brand_id = p.product_brand_id
-LEFT OUTER JOIN product_gallery pg ON
+inner join product_gallery pg ON
 	pg.product_id = p.product_id
 INNER JOIN graphics_specification gs ON
 	p.product_id = gs.product_id
@@ -1460,7 +1460,7 @@ left outer join category c on
 	c.category_id = p.category_id
 left outer join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join ram_specification rs on
 	p.product_id = rs.product_id
@@ -1520,7 +1520,7 @@ left outer join category c on
 	c.category_id = p.category_id
 left outer join product_brand pb on
 	pb.product_brand_id = p.product_brand_id
-left outer join product_gallery pg on
+inner join product_gallery pg on
 	pg.product_id = p.product_id
 inner join storage_specification ss on
 	p.product_id = ss.product_id
@@ -1603,7 +1603,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join motherboard_specification ms on
 		p.product_id = ms.product_id
@@ -1637,7 +1637,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join processor_specification ps on
 		p.product_id = ps.product_id
@@ -1671,7 +1671,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join case_specification cs on
 		p.product_id = cs.product_id
@@ -1705,7 +1705,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join graphics_specification gs on
 		p.product_id = gs.product_id
@@ -1739,7 +1739,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join ram_specification rs on
 		p.product_id = rs.product_id
@@ -1773,7 +1773,7 @@ inner join
 		c.category_id = p.category_id
 	left outer join product_brand pb on
 		pb.product_brand_id = p.product_brand_id
-	left outer join product_gallery pg on
+	inner join product_gallery pg on
 		pg.product_id = p.product_id
 	inner join storage_specification ss on
 		p.product_id = ss.product_id

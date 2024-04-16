@@ -56,6 +56,20 @@ LIMIT
 
   return productsWithDetails;
 }
+
+export async function getProductPurpose() {
+  const sqlQuery = `
+select * from build_purpose bp 
+`;
+
+  const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return productsWithDetails;
+}
+
 export async function getAllProduct() {
   const sqlQuery = `
 SELECT 

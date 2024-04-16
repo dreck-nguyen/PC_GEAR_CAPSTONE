@@ -7,6 +7,14 @@ import { SequelizeInstance } from '../utility/DbHelper.js';
 
 dotenv.config();
 
+export async function getProductPurpose(req, res, next) {
+  try {
+    const products = await productService.getProductPurpose();
+    res.send(products);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+}
 export async function getAllProduct(req, res, next) {
   try {
     const products = await productService.getAllProduct();

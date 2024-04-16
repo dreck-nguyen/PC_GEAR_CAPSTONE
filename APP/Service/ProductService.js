@@ -5,6 +5,10 @@ export async function getAllProduct() {
   const productsWithDetails = await productDAL.getAllProduct();
   return productsWithDetails;
 }
+export async function getProductPurpose() {
+  const productsWithDetails = await productDAL.getProductPurpose();
+  return productsWithDetails;
+}
 export async function getProductByName(productName) {
   const productsWithDetails = await productDAL.getProductByName(productName);
   return productsWithDetails;

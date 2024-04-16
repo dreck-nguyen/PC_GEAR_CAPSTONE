@@ -3760,6 +3760,25 @@ router.put(
  *         '500':
  *           description: Internal Server Error
  */
+/**
+ * @swagger
+ * paths:
+ *   /api/product-purpose:
+ *     get:
+ *       summary: Retrieve common rule for product
+ *       description: Endpoint to fetch common rules for product based on gaming and office purposes.
+ *       tags:
+ *         - COMMON SECTION
+ *       responses:
+ *         '200':
+ *           description: Successful response
+ *         '400':
+ *           description: Invalid request
+ *         '401':
+ *           description: Unauthorized, invalid or missing token
+ *         '500':
+ *           description: Internal Server Error
+ */
 router.post(
   '/api/auth/avatar',
   uploadCloud.single('image'),
@@ -3847,4 +3866,5 @@ router.get('/order/vnpay_return', paymentController.getVnpayReturn);
 
 router.get('/api/send-mail', paymentController.sendMail);
 
+router.get('/api/product-purpose', productController.getProductPurpose);
 export default router;

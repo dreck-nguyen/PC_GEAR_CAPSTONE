@@ -402,6 +402,9 @@ const User = sequelize.define(
     phone_number: {
       type: DataTypes.STRING(20),
     },
+    avatar: {
+      type: DataTypes.STRING(255),
+    },
     role_id: {
       type: DataTypes.UUID,
     },

@@ -19,54 +19,94 @@ where user_id = :userId
 }
 export async function getUsersOrder() {
   const sqlQuery = `
-select 
-  o.order_id
-  , u.user_id
-  , u.first_name 
-  , u.email 
-  , u.phone_number 
-  , o.shipping_fee
-  , os.status_detail 
-  , p.payment_method 
-  , array_agg(
-  jsonb_build_object(
-  'order_detail_id', od.order_detail_id,
-  'product_id', od.product_id,
-  'quantity', od.quantity,
-  'unit_price', od.unit_price
-  )) as order_details,
-  o.quantity  total_items,
-  TO_CHAR(o.total,
+select
+	o.*,
+	u.user_id,
+  u.first_name ,
+  u.email ,
+  u.phone_number, 
+	os.status_detail,
+	p.payment_method,
+	od.order_details,
+	od.total_items,
+	TO_CHAR(o.total,
 	'FM999,999,999') as total_price,
-  sa.recipient_name ,
-  sa.recipient_name ,
-  COALESCE (sa.street_address, o.street_address) as street_address ,
-  COALESCE (sa.city, o.district) as district
-from 
-  "order" o
-left join
-  order_status os 
-  on 1=1
-  and o.status_id = os.status_id 
+	sa.recipient_name,
+	sa.street_address,
+	sa.city
+from
+	"order" o
+inner join 
+    order_status os on
+	o.status_id = os.status_id
 left join 
-  payment p 
-  on 1=1
-  and o.payment_id = p.payment_id 
-left outer join
-  order_detail od 
-  on 1=1
-  and o.order_id = od.order_id
-inner join public.user u
-on 1=1
-and u.user_id = o.user_id
-left outer join 
-  shipping_address sa
-  on 1 = 1
-  and sa.address_id = o.address_id
-  and sa.user_id = o.user_id
-group by o.order_id,os.status_id,p.payment_id,u.user_id,sa.recipient_name ,
-  sa.recipient_name ,
-  sa.street_address ,sa.city
+    payment p on
+	o.payment_id = p.payment_id
+left join 
+    (
+	select
+		o.order_id,
+		SUM(od.quantity) as total_items,
+		array_agg(
+            jsonb_build_object(
+                'order_detail_id',
+		od.order_detail_id,
+		'product_id',
+		od.product_id,
+		'product_name',
+		p.name,
+		'product_img',
+		pg.image,
+		'quantity',
+		od.quantity,
+		'unit_price',
+		od.unit_price
+            )
+        ) as order_details
+	from
+		order_detail od
+	inner join 
+        "order" o on
+		o.order_id = od.order_id
+	inner join 
+        product p on
+		od.product_id = p.product_id
+	inner join 
+        (
+		select
+			distinct on
+			(product_id) *
+		from
+			product_gallery
+		order by
+			product_id,
+			product_gallery_id) pg on
+		p.product_id = pg.product_id
+	where
+		1 = 1
+	group by
+		o.order_id) od on
+	od.order_id = o.order_id
+left join 
+    shipping_address sa on
+	sa.address_id = o.address_id
+	and sa.user_id = o.user_id
+inner join "user" u 
+on u.user_id = o.user_id 
+where
+	1 = 1
+group by
+	o.order_id,
+	os.status_id,
+	p.payment_method,
+	sa.recipient_name,
+	sa.street_address,
+	sa.city,
+	od.order_details,
+	od.total_items,
+	u.user_id
+order by
+	o.created_at desc
   ;
 `;
 
@@ -96,98 +136,94 @@ from
 
 export async function getOrderByUserId(userId, limit, offset) {
   const sqlQuery = `
-select 
-  o.*
-  , os.status_detail 
-  , p.payment_method 
-  , p2.product_brand_id
-  , array_agg(jsonb_build_object(
-  'order_detail_id', od.order_detail_id,
-  'product_id', od.product_id,
-  'product_name', p2."name" ,
-  'product_img', pg.image  ,
-  'quantity', od.quantity,
-  'unit_price', od.unit_price
-  )) as order_details,
-  sum(od.quantity) as total_items,
-  TO_CHAR(o.total,
-	'FM999,999,999') as total_price,
-  sa.recipient_name ,
-  sa.recipient_name ,
-  sa.street_address ,
-  sa.city,
-  array_agg(jsonb_build_object('email', review.email,
-	'product_id', review.product_id,
-	'product_name', review.name,
-	'image_links', review.image,
-	'rating', review.rating,
-	'review', review.review)) as review_list
-from 
-  "order" o
-left join
-  order_status os 
-  on 1=1
-  and o.status_id = os.status_id 
-left join 
-  payment p 
-  on 1=1
-  and o.payment_id = p.payment_id 
-left outer join
-  order_detail od 
-  on 1=1
-  and o.order_id = od.order_id
-inner join product p2 
-on 1=1
-and p2.product_id = od.product_id 
-inner join product_gallery pg 
-on 1=1
-and pg.product_id = od.product_id 
-left outer join 
-  shipping_address sa
-  on 1 = 1
-  and sa.address_id = o.address_id
-  and sa.user_id = o.user_id
-left outer join (
 select
-	u.email,
-	od.product_id,
-	p.name,
-	pg.image,
-	od.rating,
-	od.review
+	o.*,
+	 u.user_id,
+     u.first_name ,
+     u.email ,
+    u.phone_number, 
+	os.status_detail,
+	p.payment_method,
+	od.order_details,
+	od.total_items,
+	TO_CHAR(o.total,
+	'FM999,999,999') as total_price,
+	sa.recipient_name,
+	sa.street_address,
+	sa.city
 from
 	"order" o
-inner join order_detail od on
-	o.order_id = od.order_id
-inner join "user" u on
-	o.user_id = u.user_id
-inner join product p on
-	od.product_id = p.product_id
-inner join (
+inner join 
+    order_status os on
+	o.status_id = os.status_id
+left join 
+    payment p on
+	o.payment_id = p.payment_id
+left join 
+    (
 	select
-		product_id,
-		array_agg(image) as image
+		o.order_id,
+		SUM(od.quantity) as total_items,
+		array_agg(
+            jsonb_build_object(
+                'order_detail_id',
+		od.order_detail_id,
+		'product_id',
+		od.product_id,
+		'product_name',
+		p.name,
+		'product_img',
+		pg.image,
+		'quantity',
+		od.quantity,
+		'unit_price',
+		od.unit_price
+            )
+        ) as order_details
 	from
-		product_gallery
+		order_detail od
+	inner join 
+        "order" o on
+		o.order_id = od.order_id
+	inner join 
+        product p on
+		od.product_id = p.product_id
+	inner join 
+        (
+		select
+			distinct on
+			(product_id) *
+		from
+			product_gallery
+		order by
+			product_id,
+			product_gallery_id) pg on
+		p.product_id = pg.product_id
+	where
+		1 = 1
 	group by
-		product_id,
-		product_gallery_id
-) pg on
-	p.product_id = pg.product_id
+		o.order_id) od on
+	od.order_id = o.order_id
+left join 
+    shipping_address sa on
+	sa.address_id = o.address_id
+	and sa.user_id = o.user_id
+inner join "user" u 
+on u.user_id = o.user_id 
+where
+	o.user_id = ${userId}
 group by
-	u.email,
-	od.product_id ,
-	p.name,
-	pg.image,
-	od.rating,
-	od.review) review
-  on review.product_id = od.product_id
-where 1 = 1
-  and o.user_id = '${userId}'
-group by p2.product_brand_id,o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
-  sa.recipient_name ,
-  sa.street_address ,sa.city,review.email, review.product_id, review.name, review.image, review.rating, review.review
-order by o.created_at desc
+	o.order_id,
+	os.status_id,
+	p.payment_method,
+	sa.recipient_name,
+	sa.street_address,
+	sa.city,
+	od.order_details,
+	od.total_items,
+	u.user_id
+order by
+	o.created_at desc
 limit ${limit}
 offset ${offset}
 `;
@@ -247,59 +283,87 @@ export async function updateOrderStatus(orderId, statusId) {
 
 export async function getOrderById(orderId) {
   const sqlQuery = `
-SELECT 
-  o.order_id,
-  u.user_id,
-  u.first_name,
-  u.email,
-  u.phone_number,
-  o.shipping_fee,
-  os.status_detail,
-  p.payment_method,
-  p2.product_brand_id,
-  ARRAY_AGG(jsonb_build_object(
-      'order_detail_id', od.order_detail_id,
-      'product_id', od.product_id,
-      'product_name', p2."name",
-      'product_image', pg.image,
-      'quantity', od.quantity,
-      'unit_price', od.unit_price
-  )) AS order_details,
-  o.quantity AS total_items,
- TO_CHAR(o.total,
-	'FM999,999,999') as total_price
-FROM 
-  "order" o
-LEFT JOIN
-  order_status os 
-  ON 1 = 1
-  AND o.status_id = os.status_id 
-LEFT JOIN 
-  payment p 
-  ON 1 = 1
-  AND o.payment_id = p.payment_id 
-LEFT OUTER JOIN
-  order_detail od 
-  ON 1 = 1
-  AND o.order_id = od.order_id
-INNER JOIN public.user u 
-  ON u.user_id = o.user_id
-LEFT JOIN product p2 
-  ON 1 = 1
-  AND p2.product_id = od.product_id 
-LEFT JOIN (
-    SELECT 
-      product_id,
-      MIN(image) AS image
-    FROM 
-      product_gallery
-    GROUP BY 
-      product_id
-) pg
-ON p2.product_id = pg.product_id
-WHERE 1 = 1
-  AND o.order_id = '${orderId}'
-GROUP BY o.order_id, os.status_id, p.payment_id, u.user_id,p2.product_brand_id;
+select
+	o.*,
+	os.status_detail,
+	p.payment_method,
+	od.order_details,
+	od.total_items,
+	TO_CHAR(o.total,
+	'FM999,999,999') as total_price,
+	sa.recipient_name,
+	COALESCE (sa.street_address, o.street_address) as street_address ,
+	COALESCE (sa.city, 'HCM') as city
+from
+	"order" o
+inner join 
+    order_status os on
+	o.status_id = os.status_id
+left join 
+    payment p on
+	o.payment_id = p.payment_id
+left join 
+    (
+	select
+		o.order_id,
+		SUM(od.quantity) as total_items,
+		array_agg(
+            jsonb_build_object(
+                'order_detail_id',
+		od.order_detail_id,
+		'product_id',
+		od.product_id,
+		'product_name',
+		p.name,
+		'product_img',
+		pg.image,
+		'quantity',
+		od.quantity,
+		'unit_price',
+		od.unit_price
+            )
+        ) as order_details
+	from
+		order_detail od
+	inner join 
+        "order" o on
+		o.order_id = od.order_id
+	inner join 
+        product p on
+		od.product_id = p.product_id
+	inner join 
+        (
+		select
+			distinct on
+			(product_id) *
+		from
+			product_gallery
+		order by
+			product_id,
+			product_gallery_id) pg on
+		p.product_id = pg.product_id
+	where
+		o.order_id = ${orderId}
+	group by
+		o.order_id) od on
+	od.order_id = o.order_id
+left join 
+    shipping_address sa on
+	sa.address_id = o.address_id
+	and sa.user_id = o.user_id
+where
+	o.order_id = ${orderId}
+group by
+	o.order_id,
+	os.status_id,
+	p.payment_method,
+	sa.recipient_name,
+	sa.street_address,
+	sa.city,
+	od.order_details,
+	od.total_items
+order by
+	o.created_at desc
 
 `;
 

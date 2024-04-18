@@ -391,7 +391,8 @@ group by
 	ci.cart_item_id,
 	p.name,
 	p.unit_price,
-	pg.images
+	pg.images,
+	p.product_brand_id
 `;
 
   const userCart = await SequelizeInstance.query(sqlQuery, {

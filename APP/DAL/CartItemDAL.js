@@ -150,7 +150,7 @@ export async function getCartItemDetailsByID(cartItemId) {
     p.product_id,
     p."name",
     p.description,
-    p.product_brand_id,
+    pg.product_brand_id,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
     p.discount,
     c."name" AS category_name,
@@ -471,7 +471,8 @@ GROUP BY
   ci.product_id,
   ci.quantity,
   ci.personal_build_pc_id,
-  p.unit_price;
+  p.unit_price,
+  p.product_brand_id;
   `;
 
   const result = await SequelizeInstance.query(sqlQuery, {

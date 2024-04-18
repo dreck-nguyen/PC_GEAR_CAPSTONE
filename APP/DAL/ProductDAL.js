@@ -590,7 +590,7 @@ inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN processor_specification ps  on p.product_id = ps.product_id
 WHERE p.product_id = '${processorId}'
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
+  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -623,7 +623,7 @@ inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN motherboard_specification ms on p.product_id = ms.product_id
 WHERE p.product_id = '${motherBoardId}'
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
+  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
 `;
 
   const motherBoardList = await SequelizeInstance.query(sqlQuery, {
@@ -656,7 +656,7 @@ inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN case_specification cs on p.product_id = cs.product_id
 WHERE p.product_id = '${caseId}'
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
 `;
 
   const caseList = await SequelizeInstance.query(sqlQuery, {
@@ -689,7 +689,7 @@ inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN graphics_specification gs  on p.product_id = gs.product_id
 WHERE p.product_id = '${gpuId}'
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
+  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
@@ -728,6 +728,7 @@ inner join ram_specification rs on
 where
 	p.product_id = '${ramId}'
 group by
+p.product_brand_id,
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,
@@ -771,6 +772,7 @@ inner join storage_specification ss on
 where
 	p.product_id = '${storageId}'
 group by
+p.product_brand_id,
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,

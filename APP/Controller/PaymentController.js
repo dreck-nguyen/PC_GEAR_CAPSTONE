@@ -123,10 +123,10 @@ export async function getVnpayIpn(req, res) {
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
   const t = await SequelizeInstance.transaction();
-  var total = Number(vnp_Params['vnp_Amount']) ?? 1000000;
 
   const orderId = vnp_Params['vnp_TxnRef'] ?? null;
   try {
+    var total = Number(vnp_Params['vnp_Amount']) || 1000000;
     if (!orderId) throw new Error(' order_id is null');
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];

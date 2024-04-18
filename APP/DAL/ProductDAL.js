@@ -32,7 +32,8 @@ SELECT
     p.sold,
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links
+    ARRAY_AGG(pg.image) AS image_links,
+    pb.product_brand_id
 FROM 
     product p
 LEFT OUTER JOIN 
@@ -76,7 +77,7 @@ SELECT
     p.product_id,
     p."name",
     p.description,
-    pg.product_brand_id,
+    pb.product_brand_id,
     TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
     p.discount,
     p.quantity,
@@ -226,7 +227,8 @@ SELECT
     p.sold,
     c.name AS category_name,
     pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links
+    ARRAY_AGG(pg.image) AS image_links,
+    pb.product_brand_id
 FROM 
     product p
 LEFT JOIN 
@@ -245,7 +247,7 @@ WHERE
 	c.parent_id = '${categoryId}'
 	OR (c.parent_id IS not NULL AND p.category_id = '${categoryId}')
 GROUP BY 
-    p.product_id, p.category_id, p.name, p.description, p.unit_price, p.discount, p.sold, c.name, pb.product_brand_name;
+    p.product_id, p.category_id, p.name, p.description, p.unit_price, p.discount, p.sold, c.name, pb.product_brand_name, pb.product_brand_id;
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
@@ -324,6 +326,7 @@ SELECT
 p.product_id,
 p."name",
 p.description,
+pb.product_brand_id,
 TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
 p.discount,
 p.sold,
@@ -355,6 +358,7 @@ SELECT
   p.product_id,
   p."name",
   p.description,
+  pb.product_brand_id,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
   p.discount,
   p.sold,
@@ -456,6 +460,7 @@ p.sold,
 c."name" AS category_name,
 pb.product_brand_name AS brand_name,
 ARRAY_AGG(pg.image) AS image_links,
+pb.product_brand_id,
 ms.*
 FROM 
 product p
@@ -583,7 +588,6 @@ SELECT
   p.description,
   p.product_brand_id,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
   p.discount,
   p.sold,
   c."name" AS category_name,
@@ -617,7 +621,6 @@ SELECT
   p.description,
   p.product_brand_id,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
   p.discount,
   p.sold,
   c."name" AS category_name,
@@ -651,7 +654,6 @@ SELECT
   p.description,
   p.product_brand_id,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
   p.discount,
   p.sold,
   c."name" AS category_name,
@@ -685,7 +687,6 @@ SELECT
   p.description,
   p.product_brand_id,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
   p.discount,
   p.sold,
   c."name" AS category_name,
@@ -1053,7 +1054,7 @@ select
 	p.product_id,
 	p."name",
 	p.description,
-  p.product_brand_id ,
+  pb.product_brand_id ,
 	TO_CHAR(p.unit_price,
 	'FM999,999,999') as unit_price,
 	p.discount,
@@ -1132,7 +1133,7 @@ SELECT
 	p.product_id,
 	p."name",
 	p.description,
-  p.product_brand_id ,
+  pb.product_brand_id ,
 	TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
 	p.discount,
 	p.sold,
@@ -1343,7 +1344,7 @@ export async function getCase(motherboardId, gpuId, caseBrandId) {
 	p.product_id,
 	p."name",
 	p.description,
-  p.product_brand_id ,
+  pb.product_brand_id ,
 	TO_CHAR(p.unit_price,
 	'FM999,999,999') as unit_price,
 	p.discount,
@@ -1409,7 +1410,7 @@ SELECT
 	p.product_id,
 	p."name",
 	p.description,
-  p.product_brand_id ,
+  pb.product_brand_id ,
 	TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
 	p.discount,
 	p.sold,
@@ -1466,7 +1467,7 @@ select
 	p.product_id,
 	p."name",
 	p.description,
-  p.product_brand_id ,
+  pb.product_brand_id ,
 	TO_CHAR(p.unit_price,
 	'FM999,999,999') as unit_price,
 	p.discount,

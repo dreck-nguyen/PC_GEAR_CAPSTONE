@@ -77,7 +77,8 @@ export async function createPaymentUrl(req, res, next) {
 
     res.send({ vnpUrl });
   } catch (e) {
-    await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
+    if (orderId)
+      await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);
     res.send(e);
   }

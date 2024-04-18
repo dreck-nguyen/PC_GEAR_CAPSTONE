@@ -3,8 +3,9 @@ import { Cart, SequelizeInstance } from '../utility/DbHelper.js';
 export async function getCartUser(userId) {
   const sqlQuery = `
  select
-	c.*,
+  c.*,
   ci.*,
+  p.product_brand_id,
   ARRAY_AGG(
     JSONB_BUILD_OBJECT(
       'cart_item_id', ci.cart_item_id,

@@ -100,6 +100,7 @@ select
   o.*
   , os.status_detail 
   , p.payment_method 
+  , p2.product_brand_id
   , array_agg(jsonb_build_object(
   'order_detail_id', od.order_detail_id,
   'product_id', od.product_id,
@@ -255,6 +256,7 @@ SELECT
   o.shipping_fee,
   os.status_detail,
   p.payment_method,
+  p2.product_brand_id,
   ARRAY_AGG(jsonb_build_object(
       'order_detail_id', od.order_detail_id,
       'product_id', od.product_id,

@@ -61,6 +61,7 @@ export async function sendMail(mailOptions) {
     // Send mail
     mailOptions.from = email;
     mailOptions.subject = `THIS IS AUTO MAIL. PLEASE DO NOT REPLY`;
+    console.log(mailOptions);
     const info = await transporter.sendMail(mailOptions);
     console.log('Message sent: %s', info.messageId);
     return info;

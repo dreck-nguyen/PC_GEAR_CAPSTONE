@@ -32,7 +32,7 @@ product p
   on
 	1 = 1
 	and ci.product_id = p.product_id
-inner join 
+left join 
   (
 	select
 		product_id 

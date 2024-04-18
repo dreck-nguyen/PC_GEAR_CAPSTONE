@@ -299,7 +299,7 @@ LEFT JOIN (
 ON p2.product_id = pg.product_id
 WHERE 1 = 1
   AND o.order_id = '${orderId}'
-GROUP BY o.order_id, os.status_id, p.payment_id, u.user_id;
+GROUP BY o.order_id, os.status_id, p.payment_id, u.user_id,p2.product_brand_id;
 
 `;
 

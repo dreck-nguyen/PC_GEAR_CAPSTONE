@@ -23,8 +23,9 @@ export async function getPayment(req, res, next) {
 }
 
 export async function createPaymentUrl(req, res, next) {
-  var orderId = req.body.orderId;
+  var orderId = req?.body?.orderId || null;
   try {
+    if (!orderId) throw new Error(' order_id is null');
     var ipAddr =
       req.headers['x-forwarded-for'] ||
       req.connection.remoteAddress ||
@@ -85,8 +86,9 @@ export async function createPaymentUrl(req, res, next) {
 }
 
 export async function getVnpayIpn(req, res) {
-  var orderId = vnp_Params['vnp_TxnRef'];
+  var orderId = vnp_Params['vnp_TxnRef'] ?? null;
   try {
+    if (!orderId) throw new Error(' order_id is null');
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
 
@@ -121,8 +123,9 @@ export async function getVnpayIpn(req, res) {
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
   const t = await SequelizeInstance.transaction();
-  const orderId = vnp_Params['vnp_TxnRef'];
+  const orderId = vnp_Params['vnp_TxnRef'] ?? null;
   try {
+    if (!orderId) throw new Error(' order_id is null');
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
 

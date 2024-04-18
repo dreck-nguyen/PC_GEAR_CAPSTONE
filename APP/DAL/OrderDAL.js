@@ -211,7 +211,7 @@ left join
 inner join "user" u 
 on u.user_id = o.user_id 
 where
-	o.user_id = ${userId}
+	o.user_id = '${userId}'
 group by
 	o.order_id,
 	os.status_id,
@@ -343,7 +343,7 @@ left join
 			product_gallery_id) pg on
 		p.product_id = pg.product_id
 	where
-		o.order_id = ${orderId}
+		o.order_id = '${orderId}'
 	group by
 		o.order_id) od on
 	od.order_id = o.order_id
@@ -352,7 +352,7 @@ left join
 	sa.address_id = o.address_id
 	and sa.user_id = o.user_id
 where
-	o.order_id = ${orderId}
+	o.order_id = '${orderId}'
 group by
 	o.order_id,
 	os.status_id,

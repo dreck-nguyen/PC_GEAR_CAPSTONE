@@ -184,7 +184,7 @@ group by
   on review.product_id = od.product_id
 where 1 = 1
   and o.user_id = '${userId}'
-group by o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
+group by p2.product_brand_id,o.order_id,os.status_id,p.payment_id,sa.recipient_name ,
   sa.recipient_name ,
   sa.street_address ,sa.city,review.email, review.product_id, review.name, review.image, review.rating, review.review
 order by o.created_at desc

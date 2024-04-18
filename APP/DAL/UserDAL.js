@@ -155,19 +155,18 @@ export async function checkAuth(email, password) {
 }
 export async function getUserByOrder(orderId) {
   const sqlQuery = `
-    select 
-      user_id
-      , u.email
-      , u.first_name || '-' || u.last_name as user_name
-      , role 
-      , o.total
-    from 
-      public."user" u 
-    inner join 
-      user_role ur 
-    on u.role_id = ur.role_id
-    inner join order o 
-    on o.user_id = u.user_id
+    SELECT
+    u.user_id,
+    u.email,
+    u.first_name || '-' || u.last_name AS user_name,
+    ur.role,
+    o.total
+FROM
+    public."user" u
+INNER JOIN
+    user_role ur ON u.role_id = ur.role_id
+INNER JOIN
+    "order" o ON o.user_id = u.user_id
     where o.order_id = '${orderId}'
   `;
 

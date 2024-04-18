@@ -86,10 +86,11 @@ export async function createPaymentUrl(req, res, next) {
 }
 
 export async function getVnpayIpn(req, res) {
-  var orderId = vnp_Params['vnp_TxnRef'] ?? null;
+  let orderId = '';
   try {
     if (!orderId) throw new Error(' order_id is null');
     var vnp_Params = req.query;
+    orderId = vnp_Params['vnp_TxnRef'] ?? null;
     var secureHash = vnp_Params['vnp_SecureHash'];
 
     delete vnp_Params['vnp_SecureHash'];

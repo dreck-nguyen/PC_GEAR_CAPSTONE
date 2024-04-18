@@ -123,6 +123,8 @@ export async function getVnpayIpn(req, res) {
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
   const t = await SequelizeInstance.transaction();
+  var total = Number(vnp_Params['vnp_Amount']) ?? 1000000;
+
   const orderId = vnp_Params['vnp_TxnRef'] ?? null;
   try {
     if (!orderId) throw new Error(' order_id is null');
@@ -153,7 +155,7 @@ export async function getVnpayReturn(req, res) {
         .replace('[Customer Name]', user.user_name)
         .replace('[Order Number]', orderId)
         .replace('[Payment Method]', `VN PAY`)
-        .replace('[Total Amount]', user.total)
+        .replace('[Total Amount]', total)
         .replace('[Payment Status]', message);
       await orderService.updateOrderPaymentStatus(orderId, true, message);
       const mailOptions = {

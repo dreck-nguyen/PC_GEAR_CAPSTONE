@@ -146,7 +146,7 @@ SELECT
     p.payment_method,
     od.order_details,
     od.total_items,
-    TO_CHAR(o.total, 'FM999,999,999') AS total_price
+    TO_CHAR(o.total, 'FM999,999,999') AS total_price,
     sa.recipient_name,
     sa.street_address,
     sa.city,

@@ -14,6 +14,7 @@ import * as paymentController from './APP/Controller/PaymentController.js';
 import * as orderStatusController from './APP/Controller/OrderStatusController.js';
 import * as shippingAddressController from './APP/Controller/ShippingAddressController.js';
 import * as pcBuilderController from './APP/Controller/PcBuilderController.js';
+import * as orderDetailController from './APP/Controller/OrderDetailController.js';
 const router = express.Router();
 // PC BUILD SECTION
 
@@ -3867,4 +3868,40 @@ router.get('/order/vnpay_return', paymentController.getVnpayReturn);
 router.get('/api/send-mail', paymentController.sendMail);
 
 router.get('/api/product-purpose', productController.getProductPurpose);
+/**
+ * @swagger
+ * /api/order/order-detail/{orderDetailId}:
+ *   get:
+ *     summary: Retrieve Order Detail by ID
+ *     description: Retrieve details of a specific order by its ID.
+ *     tags:
+ *       - ORDER SECTION
+ *     parameters:
+ *       - in: path
+ *         name: orderDetailId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the order detail to retrieve.
+ *     responses:
+ *       '200':
+ *         description: A single order detail object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 orderDetailId:
+ *                   type: string
+ *                   description: The ID of the order detail.
+ *                   example: 02e0dd5e-18dd-4875-89a8-ff93183d9728
+ *       '404':
+ *         description: Order detail not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get(
+  '/api/order/order-detail/:orderDetailId',
+  orderDetailController.getOrderDetailByOrderDetailId,
+);
 export default router;

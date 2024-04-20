@@ -154,12 +154,12 @@ SELECT
     pb.product_brand_name AS brand_name,
     pb.product_brand_id,
     ARRAY_AGG(pg.image) AS image_links,
-    array_agg(jsonb_build_object(
-  'review_user', review.email,
-  'product_name', review.name,
-  'rating', review.rating,
-  'review', review.review
-  )) as review_list
+    ARRAY_AGG(jsonb_build_object(
+    'review_user', review.email,
+    'product_name', review.name,
+    'rating', review.rating,
+    'review', review.review
+    )) as review_list
 FROM 
     product p
 LEFT OUTER JOIN 

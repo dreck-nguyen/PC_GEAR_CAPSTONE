@@ -8,7 +8,6 @@ from
 where user_id = :userId
   ;
 `;
-
   const userOrder = await SequelizeInstance.query(sqlQuery, {
     replacements: { userId },
     type: SequelizeInstance.QueryTypes.SELECT,

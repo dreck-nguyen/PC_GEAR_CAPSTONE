@@ -136,99 +136,80 @@ from
 
 export async function getOrderByUserId(userId, limit, offset) {
   const sqlQuery = `
-select
-	o.*,
-	 u.user_id,
-     u.first_name ,
-     u.email ,
-    u.phone_number, 
-	os.status_detail,
-	p.payment_method,
-	od.order_details,
-	od.total_items,
-	TO_CHAR(o.total,
-	'FM999,999,999') as total_price,
-	sa.recipient_name,
-	sa.street_address,
-	sa.city
-from
-	"order" o
-inner join 
-    order_status os on
-	o.status_id = os.status_id
-left join 
-    payment p on
-	o.payment_id = p.payment_id
-left join 
+SELECT
+    o.*,
+    u.user_id,
+    u.first_name,
+    u.email,
+    u.phone_number,
+    os.status_detail,
+    p.payment_method,
+    od.order_details,
+    od.total_items,
+    TO_CHAR(o.total, 'FM999,999,999') AS total_price
+    sa.recipient_name,
+    sa.street_address,
+    sa.city
+FROM
+    "order" o
+INNER JOIN
+    order_status os ON o.status_id = os.status_id
+inner  JOIN
+    payment p ON o.payment_id = p.payment_id 
+inner JOIN
     (
-	select
-		o.order_id,
-		SUM(od.quantity) as total_items,
-		array_agg(
-            jsonb_build_object(
-                'order_detail_id',
-		od.order_detail_id,
-		'product_id',
-		od.product_id,
-		'product_name',
-		p.name,
-		'product_img',
-		pg.image,
-		'quantity',
-		od.quantity,
-		'unit_price',
-		od.unit_price
+    SELECT
+        o.order_id,
+        SUM(od.quantity) AS total_items,
+        JSONB_AGG(
+            JSONB_BUILD_OBJECT(
+                'order_detail_id', od.order_detail_id,
+                'product_id', od.product_id,
+                'product_name', p.name,
+                'product_img', pg.image,
+                'quantity', od.quantity,
+                'unit_price', od.unit_price
             )
-        ) as order_details
-	from
-		order_detail od
-	inner join 
-        "order" o on
-		o.order_id = od.order_id
-	inner join 
-        product p on
-		od.product_id = p.product_id
-	inner join 
-        (
-		select
-			distinct on
-			(product_id) *
-		from
-			product_gallery
-		order by
-			product_id,
-			product_gallery_id) pg on
-		p.product_id = pg.product_id
-	where
-		1 = 1
-	group by
-		o.order_id) od on
-	od.order_id = o.order_id
-left join 
-    shipping_address sa on
-	sa.address_id = o.address_id
-	and sa.user_id = o.user_id
-inner join "user" u 
-on u.user_id = o.user_id 
-where
-	o.user_id = '${userId}'
-group by
-	o.order_id,
-	os.status_id,
-	p.payment_method,
-	sa.recipient_name,
-	sa.street_address,
-	sa.city,
-	od.order_details,
-	od.total_items,
-	u.user_id
-order by
-	o.created_at desc
-limit ${limit}
-offset ${offset}
+        ) AS order_details
+        FROM
+            order_detail od
+        INNER JOIN
+            "order" o ON o.order_id = od.order_id
+        INNER JOIN
+            product p ON od.product_id = p.product_id
+        INNER JOIN
+            (
+                SELECT DISTINCT ON (product_id) *
+                FROM product_gallery
+                ORDER BY product_id, product_gallery_id
+            ) pg ON p.product_id = pg.product_id
+        GROUP BY
+            o.order_id
+    ) od ON od.order_id = o.order_id
+LEFT JOIN
+    shipping_address sa ON sa.address_id = o.address_id
+INNER JOIN
+    "user" u ON u.user_id = o.user_id
+WHERE
+    o.user_id = :userId
+GROUP BY
+    o.order_id,
+    os.status_id,
+    p.payment_method,
+    sa.recipient_name,
+    sa.street_address,
+    sa.city,
+    od.order_details,
+    od.total_items,
+    u.user_id
+ORDER BY
+    o.created_at desc
+limit :limit
+offset :offset
 `;
 
   const userOrder = await SequelizeInstance.query(sqlQuery, {
+    replacements: { userId, limit, offset },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

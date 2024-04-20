@@ -39,7 +39,7 @@ od.order_detail_id
   'product_name', review.name,
   'rating', review.rating,
   'review', review.review
-  )) as order_details
+  )) as review_list
 from order_detail od 
 inner join product p on p.product_id = od.product_id 
 inner join 
@@ -56,7 +56,7 @@ order by
 p.product_id = pg.product_id
 inner join "order" o ON od.order_id = o.order_id
 inner join "user" u on u.user_id = o.user_id
-inner join (
+left outer join (
 SELECT od.review, od.rating, p.name, u.email, p.product_id 
 FROM order_detail od
 JOIN product p ON od.product_id = p.product_id

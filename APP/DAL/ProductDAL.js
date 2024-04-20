@@ -154,7 +154,12 @@ SELECT
     pb.product_brand_name AS brand_name,
     pb.product_brand_id,
     ARRAY_AGG(pg.image) AS image_links,
-    ARRAY_AGG(COALESCE(review.review_list, ARRAY[NULL]::jsonb[])) AS review_list
+    array_agg(jsonb_build_object(
+  'review_user', review.email,
+  'product_name', review.name,
+  'rating', review.rating,
+  'review', review.review
+  )) as review_list
 FROM 
     product p
 LEFT OUTER JOIN 
@@ -163,44 +168,19 @@ LEFT OUTER JOIN
     product_brand pb ON pb.product_brand_id = p.product_brand_id
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
-LEFT OUTER JOIN (
-    SELECT
-        od.product_id,
-        ARRAY_AGG(
-            jsonb_build_object(
-                'email', u.email,
-                'product_id', od.product_id,
-                'product_name', p.name,
-                'image_links', pg.image,
-                'rating', od.rating,
-                'review', od.review
-            )
-        ) AS review_list
-    FROM
-        "order" o
-    INNER JOIN 
-        order_detail od ON o.order_id = od.order_id
-    INNER JOIN 
-        "user" u ON o.user_id = u.user_id
-    INNER JOIN 
-        product p ON od.product_id = p.product_id
-    INNER JOIN (
-        SELECT
-            product_id,
-            ARRAY_AGG(image) AS image
-        FROM
-            product_gallery
-        GROUP BY
-            product_id
-    ) pg ON p.product_id = pg.product_id
-    WHERE 
-        p.product_id = '${productId}'
-    GROUP BY
-        od.product_id,
-        p.name
-) review ON review.product_id = p.product_id
+left join (
+SELECT od.review, od.rating, p.name, u.email, p.product_id 
+FROM order_detail od
+JOIN product p ON od.product_id = p.product_id
+JOIN "order" o ON od.order_id = o.order_id
+JOIN "user" u ON o.user_id = u.user_id
+where 1=1
+and od.rating is not null 
+and od.review is not null 
+) review 
+on p.product_id  = review.product_id
 WHERE 
-    p.product_id = '${productId}'
+    p.product_id = :productId
 GROUP BY 
     p.product_id, 
     c.category_id, 
@@ -208,6 +188,7 @@ GROUP BY
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {
+    replacements: { productId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

@@ -27,7 +27,6 @@ export async function getProductById(productId) {
 
   // Check if the fetched product has a review_list property
   if (productsWithDetails[0]?.review_list) {
-    // Assign the first review object to review_list, or an empty array if review_list is null or undefined
     productsWithDetails[0].review_list =
       productsWithDetails[0].review_list[0] || [];
   }

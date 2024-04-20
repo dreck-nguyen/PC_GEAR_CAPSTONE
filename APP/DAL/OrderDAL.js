@@ -149,7 +149,8 @@ SELECT
     TO_CHAR(o.total, 'FM999,999,999') AS total_price
     sa.recipient_name,
     sa.street_address,
-    sa.city
+    sa.city,
+	os.is_final as allow_review
 FROM
     "order" o
 INNER JOIN
@@ -201,7 +202,8 @@ GROUP BY
     sa.city,
     od.order_details,
     od.total_items,
-    u.user_id
+    u.user_id,
+	os.is_final
 ORDER BY
     o.created_at desc
 limit :limit

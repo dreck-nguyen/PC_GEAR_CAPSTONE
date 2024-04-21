@@ -2575,6 +2575,9 @@ router.post('/api/user/register', userController.registerUser);
  *                 type: int
  *                 example: 1
  *                 description: The ID of the psu used in the personal PC build.
+ *               purpose_id:
+ *                 type: int
+ *                 example: 3
  *     responses:
  *       200:
  *         description: Personal PC build created successfully.

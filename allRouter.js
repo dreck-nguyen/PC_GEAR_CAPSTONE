@@ -2657,6 +2657,41 @@ router.post('/api/user/register', userController.registerUser);
  *       '500':
  *         description: Internal server error. Something went wrong on the server side.
  */
+/**
+ * @swagger
+ * /api/auth/user/pc-component/copy-personal-build/{userBuildId}:
+ *   post:
+ *     summary: Copy a personal PC build
+ *     description: Copy a personal PC build for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - USER SECTION
+ *     parameters:
+ *       - in: path
+ *         name: userBuildId
+ *         required: true
+ *         description: ID of the personal PC build to copy
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successfully copied the personal PC build
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Personal PC build copied successfully
+ *       '400':
+ *         description: Bad request - Invalid user_pc_build_id provided
+ *       '404':
+ *         description: Personal PC build not found
+ *       '500':
+ *         description: Internal server error
+ */
 router.post(
   '/api/auth/user/pc-build-cart',
   cartController.uploadCartPcComponent,
@@ -2666,6 +2701,10 @@ router.post('/api/auth/user/cart', cartController.createCart);
 router.post(
   '/api/auth/user/pc-component/personal-build',
   userController.createPersonalBuildPc,
+);
+router.post(
+  '/api/auth/user/pc-component/copy-personal-build/:userBuildId',
+  userController.copyStaffToPersonalBuildPc,
 );
 router.get(
   '/api/auth/user/pc-component/personal-build',

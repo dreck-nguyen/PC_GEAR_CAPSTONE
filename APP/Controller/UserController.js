@@ -91,6 +91,23 @@ export async function createPersonalBuildPc(req, res, next) {
     res.status(404).send({ error: error.message });
   }
 }
+export async function copyStaffToPersonalBuildPc(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const loginUser = req.loginUser;
+    const userBuildId = req.params.userBuildId;
+    const result = await userService.copyStaffToPersonalBuildPc(
+      loginUser.user_id,
+      userBuildId,
+    );
+    await t.commit();
+    res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    await t.rollback();
+    res.status(404).send({ error: error.message });
+  }
+}
 export async function deletePersonalBuildPc(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {

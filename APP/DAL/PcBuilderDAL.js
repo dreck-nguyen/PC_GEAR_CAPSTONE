@@ -227,6 +227,68 @@ export async function clearPreBuildPC() {
     raw: true,
   });
 }
+export async function copyStaffToPersonalBuildPc(
+  buildPcId,
+  userId,
+  userBuildId,
+) {
+  const sqlQuery = `
+    INSERT INTO public.user_pc_build (
+      user_pc_build_id,
+      user_id,
+      created_at,
+      profile_name,
+      motherboard_id,
+      processor_id,
+      cpu_cooler_id,
+      case_id,
+      gpu_id,
+      ram_id,
+      storage_id,
+      case_cooler_id,
+      monitor_id,
+      psu_id,
+      ram_quantity,
+      storage_quantity
+    )
+    SELECT
+      :buildPcId,
+      :userId,
+      NOW(),
+      profile_name,
+      motherboard_id,
+      processor_id,
+      cpu_cooler_id,
+      case_id,
+      gpu_id,
+      ram_id,
+      storage_id,
+      case_cooler_id,
+      monitor_id,
+      psu_id,
+      ram_quantity,
+      storage_quantity
+    FROM
+      user_pc_build
+    WHERE
+      user_pc_build_id = :userBuildId
+	  RETURNING *
+  `;
+
+  const replacements = {
+    buildPcId: buildPcId,
+    userId: userId,
+    userBuildId: userBuildId,
+  };
+
+  const createPersonalPc = await SequelizeInstance.query(sqlQuery, {
+    replacements: replacements,
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
+
+  return createPersonalPc;
+}
 
 export async function createPersonalBuildPc(dataObj) {
   const sqlQuery = `

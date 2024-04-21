@@ -78,6 +78,15 @@ export async function checkAuth(email, password) {
   const result = await userDAL.checkAuth(email, password);
   return result;
 }
+export async function copyStaffToPersonalBuildPc(userId, userBuildId) {
+  const buildPcId = uuidv4();
+  const [result] = await pcBuildDAL.copyStaffToPersonalBuildPc(
+    buildPcId,
+    userId,
+    userBuildId,
+  );
+  return result;
+}
 export async function createPersonalBuildPc(loginUser, dataObj) {
   const buildPcId = uuidv4();
   const userId = loginUser.user_id;

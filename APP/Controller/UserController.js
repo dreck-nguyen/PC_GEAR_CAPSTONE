@@ -148,3 +148,13 @@ export async function updateUserInfo(req, res, next) {
     res.status(404).send({ error: error.message });
   }
 }
+
+export async function getStaffPreBuildPc(req, res, next) {
+  try {
+    const result = await userService.getStaffPreBuildPc();
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(404).send({ error: error.message });
+  }
+}

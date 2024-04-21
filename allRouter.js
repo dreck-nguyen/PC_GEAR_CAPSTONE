@@ -2638,6 +2638,22 @@ router.post('/api/user/register', userController.registerUser);
  *       '500':
  *         description: Internal server error
  */
+/**
+ * @swagger
+ * /api/product/pc-component/get-pre-build:
+ *   get:
+ *     summary: Get pre-built PC components
+ *     description: Retrieves pre-built PC components from the server
+ *     tags:
+ *       - USER SECTION
+ *     responses:
+ *       '200':
+ *         description: Successful operation. Returns pre-built PC components.
+ *       '401':
+ *         description: Unauthorized. Authentication credentials are missing or invalid.
+ *       '500':
+ *         description: Internal server error. Something went wrong on the server side.
+ */
 router.post(
   '/api/auth/user/pc-build-cart',
   cartController.uploadCartPcComponent,
@@ -2651,6 +2667,10 @@ router.post(
 router.get(
   '/api/auth/user/pc-component/personal-build',
   userController.getPersonalBuildPc,
+);
+router.get(
+  '/api/product/pc-component/get-pre-build',
+  userController.getStaffPreBuildPc,
 );
 router.delete(
   '/api/auth/user/pc-component/personal-build/:user_pc_build_id',

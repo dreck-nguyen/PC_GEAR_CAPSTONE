@@ -115,3 +115,7 @@ export async function updateUserInfo(loginUser, dataObj) {
   const [result] = await userDAL.updateUserInfo(loginUser.user_id, dataObj);
   return result;
 }
+
+export async function getStaffPreBuildPc() {
+  return await pcBuildDAL.getStaffPreBuildPc();
+}

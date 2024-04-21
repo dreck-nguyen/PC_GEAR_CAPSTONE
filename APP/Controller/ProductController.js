@@ -263,17 +263,6 @@ export async function getStorageById(req, res, next) {
   }
 }
 
-export async function getAutoGenById(req, res, next) {
-  try {
-    const autoGenId = req.params.auto_gen_id;
-    const result = await productService.getAutoGenById(autoGenId);
-    res.status(200).send(result);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ error: error.message });
-  }
-}
-
 export async function getCaseCoolerById(req, res, next) {
   try {
     const caseCoolerId = req.params.case_cooler_id;
@@ -400,17 +389,6 @@ export async function getPowerSupply(req, res, next) {
 export async function getMonitor(req, res, next) {
   try {
     const result = await productService.getMonitor();
-    res.status(200).send(result);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ error: error.message });
-  }
-}
-
-export async function getAutoGen(req, res, next) {
-  try {
-    const dataObj = req.body || null;
-    const result = await productService.getAutoGen(dataObj);
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

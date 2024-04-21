@@ -932,11 +932,6 @@ router.post(
 );
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
-// router.post('/api/pc-component/auto-gen', productController.getAutoGen);
-// router.post(
-//   '/api/pc-component/random/auto-gen',
-//   productController.getRandomOne,
-// );
 
 //
 /**
@@ -1191,10 +1186,7 @@ router.get(
   '/api/pc-component/storage/:storage_id',
   productController.getStorageById,
 );
-// router.get(
-//   '/api/pc-component/auto-gen/:auto_gen_id',
-//   productController.getAutoGenById,
-// );
+
 router.get(
   '/api/pc-component/case-cooler/:case_cooler_id',
   productController.getCaseCoolerById,

@@ -2661,8 +2661,8 @@ router.post('/api/user/register', userController.registerUser);
  * @swagger
  * /api/auth/user/pc-component/copy-personal-build/{userBuildId}:
  *   post:
- *     summary: Copy a personal PC build
- *     description: Copy a personal PC build for the authenticated user.
+ *     summary: Copy a staff pre-build-pc components
+ *     description: Copy a staff pre-build-pc components for the authenticated user.
  *     security:
  *       - BearerAuth: []
  *     tags:

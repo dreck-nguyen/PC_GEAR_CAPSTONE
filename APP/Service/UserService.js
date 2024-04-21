@@ -91,6 +91,14 @@ export async function createPersonalBuildPc(loginUser, dataObj) {
   const buildPcId = uuidv4();
   const userId = loginUser.user_id;
   let result;
+  const [countSameProfileName] = await pcBuildDAL.countSameProfileName(
+    dataObj.profile_name,
+    userId,
+  );
+  const profileName =
+    dataObj.profile_name +
+    (countSameProfileName.count > 0 ? `_${countSameProfileName.count}` : '');
+  dataObj.profile_name = profileName;
   if (!dataObj.user_pc_build_id) {
     console.log(dataObj, buildPcId, userId);
     dataObj.user_pc_build_id = buildPcId;

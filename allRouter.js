@@ -932,7 +932,6 @@ router.post(
 );
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
-
 //
 /**
  * @swagger

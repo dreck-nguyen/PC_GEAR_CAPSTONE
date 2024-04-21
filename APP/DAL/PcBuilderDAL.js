@@ -227,6 +227,16 @@ export async function clearPreBuildPC() {
     raw: true,
   });
 }
+
+export async function countSameProfileName(profileName, userId) {
+  const sqlQuery = `
+  select count(profile_name) from user_pc_build upb where user_id = '${userId}' and profile_name = '${profileName}'
+  `;
+  return await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+}
 export async function copyStaffToPersonalBuildPc(
   buildPcId,
   userId,
@@ -255,7 +265,7 @@ export async function copyStaffToPersonalBuildPc(
       :buildPcId,
       :userId,
       NOW(),
-      profile_name,
+      'Copied ' || profile_name,
       motherboard_id,
       processor_id,
       cpu_cooler_id,
@@ -272,7 +282,7 @@ export async function copyStaffToPersonalBuildPc(
       user_pc_build
     WHERE
       user_pc_build_id = :userBuildId
-	  RETURNING *
+    RETURNING *
   `;
 
   const replacements = {

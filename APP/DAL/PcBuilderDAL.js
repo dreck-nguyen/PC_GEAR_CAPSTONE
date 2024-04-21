@@ -349,7 +349,8 @@ export async function getPersonalBuildPc(userId) {
 	upb.psu_id,
 	to_json(psu.*) as psu,
 	upb.ram_quantity,
-	upb.storage_quantity
+	upb.storage_quantity,
+	build_purpose.purpose_name
 from
 	public.user_pc_build upb
 left join (
@@ -672,6 +673,8 @@ left join
 ) ss 
 on
 	upb.storage_id = ss.primary_product_id
+inner join build_purpose
+on build_purpose.purpose_id = upb.purpose_id
 where
 	upb.user_id = '${userId}'
 group by
@@ -685,7 +688,9 @@ group by
 	case_cooler.*,
 	monitor.*,
 	cpu_cooler.*,
-	psu.*
+	psu.*,
+	upb.purpose_id,
+	build_purpose.purpose_name
 
 `;
   const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
@@ -722,7 +727,8 @@ select
 	upb.psu_id,
 	to_json(psu.*) as psu,
 	upb.ram_quantity,
-	upb.storage_quantity
+	upb.storage_quantity,
+	build_purpose.purpose_name
 from
 	public.user_pc_build upb
 left join (
@@ -1045,6 +1051,8 @@ left join
 ) ss 
 on
 	upb.storage_id = ss.primary_product_id
+inner join build_purpose
+on build_purpose.purpose_id = upb.purpose_id
 where
 	upb.user_id IN 
 	(select user_id from public."user" u
@@ -1062,7 +1070,9 @@ group by
 	case_cooler.*,
 	monitor.*,
 	cpu_cooler.*,
-	psu.*
+	psu.*,
+	upb.purpose_id,
+	build_purpose.purpose_name
 `;
   const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

@@ -284,7 +284,8 @@ select
 	sa.recipient_name,
   sa.recipient_name,
 	COALESCE (sa.street_address, o.street_address) as street_address ,
-	COALESCE (sa.city, 'HCM') as city
+	COALESCE (sa.city, 'HCM') as city,
+  os.is_final as allow_review
 from
 	"order" o
 INNER JOIN

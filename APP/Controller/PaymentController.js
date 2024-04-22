@@ -14,7 +14,7 @@ dotenv.config();
 
 export async function getPayment(req, res, next) {
   try {
-    const result = await paymentService.getPayment();
+    let result = await paymentService.getPayment();
     res.status(200).send(result);
   } catch (error) {
     console.log(error);
@@ -39,7 +39,7 @@ export async function createPaymentUrl(req, res, next) {
     var date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
     if (!orderId) throw new Error('YOUR PAYMENT METHOD NOT VN PAY');
-    const [order] = await orderService.getOrdersByOrderId(orderId);
+    let [order] = await orderService.getOrdersByOrderId(orderId);
     var amount = order.total;
     var bankCode = 'NCB';
 
@@ -123,10 +123,10 @@ export async function getVnpayIpn(req, res) {
 
 export async function getVnpayReturn(req, res) {
   console.log(`~~~~~ GOT HERE`);
-  const vnp_Params = req.query;
-  const t = await SequelizeInstance.transaction();
+  let vnp_Params = req.query;
+  let t = await SequelizeInstance.transaction();
 
-  const orderId = vnp_Params['vnp_TxnRef'] ?? null;
+  let orderId = vnp_Params['vnp_TxnRef'] ?? null;
   try {
     var total = Number(vnp_Params['vnp_Amount']) || 1000000;
     if (!orderId) throw new Error(' order_id is null');
@@ -145,21 +145,21 @@ export async function getVnpayReturn(req, res) {
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var hmac = crypto.createHmac('sha512', secretKey);
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
-    const [user] = await userDAL.getUserByOrder(orderId);
+    let [user] = await userDAL.getUserByOrder(orderId);
 
     console.log(`~~~~~~`, orderId);
     if (secureHash === signed) {
       console.log(vnp_Params);
-      const code = vnp_Params['vnp_ResponseCode'];
-      const message = handleErrorCode(code);
-      const messageMail = mailHelper.paymentConfirm
+      let code = vnp_Params['vnp_ResponseCode'];
+      let message = handleErrorCode(code);
+      let messageMail = mailHelper.paymentConfirm
         .replace('[Customer Name]', user.user_name)
         .replace('[Order Number]', orderId)
         .replace('[Payment Method]', `VN PAY`)
         .replace('[Total Amount]', total)
         .replace('[Payment Status]', message);
       await orderService.updateOrderPaymentStatus(orderId, true, message);
-      const mailOptions = {
+      let mailOptions = {
         to: user.email,
         html: messageMail,
       };
@@ -252,15 +252,15 @@ function handleErrorCode(errorCode) {
 // console.log(handleErrorCode(errorCode));
 export async function sendMail(req, res) {
   try {
-    const email = process.env.FEATURE_MAIL;
-    // const pass = process.env.FEATURE_PASSWORD;
-    const mailOptions = {
+    let email = process.env.FEATURE_MAIL;
+    // let pass = process.env.FEATURE_PASSWORD;
+    let mailOptions = {
       from: 'noreplyemail@gmail.com',
       to: 'hduy01012000@gmail.com',
       subject: 'Test Email',
       text: 'Hello, this is a test email!',
     };
-    const result = await mailHelper.sendMail(mailOptions);
+    let result = await mailHelper.sendMail(mailOptions);
     res.send(result);
   } catch (e) {
     console.log(e);

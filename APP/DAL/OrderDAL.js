@@ -238,7 +238,7 @@ export async function updateOrderPaymentStatus(orderId, stage, message) {
     SET
       payment_date = now(),
       vnpay_status = :stage,
-      vnpay_message = :message
+      message = :message
     WHERE
       order_id = :orderId
   `;

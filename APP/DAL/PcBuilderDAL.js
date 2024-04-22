@@ -477,7 +477,7 @@ left join (
 		c."name" as category_name,
 		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
-		ccs.*
+		ccs.specification_id, ccs.product_id, ccs.product_specification_type, ccs.brand, ccs.model::text, ccs.airflow::text, ccs.fan_rpm, ccs."size"::text, ccs.color
 	from
 		product p
 	left outer join category c on

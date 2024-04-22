@@ -158,7 +158,7 @@ inner  JOIN
     payment p ON o.payment_id = p.payment_id 
 inner JOIN
     (
-    SELECT
+     SELECT
         o.order_id,
         SUM(od.quantity) AS total_items,
         JSONB_AGG(
@@ -168,13 +168,16 @@ inner JOIN
                 'product_name', p.name,
                 'product_img', pg.image,
                 'quantity', od.quantity,
-                'unit_price', od.unit_price
+                'unit_price', od.unit_price,
+                'allow_review', os.is_final
             )
         ) AS order_details
         FROM
             order_detail od
         INNER JOIN
             "order" o ON o.order_id = od.order_id
+        INNER JOIN
+           order_status os ON o.status_id = os.status_id
         INNER JOIN
             product p ON od.product_id = p.product_id
         INNER JOIN
@@ -184,7 +187,8 @@ inner JOIN
                 ORDER BY product_id, product_gallery_id
             ) pg ON p.product_id = pg.product_id
         GROUP BY
-            o.order_id
+            o.order_id,
+            o.status_id
     ) od ON od.order_id = o.order_id
 LEFT JOIN
     shipping_address sa ON sa.address_id = o.address_id

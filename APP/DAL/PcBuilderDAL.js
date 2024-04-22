@@ -443,7 +443,7 @@ left join (
 		c."name" as category_name,
 		pb.product_brand_name as brand_name,
 		ARRAY_AGG(pg.image) as image_links,
-		ms.*
+		pss.*
 	from
 		product p
 	left outer join category c on
@@ -452,14 +452,14 @@ left join (
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join motherboard_specification ms on
-		p.product_id = ms.product_id
+	inner join power_supply_specification pss 
+		on pss.product_id = p.product_id
 	group by
 		p.product_id,
 		c.category_id,
 		pb.product_brand_id,
-		ms.product_id,
-		ms.specification_id
+		pss.product_id,
+		pss.specification_id
   ) psu
 on
 	1 = 1

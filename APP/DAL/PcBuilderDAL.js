@@ -259,7 +259,8 @@ export async function copyStaffToPersonalBuildPc(
       monitor_id,
       psu_id,
       ram_quantity,
-      storage_quantity
+      storage_quantity,
+	  purpose_id
     )
     SELECT
       :buildPcId,
@@ -277,7 +278,8 @@ export async function copyStaffToPersonalBuildPc(
       monitor_id,
       psu_id,
       ram_quantity,
-      storage_quantity
+      storage_quantity,
+	  3
     FROM
       user_pc_build
     WHERE
@@ -318,8 +320,8 @@ export async function createPersonalBuildPc(dataObj) {
       , monitor_id
       , psu_id
       , ram_quantity
-      ,storage_quantity
-	  ,purpose_id)
+      , storage_quantity
+	  , purpose_id)
     VALUES (
       :user_pc_build_id,
       :user_id,

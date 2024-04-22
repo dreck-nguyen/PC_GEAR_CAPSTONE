@@ -98,8 +98,8 @@ export async function createPersonalBuildPc(loginUser, dataObj) {
   const profileName =
     dataObj.profile_name +
     (countSameProfileName.count > 0 ? `_${countSameProfileName.count}` : '');
-  dataObj.profile_name = profileName;
   if (!dataObj.user_pc_build_id) {
+    dataObj.profile_name = profileName;
     console.log(dataObj, buildPcId, userId);
     dataObj.user_pc_build_id = buildPcId;
     dataObj.user_id = userId;

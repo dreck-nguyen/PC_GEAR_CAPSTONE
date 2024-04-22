@@ -442,7 +442,8 @@ left join (
 		p.sold,
 		c."name" as category_name,
 		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links
+		ARRAY_AGG(pg.image) as image_links,
+		ms.*
 	from
 		product p
 	left outer join category c on
@@ -451,10 +452,14 @@ left join (
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
+	inner join motherboard_specification ms on
+		p.product_id = ms.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id
+		pb.product_brand_id,
+		ms.product_id,
+		ms.specification_id
   ) psu
 on
 	1 = 1
@@ -471,7 +476,8 @@ left join (
 		p.sold,
 		c."name" as category_name,
 		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links
+		ARRAY_AGG(pg.image) as image_links,
+		ccs.*
 	from
 		product p
 	left outer join category c on
@@ -480,10 +486,14 @@ left join (
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
+	inner join case_cooler_specification ccs 
+	    on ccs.product_id = p.product_id 
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id
+		pb.product_brand_id,
+		ccs.product_id,
+		ccs.specification_id
   ) case_cooler
 on
 	1 = 1
@@ -529,7 +539,8 @@ left join (
 		p.sold,
 		c."name" as category_name,
 		pb.product_brand_name as brand_name,
-		ARRAY_AGG(pg.image) as image_links
+		ARRAY_AGG(pg.image) as image_links,
+		cs.*
 	from
 		product p
 	left outer join category c on
@@ -538,10 +549,14 @@ left join (
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
+    inner join cooler_specification cs 
+    on cs.product_id = p.product_id 
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id
+		pb.product_brand_id,
+		cs.product_id,
+		cs.specification_id 
   ) cpu_cooler
 on
 	1 = 1

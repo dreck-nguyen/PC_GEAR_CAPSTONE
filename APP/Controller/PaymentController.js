@@ -115,7 +115,8 @@ export async function getVnpayIpn(req, res) {
       res.status(200).json({ RspCode: '97', Message: 'Fail checksum' });
     }
   } catch (e) {
-    await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
+    if (orderId)
+      await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);
     res.send(e);
   }
@@ -172,6 +173,8 @@ export async function getVnpayReturn(req, res) {
     await t.commit();
   } catch (e) {
     t.rollback();
+    if (orderId)
+      await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
     console.log(e);
     res.send(e);
   }

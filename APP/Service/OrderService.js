@@ -283,5 +283,5 @@ export async function getOrdersByOrderId(orderId) {
 
 export async function deleteOrderAndOrderDetailByOrderByID(orderId) {
   await orderDAL.deleteOrderByOrderBy(orderId);
-  await orderDetailDAL.deleteOrderDetailByOrderBy(orderId);
+  // await orderDetailDAL.deleteOrderDetailByOrderBy(orderId);
 }

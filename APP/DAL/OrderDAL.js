@@ -378,10 +378,19 @@ where 1=1
   return orderDetail;
 }
 export async function deleteOrderByOrderBy(orderId) {
-  const sqlQuery = `DELETE FROM public."order" WHERE order_id='${orderId}'`;
+  const sqlQuery = `
+    UPDATE "order"
+    SET status_id = (
+      SELECT status_id
+      FROM order_status
+      WHERE status_detail = 'Canceled'
+    )
+    WHERE order_id = :orderId
+  `;
 
   const orderDetail = await SequelizeInstance.query(sqlQuery, {
-    type: SequelizeInstance.QueryTypes.DELETE,
+    replacements: { orderId },
+    type: SequelizeInstance.QueryTypes.UPDATE,
     raw: true,
   });
 

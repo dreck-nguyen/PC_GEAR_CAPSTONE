@@ -149,7 +149,7 @@ SELECT
     sa.recipient_name,
     sa.street_address,
     sa.city,
-	os.is_final as allow_review
+	  os.is_final as allow_review
 FROM
     "order" o
 INNER JOIN
@@ -267,6 +267,10 @@ export async function getOrderById(orderId) {
   const sqlQuery = `
 select
 	o.*,
+  u.user_id,
+  u.first_name,
+  u.email,
+  u.phone_number,
 	os.status_detail,
 	p.payment_method,
 	od.order_details,
@@ -274,10 +278,13 @@ select
 	TO_CHAR(o.total,
 	'FM999,999,999') as total_price,
 	sa.recipient_name,
+  sa.recipient_name,
 	COALESCE (sa.street_address, o.street_address) as street_address ,
 	COALESCE (sa.city, 'HCM') as city
 from
 	"order" o
+INNER JOIN
+    "user" u ON u.user_id = o.user_id
 inner join 
     order_status os on
 	o.status_id = os.status_id
@@ -335,15 +342,16 @@ left join
 	and sa.user_id = o.user_id
 where
 	o.order_id = '${orderId}'
-group by
-	o.order_id,
-	os.status_id,
-	p.payment_method,
-	sa.recipient_name,
-	sa.street_address,
-	sa.city,
-	od.order_details,
-	od.total_items
+GROUP BY
+    o.order_id,
+    os.status_id,
+    p.payment_method,
+    sa.recipient_name,
+    sa.street_address,
+    sa.city,
+    od.order_details,
+    od.total_items,
+    u.user_id
 order by
 	o.created_at desc
 

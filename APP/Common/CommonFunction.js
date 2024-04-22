@@ -39,11 +39,6 @@ export function extractNumberFromCpuCoolerSupportSize(cpuCoolerSupportSize) {
 export function hasFrequency(frequencyList, targetFrequency) {
   const [ramType, ramFreq] = targetFrequency.split('-');
   const ramFreqNum = extractNumberFromString(ramFreq);
-  console.log(
-    ramType,
-    ramFreqNum,
-    frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum),
-  );
 
   return frequencyList.includes(ramType) && frequencyList.includes(ramFreqNum);
 }
@@ -122,7 +117,6 @@ export function filterByPurposeForGPU(gpus, purpose) {
   }
 }
 export function filterForGamingForGPU(gpus) {
-  console.log(gpus);
   return gpus.filter((gpu) => {
     return (
       gpu.VRAM >= 8 &&

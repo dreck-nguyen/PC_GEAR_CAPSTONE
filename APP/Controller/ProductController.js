@@ -83,7 +83,6 @@ export async function updateProductById(req, res, next) {
       );
     const productId = req.params.productId;
     const product = req.body;
-    console.log(product);
     const result = await productService.updateProductById(productId, product);
     await await t.commit();
     res.status(200).send(result);
@@ -107,7 +106,6 @@ export async function createProduct(req, res, next) {
       );
 
     const product = req.body;
-    console.log(product);
     const result = await productService.createProduct(product);
     await await t.commit();
     res.status(201).send(result);
@@ -121,7 +119,6 @@ export async function createProductImage(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
     const loginUser = req.loginUser;
-    console.log(loginUser);
     if (
       !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.ADMIN) &&
       !commonFunction.checkRole(loginUser, commonEnums.USER_ROLE.STAFF)
@@ -130,7 +127,6 @@ export async function createProductImage(req, res, next) {
         `${commonEnums.USER_ROLE.ADMIN} || ${commonEnums.USER_ROLE.STAFF} ONLY`,
       );
     const images = req.file;
-    console.log(images);
     const productId = req.params.productId;
     await productService.createProductImage(productId, images.path);
     const result = await productService.getProductById(productId);

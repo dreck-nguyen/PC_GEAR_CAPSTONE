@@ -11,7 +11,6 @@ export async function loginUser(email, password) {
   if (!user) {
     throw new Error('User not found');
   }
-  console.log(user);
   const isPasswordValid = await comparePasswordWithSalt(
     password,
     user.password,
@@ -24,7 +23,6 @@ export async function loginUser(email, password) {
 export async function loginStaff(email, password) {
   const result = await userDAL.getStaffDetails(email);
   const user = result.dataValues;
-  console.log(user);
   const isPasswordValid = await comparePasswordWithSalt(
     password,
     user.password,
@@ -100,12 +98,10 @@ export async function createPersonalBuildPc(loginUser, dataObj) {
     (countSameProfileName.count > 0 ? `_${countSameProfileName.count}` : '');
   if (!dataObj.user_pc_build_id) {
     dataObj.profile_name = profileName;
-    console.log(dataObj, buildPcId, userId);
     dataObj.user_pc_build_id = buildPcId;
     dataObj.user_id = userId;
     result = await pcBuildDAL.createPersonalBuildPc(dataObj);
   } else {
-    console.log(dataObj);
     result = await pcBuildDAL.updatePersonalBuildPc(dataObj);
   }
   return result;

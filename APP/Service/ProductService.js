@@ -134,7 +134,6 @@ export async function getMotherboard(dataObj) {
   const ramId = dataObj?.ramDetails?.ram_id || null;
   const caseId = dataObj?.caseDetails?.case_id || null;
   const processorId = dataObj?.processorDetails?.processor_id || null;
-  console.log(storageId, ramId, caseId, processorId);
   const motherboardBrandId = dataObj?.motherboard_brand_id || null;
   let result = await productDAL.getMotherboard(
     storageId,
@@ -165,7 +164,6 @@ export async function getRam(dataObj) {
 
   let result = await productDAL.getRam(motherboardId, ramBrandId);
 
-  console.log(result);
   return result;
 }
 export async function getStorage(dataObj) {

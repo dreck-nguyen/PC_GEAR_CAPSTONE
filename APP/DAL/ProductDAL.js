@@ -1060,8 +1060,6 @@ group by
 ORDER BY 
   p.unit_price ASC`;
 
-  console.log(`~~~~~~~~~~~~query here`, sqlQuery);
-
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
     replacements: { storageId, ramId, caseId, processorId, motherboardBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
@@ -1137,7 +1135,6 @@ ORDER BY
   return caseList;
 }
 export async function getGraphicsCard(motherBoardId, gpuBrandId) {
-  console.log(motherBoardId);
   let sqlQuery = `
 SELECT
 	p.product_id,

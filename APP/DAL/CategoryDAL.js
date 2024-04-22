@@ -150,7 +150,6 @@ export async function updateCategory(categoryId, category) {
       },
     },
   );
-  console.log(category);
   return result;
 }
 export async function createCategory(category) {
@@ -162,6 +161,5 @@ export async function createCategory(category) {
     image: category.image,
     category_id: category.category_id,
   });
-  console.log(category);
   return result;
 }

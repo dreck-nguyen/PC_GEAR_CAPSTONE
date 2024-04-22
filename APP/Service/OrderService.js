@@ -38,7 +38,6 @@ export async function createOrderByUser(loginUser, cartObject) {
     .map((e) => e.cart_item_id)
     .join(',');
   const cart = await cartItemDAL.getCartItemByUser(userId, cartItems);
-  console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~`, cart);
   if (!cart.length) return;
   for (const cartItem of cart) {
     if (cartItem.product_id) {
@@ -53,19 +52,14 @@ export async function createOrderByUser(loginUser, cartObject) {
         unit_price: cartItem.unit_price,
       };
       await orderDetailDAL.createOrderDetail(orderDetails);
-      console.log(
-        `after insert into order detail`,
-        cartItem.unit_price * cartItem.quantity,
-        total,
-      );
     } else {
-      console.log('````` BUILD PC');
       const preBuildPc = cartItem.build_pc;
       if (preBuildPc.motherboard_id && preBuildPc.motherboard_specification) {
-        console.log(1);
         quantity += 1;
-        total += preBuildPc.motherboard_specification.unit_price;
-        console.log(`1`, quantity, total);
+        total +=
+          preBuildPc.motherboard_specification.unit_price > 0
+            ? Number(preBuildPc.motherboard_specification.unit_price)
+            : 0;
         const orderDetails = {
           order_detail_id: uuidv4(),
           order_id: orderId,
@@ -76,11 +70,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.processor_id && preBuildPc.processor_specification) {
-        console.log(1);
-
         quantity += 1;
-        total += preBuildPc.processor_specification.unit_price;
-        console.log(`2`, quantity, total);
+        total +=
+          preBuildPc.processor_specification.unit_price > 0
+            ? Number(preBuildPc.processor_specification.unit_price)
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -92,11 +86,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.case_id) {
-        console.log(1);
-
         quantity += 1;
-        total += preBuildPc.case_specification.unit_price;
-        console.log(`3`, quantity, total);
+        total +=
+          preBuildPc.case_specification.unit_price > 0
+            ? Number(preBuildPc.case_specification.unit_price)
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -108,11 +102,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.gpu_id) {
-        console.log(1);
-
         quantity += 1;
-        total += preBuildPc.gpu_specification.unit_price;
-        console.log(`4`, quantity, total);
+        total +=
+          preBuildPc.gpu_specification.unit_price > 0
+            ? Number(preBuildPc.gpu_specification.unit_price)
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -124,13 +118,15 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.ram_id) {
-        console.log(1);
-
         quantity += preBuildPc.ram_quantity;
-        total += Number(
-          preBuildPc.ram_specification.unit_price * preBuildPc.ram_quantity,
-        );
-        console.log(`5`, quantity, total);
+        total +=
+          preBuildPc.ram_specification.unit_price > 0 &&
+          preBuildPc.ram_quantity > 0
+            ? Number(
+                preBuildPc.ram_specification.unit_price *
+                  preBuildPc.ram_quantity,
+              )
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -142,14 +138,15 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.storage_id) {
-        console.log(1);
-
         quantity += preBuildPc.storage_quantity;
-        total += Number(
-          preBuildPc.storage_specification.unit_price *
-            preBuildPc.storage_quantity,
-        );
-        console.log(`6`, quantity, total);
+        total +=
+          preBuildPc.storage_specification.unit_price > 0 &&
+          preBuildPc.storage_quantity > 0
+            ? Number(
+                preBuildPc.storage_specification.unit_price *
+                  preBuildPc.storage_quantity,
+              )
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -161,12 +158,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.case_cooler_id) {
-        console.log(1);
-
         quantity += 1;
-        total += preBuildPc.case_cooler.unit_price;
-        console.log(`7`, quantity, total);
-        console.log(preBuildPc.case_cooler.unit_price);
+        total +=
+          preBuildPc.case_cooler.unit_price > 0
+            ? Number(preBuildPc.case_cooler.unit_price)
+            : 0;
         const orderDetails = {
           order_detail_id: uuidv4(),
           order_id: orderId,
@@ -177,12 +173,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.monitor_id) {
-        console.log(1);
-
-        console.log(`8`, quantity, total);
-        console.log(preBuildPc.monitor);
         quantity += 1;
-        total += preBuildPc.monitor.unit_price;
+        total +=
+          preBuildPc.monitor.unit_price > 0
+            ? Number(preBuildPc.monitor.unit_price)
+            : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -194,10 +189,11 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.cpu_cooler_id) {
-        console.log(`9`, quantity, total);
         quantity += 1;
-        total += preBuildPc.cpu_cooler.unit_price;
-
+        total +=
+          preBuildPc.cpu_cooler.unit_price > 0
+            ? Number(preBuildPc.cpu_cooler.unit_price)
+            : 0;
         const orderDetails = {
           order_detail_id: uuidv4(),
           order_id: orderId,
@@ -208,9 +204,9 @@ export async function createOrderByUser(loginUser, cartObject) {
         await orderDetailDAL.createOrderDetail(orderDetails);
       }
       if (preBuildPc.psu_id) {
-        console.log(`10`, quantity, total);
         quantity += 1;
-        total += preBuildPc.psu.unit_price;
+        total +=
+          preBuildPc.psu.unit_price > 0 ? Number(preBuildPc.psu.unit_price) : 0;
 
         const orderDetails = {
           order_detail_id: uuidv4(),
@@ -223,7 +219,6 @@ export async function createOrderByUser(loginUser, cartObject) {
       }
     }
   }
-  console.log(11);
   const orderStatus = await orderDAL.getOrderStatus();
   const { status_id, status_detail } = orderStatus.filter(
     (e) => e.status_detail,
@@ -231,12 +226,9 @@ export async function createOrderByUser(loginUser, cartObject) {
   cartObject.statusId = status_id;
   cartObject.total = total;
   cartObject.quantity = quantity;
-  console.log(cartObject);
   total += cartObject.shipping_fee;
-  console.log(cartObject);
   await orderDAL.createOrderByUser(cartObject);
   for (const cartItem of cartObject.cartItemList) {
-    console.log(cartItem.cart_item_id);
     // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
   }
   const message = mailHelper.orderPlaceMessage
@@ -283,5 +275,4 @@ export async function getOrdersByOrderId(orderId) {
 
 export async function deleteOrderAndOrderDetailByOrderByID(orderId) {
   await orderDAL.deleteOrderByOrderBy(orderId);
-  // await orderDetailDAL.deleteOrderDetailByOrderBy(orderId);
 }

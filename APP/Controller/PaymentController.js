@@ -157,9 +157,11 @@ export async function getVnpayReturn(req, res) {
         .replace('[Customer Name]', user.user_name)
         .replace('[Order Number]', orderId)
         .replace('[Payment Method]', `VN PAY`)
-        .replace('[Total Amount]', total)
+        .replace('[Total Amount]', Number(total) > 0 ? total : 0)
         .replace('[Payment Status]', message);
-      await orderService.updateOrderPaymentStatus(orderId, true, message);
+      if (code === '24')
+        await orderService.deleteOrderAndOrderDetailByOrderByID(orderId);
+      else await orderService.updateOrderPaymentStatus(orderId, true, message);
       let mailOptions = {
         to: user.email,
         html: messageMail,
@@ -252,7 +254,6 @@ function handleErrorCode(errorCode) {
   return errorMessage;
 }
 
-// console.log(handleErrorCode(errorCode));
 export async function sendMail(req, res) {
   try {
     let email = process.env.FEATURE_MAIL;

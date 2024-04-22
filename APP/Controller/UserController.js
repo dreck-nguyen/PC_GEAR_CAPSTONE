@@ -141,7 +141,6 @@ export async function updateUserAvatar(req, res, next) {
   try {
     const loginUser = req.loginUser;
     const image = req.file;
-    console.log(image);
     const [user] = await userService.updateUserAvatar(loginUser, image.path);
     res.status(201).send(user);
     await t.commit();

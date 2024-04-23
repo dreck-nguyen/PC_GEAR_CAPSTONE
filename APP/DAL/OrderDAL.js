@@ -362,7 +362,7 @@ GROUP BY
     sa.city,
     od.order_details,
     od.total_items,
-    u.user_id,
+    u.user_id
 order by
 	o.created_at desc
 

@@ -30,7 +30,7 @@ export async function getOrderDetailByOrderDetailId(orderDetailId) {
 select 
 od.order_detail_id 
 , od.quantity
-, od.unit_price
+TO_CHAR(od.unit_price, 'FM999,999,999') AS unit_price,
 , p.product_id
 , p.name
 , pg.image

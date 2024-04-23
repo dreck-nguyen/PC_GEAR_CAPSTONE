@@ -37,7 +37,10 @@ export async function deleteCartItem(cartItemId) {
 }
 export async function getCartItem(cartItemId) {
   const sqlQuery = `
-  select *,p.product_brand_id from cart c 
+  select *,
+  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+  p.product_brand_id 
+  from cart c 
   inner join cart_item ci on c.cart_id = ci.cart_id 
   inner join product p on ci.product_id  = p.product_id 
   where ci.cart_item_id = '${cartItemId}'

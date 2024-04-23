@@ -314,7 +314,9 @@ left join
 		'quantity',
 		od.quantity,
 		'unit_price',
-		od.unit_price
+		od.unit_price,
+    'allow_review',
+    os.is_final
             )
         ) as order_details
 	from
@@ -322,6 +324,9 @@ left join
 	inner join 
         "order" o on
 		o.order_id = od.order_id
+  inner join
+    order_status os
+    on os.status_id = o.status_id
 	inner join 
         product p on
 		od.product_id = p.product_id
@@ -339,7 +344,8 @@ left join
 	where
 		o.order_id = '${orderId}'
 	group by
-		o.order_id) od on
+		o.order_id
+    , os.status_id) od on
 	od.order_id = o.order_id
 left join 
     shipping_address sa on
@@ -356,7 +362,7 @@ GROUP BY
     sa.city,
     od.order_details,
     od.total_items,
-    u.user_id
+    u.user_id,
 order by
 	o.created_at desc
 

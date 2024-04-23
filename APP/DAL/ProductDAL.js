@@ -154,12 +154,7 @@ SELECT
     pb.product_brand_name AS brand_name,
     pb.product_brand_id,
     ARRAY_AGG(pg.image) AS image_links,
-    ARRAY_AGG(jsonb_build_object(
-    'review_user', review.email,
-    'product_name', review.name,
-    'rating', review.rating,
-    'review', review.review
-    )) as review_list
+    review.review_list
 FROM 
     product p
 LEFT OUTER JOIN 
@@ -168,8 +163,13 @@ LEFT OUTER JOIN
     product_brand pb ON pb.product_brand_id = p.product_brand_id
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
-left join (
-SELECT od.review, od.rating, p.name, u.email, p.product_id 
+left outer join (
+SELECT p.product_id, array_agg(jsonb_build_object(
+  'review_user', u.email,
+  'product_name', p.name,
+  'rating', od.rating,
+  'review', od.review
+  )) as review_list
 FROM order_detail od
 JOIN product p ON od.product_id = p.product_id
 JOIN "order" o ON od.order_id = o.order_id
@@ -177,14 +177,16 @@ JOIN "user" u ON o.user_id = u.user_id
 where 1=1
 and od.rating is not null 
 and od.review is not null 
+group by p.product_id
 ) review 
 on p.product_id  = review.product_id
-WHERE 
-    p.product_id = :productId
+WHERE 1=1
+    and p.product_id = :productId
 GROUP BY 
     p.product_id, 
     c.category_id, 
-    pb.product_brand_id;
+    pb.product_brand_id,
+    review.review_list
 `;
 
   const productsWithDetails = await SequelizeInstance.query(sqlQuery, {

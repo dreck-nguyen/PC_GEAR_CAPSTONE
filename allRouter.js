@@ -696,11 +696,11 @@ router.get(
   '/api/category/product/:categoryId',
   productController.getProductsByCategory,
 );
-// router.post(
-//   '/api/auth/staff/product/image/:productId',
-//   uploadCloud.single('image'),
-//   productController.createProductImage,
-// );
+router.post(
+  '/api/auth/staff/product/image/:productId',
+  uploadCloud.single('image'),
+  productController.createProductImage,
+);
 router.delete('/api/auth/staff/product/', productController.deleteProductsById);
 router.delete(
   '/api/auth/staff/product/:productId',

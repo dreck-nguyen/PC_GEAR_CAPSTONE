@@ -257,7 +257,7 @@ export async function updateOrderStatus(loginUser, orderId, statusId) {
     .replace('[Brief Description of Update]', `Your order has been an update`)
     .replace('[Staff Name]', loginUser.user_name)
     .replace('[Staff Mail]', loginUser.email);
-  await orderDAL.updateOrderStatus(loginUser, orderId, statusId);
+  await orderDAL.updateOrderStatus(orderId, statusId);
   const mailOptions = {
     to: user.email || 'hduy01012000@gmail.com',
     html: message,

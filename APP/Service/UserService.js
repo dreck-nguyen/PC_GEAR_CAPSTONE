@@ -116,7 +116,6 @@ export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
     loginUser.user_id,
     userPcBuildId,
   );
-  // return true;
 }
 
 export async function updateUserAvatar(loginUser, image) {

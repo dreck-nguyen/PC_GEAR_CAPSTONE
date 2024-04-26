@@ -820,15 +820,19 @@ select
   to_json(psu.*) as psu,
   upb.ram_quantity,
   upb.storage_quantity,
-  SUM(coalesce(ms.unit_price,0)) + SUM(coalesce(ps.unit_price, 0))
-  + SUM(coalesce(cs.unit_price,0)) + SUM(coalesce(rs.unit_price,0))
-  + SUM(coalesce(rs.unit_price,0) * coalesce(upb.ram_quantity,1))
-  + SUM (coalesce(ss.unit_price,0) * coalesce(upb.storage_quantity,1))
-  + SUM(coalesce(case_cooler.unit_price,0))
-  + SUM(coalesce(monitor.unit_price,0))
-  + SUM(coalesce(cpu_cooler.unit_price,0))
-  + SUM(coalesce(psu.unit_price,0))
-  + SUM(coalesce(gs.unit_price,0))  as total_price,
+  (
+    SUM(COALESCE(ms.unit_price::numeric, 0)) +
+    SUM(COALESCE(ps.unit_price::numeric, 0)) +
+    SUM(COALESCE(cs.unit_price::numeric, 0)) +
+    SUM(COALESCE(rs.unit_price::numeric, 0)) +
+    SUM(COALESCE(rs.unit_price::numeric, 0) * COALESCE(upb.ram_quantity::numeric, 1)) +
+    SUM(COALESCE(ss.unit_price::numeric, 0) * COALESCE(upb.storage_quantity::numeric, 1)) +
+    SUM(COALESCE(case_cooler.unit_price::numeric, 0)) +
+    SUM(COALESCE(monitor.unit_price::numeric, 0)) +
+    SUM(COALESCE(cpu_cooler.unit_price::numeric, 0)) +
+    SUM(COALESCE(psu.unit_price::numeric, 0)) +
+    SUM(COALESCE(gs.unit_price::numeric, 0))
+  )::numeric AS total_price,
   build_purpose.purpose_name
 from
   public.user_pc_build upb
@@ -1177,7 +1181,6 @@ group by
 `;
   const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
-    raw: true,
   });
 
   return personalBuildPcList;

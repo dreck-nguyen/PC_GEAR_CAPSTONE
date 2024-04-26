@@ -488,7 +488,7 @@ GROUP BY
 
 export async function deleteByBuildPc(userPcBuildId) {
   const sqlQuery = `
-      DELETE FROM cart_item
+      DELETE FROM public.cart_item
       WHERE personal_build_pc_id = :userPcBuildId
     `;
 

@@ -565,13 +565,6 @@ GROUP BY
 
 export async function getProcessorById(processorId) {
   const sqlQuery = `
-select * from motherboard_specification ms where product_id ='f5c35a46-6ccc-45ba-898a-54fd35dade9e'
-
-
-select * from storage_interface si 
-
-select * from storage_interface si 
-
 select
   p.product_id,
   p."name",
@@ -877,8 +870,8 @@ inner join proccessor_model pm
 on
   1 = 1
   and pm.id = ps.model
-where 1 = 1 
-  and (:motherboardId is null
+where
+  (:motherboardId is null
     or msp.motherboard_id = :motherboardId)
     and 
     (:brandId is null

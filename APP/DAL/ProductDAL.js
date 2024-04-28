@@ -1188,26 +1188,43 @@ export async function getGraphicsCard(motherBoardId, gpuBrandId) {
   let sqlQuery = `
 SELECT
 	p.product_id,
-	p."name",
-	p.description,
+  p."name",
+  p.description,
   pb.product_brand_id ,
-	TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-	p.discount,
-	p.sold,
-	c."name" AS category_name,
-	pb.product_brand_name AS brand_name,
-	ARRAY_AGG(pg.image) AS image_links,
-	gs.*
+  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+  p.discount,
+  p.sold,
+  c."name" AS category_name,
+  pb.product_brand_name AS brand_name,
+  ARRAY_AGG(pg.image) AS image_links,
+  gs.specification_id
+  , gs.product_id
+  , gs.product_specification_type
+  , gs.brand
+  , gs.chipset
+  , gs.memory
+  , gs.benchmark
+  , gs.max_power_consumption
+  , gs.base_clock_speed
+  , gs.length
+  , gs.cooler_type
+  , gs.interface
+  , gs."VRAM"
+  , gi.interface_type as gpu_interface
+  , gs.gpu_version
+  , gs.gpu_physical_size
 FROM
-	product p
+  product p
 LEFT OUTER JOIN category c ON
-	c.category_id = p.category_id
+  c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON
-	pb.product_brand_id = p.product_brand_id
+  pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg ON
-	pg.product_id = p.product_id
+  pg.product_id = p.product_id
 INNER JOIN graphics_specification gs ON
-	p.product_id = gs.product_id
+  p.product_id = gs.product_id
+inner join graphics_interface gi 
+on gi.id = gs.gpu_interface 
 `;
 
   if (motherBoardId)
@@ -1227,7 +1244,8 @@ GROUP BY
 	c.category_id,
 	pb.product_brand_id,
 	gs.product_id,
-	gs.specification_id
+	gs.specification_id,
+  gi.interface_type
 ORDER BY 
   p.unit_price ASC
 `;
@@ -1244,28 +1262,40 @@ ORDER BY
 export async function getRam(motherboardId, ramBrandId) {
   let sqlQuery = `
 select
-	p.product_id,
-	p."name",
-	p.description,
+  p.product_id,
+  p."name",
+  p.description,
   pb.product_brand_id ,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
-	p.discount,
-	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
-	rs.*
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
+  p.discount,
+  p.sold,
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  rs.specification_id
+  , rs.product_id
+  , rs.product_specification_type
+  , rs.brand
+  , rs.warranty
+  , rs.memory
+  , rt.ram_type as ram_type
+  , rs.cas_latency
+  , rs.dimm_type
+  , rs.voltage
+  , rs.ram_speed
 from
-	product p
+  product p
 left outer join category c on
-	c.category_id = p.category_id
+  c.category_id = p.category_id
 left outer join product_brand pb on
-	pb.product_brand_id = p.product_brand_id
+  pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg on
-	pg.product_id = p.product_id
+  pg.product_id = p.product_id
 inner join ram_specification rs on
-	p.product_id = rs.product_id
+  p.product_id = rs.product_id
+inner join ram_type rt 
+on rt.id = rs.ram_type 
 `;
   if (motherboardId)
     sqlQuery += `
@@ -1287,7 +1317,8 @@ group by
 	c.category_id,
 	pb.product_brand_id,
 	rs.product_id,
-	rs.specification_id
+	rs.specification_id,
+  rt.ram_type
 ORDER BY 
   p.unit_price asc
 `;

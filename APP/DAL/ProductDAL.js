@@ -565,27 +565,72 @@ GROUP BY
 
 export async function getProcessorById(processorId) {
   const sqlQuery = `
-SELECT 
+select * from motherboard_specification ms where product_id ='f5c35a46-6ccc-45ba-898a-54fd35dade9e'
+
+
+select * from storage_interface si 
+
+select * from storage_interface si 
+
+select
   p.product_id,
   p."name",
   p.description,
-  p.product_brand_id,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+  pb.product_brand_id ,
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
   p.discount,
   p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  ps.*
-FROM 
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  ps.specification_id,
+  ps.product_id,
+  ps.product_specification_type,
+  ps.brand,
+  pm.model || '-' || ps.model_number as model, 
+  ps.socket,
+  ps.micro_architecture,
+  ps.core_quantity,
+  ps.threads_quantity,
+  ps.clock_speed,
+  ps.boost_speed_max,
+  ps."cache",
+  rt.ram_type as memory_support,
+  ps.channel_architecture,
+  ps.power,
+  ps.chipset
+from
   product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN processor_specification ps  on p.product_id = ps.product_id
-WHERE p.product_id = '${processorId}'
-GROUP BY 
-  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
+left join category c on
+  c.category_id = p.category_id
+left join product_brand pb on
+  pb.product_brand_id = p.product_brand_id
+inner join product_gallery pg on
+  pg.product_id = p.product_id
+inner join processor_specification ps on
+  p.product_id = ps.product_id
+left join motherboard_support_processor msp on
+  ps.model = msp.support_proccessor_type
+  and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
+inner join ram_type rt 
+on rt.id = ps.memory_support
+inner join proccessor_model pm  
+on
+  1 = 1
+  and pm.id = ps.model
+where
+  p.product_id = '${processorId}'
+group by
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id,
+  ps.product_id,
+  ps.specification_id ,
+  pm.model,
+  rt.ram_type
+order by
+  p.unit_price asc
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -786,66 +831,69 @@ p.product_brand_id,
 export async function getProcessor(motherboardId, brandId) {
   let sqlQuery = `
 select
-	p.product_id,
-	p."name",
-	p.description,
+  p.product_id,
+  p."name",
+  p.description,
   pb.product_brand_id ,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
-	p.discount,
-	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
-	ps.specification_id,
-	ps.product_id,
-	ps.product_specification_type,
-	ps.brand,
-	pm.model || '-' || ps.model_number as model, 
-	ps.socket,
-	ps.micro_architecture,
-	ps.core_quantity,
-	ps.threads_quantity,
-	ps.clock_speed,
-	ps.boost_speed_max,
-	ps."cache",
-	ps.memory_support,
-	ps.channel_architecture,
-	ps.power,
-	ps.chipset
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
+  p.discount,
+  p.sold,
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  ps.specification_id,
+  ps.product_id,
+  ps.product_specification_type,
+  ps.brand,
+  pm.model || '-' || ps.model_number as model, 
+  ps.socket,
+  ps.micro_architecture,
+  ps.core_quantity,
+  ps.threads_quantity,
+  ps.clock_speed,
+  ps.boost_speed_max,
+  ps."cache",
+  rt.ram_type as memory_support,
+  ps.channel_architecture,
+  ps.power,
+  ps.chipset
 from
-	product p
+  product p
 left join category c on
-	c.category_id = p.category_id
+  c.category_id = p.category_id
 left join product_brand pb on
-	pb.product_brand_id = p.product_brand_id
+  pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg on
-	pg.product_id = p.product_id
+  pg.product_id = p.product_id
 inner join processor_specification ps on
-	p.product_id = ps.product_id
+  p.product_id = ps.product_id
 left join motherboard_support_processor msp on
-	ps.model = msp.support_proccessor_type
-	and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
+  ps.model = msp.support_proccessor_type
+  and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
+inner join ram_type rt 
+on rt.id = ps.memory_support
 inner join proccessor_model pm  
 on
-	1 = 1
-	and pm.id = ps.model
-where
-	(:motherboardId is null
-		or msp.motherboard_id = :motherboardId)
+  1 = 1
+  and pm.id = ps.model
+where 1 = 1 
+  and (:motherboardId is null
+    or msp.motherboard_id = :motherboardId)
     and 
     (:brandId is null
-		  or p.product_brand_id = :brandId
+      or p.product_brand_id = :brandId
     )
 group by
-	p.product_id,
-	c.category_id,
-	pb.product_brand_id,
-	ps.product_id,
-	ps.specification_id ,
-	pm.model
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id,
+  ps.product_id,
+  ps.specification_id ,
+  pm.model,
+  rt.ram_type
 order by
-	p.unit_price asc`;
+  p.unit_price asc`;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherboardId, brandId },
@@ -1328,28 +1376,30 @@ export async function upsertProcessorSpec(dataObj) {
     channel_architecture,
     power,
     chipset,
+    model_number,
   } = dataObj;
 
   const sqlQuery = `
     INSERT INTO public.processor_specification (
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      model,
-      socket,
-      micro_architecture,
-      core_quantity,
-      threads_quantity,
-      clock_speed,
-      boost_speed_max,
-      "cache",
-      memory_support,
-      channel_architecture,
-      power,
-      chipset
+      specification_id
+      , product_id
+      , product_specification_type
+      , brand
+      , model
+      , socket
+      , micro_architecture
+      , core_quantity
+      , threads_quantity
+      , clock_speed
+      , boost_speed_max
+      , "cache"
+      , memory_support
+      , channel_architecture
+      , power
+      , chipset
+      , model_number
     ) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (product_id) DO UPDATE SET
       product_specification_type = EXCLUDED.product_specification_type,
       brand = EXCLUDED.brand,
@@ -1365,6 +1415,7 @@ export async function upsertProcessorSpec(dataObj) {
       channel_architecture = EXCLUDED.channel_architecture,
       power = EXCLUDED.power,
       chipset = EXCLUDED.chipset
+      model_number = EXCLUDED.model_number
   `;
 
   const result = await SequelizeInstance.query(sqlQuery, {
@@ -1385,6 +1436,7 @@ export async function upsertProcessorSpec(dataObj) {
       channel_architecture,
       power,
       chipset,
+      model_number,
     ],
     type: SequelizeInstance.QueryTypes.UPSERT,
   });
@@ -1635,12 +1687,14 @@ export async function upsertRam(dataObj) {
     cas_latency,
     dimm_type,
     voltage,
+    ram_speed,
   } = dataObj;
 
   const sqlQuery = `
     INSERT INTO public.ram_specification 
-    (specification_id, product_id, product_specification_type, brand, warranty, memory, ram_type, cas_latency, dimm_type, voltage) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (specification_id, product_id, product_specification_type
+      , brand, warranty, memory, ram_type, cas_latency, dimm_type, voltage,ram_speed) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
     ON CONFLICT (product_id) DO UPDATE SET
         product_specification_type = EXCLUDED.product_specification_type,
         brand = EXCLUDED.brand,
@@ -1649,7 +1703,8 @@ export async function upsertRam(dataObj) {
         ram_type = EXCLUDED.ram_type,
         cas_latency = EXCLUDED.cas_latency,
         dimm_type = EXCLUDED.dimm_type,
-        voltage = EXCLUDED.voltage
+        voltage = EXCLUDED.voltage,
+        ram_speed = EXCLUDED.ram_speed
   `;
 
   const result = await SequelizeInstance.query(sqlQuery, {
@@ -1664,6 +1719,7 @@ export async function upsertRam(dataObj) {
       cas_latency,
       dimm_type,
       voltage,
+      ram_speed,
     ],
     type: SequelizeInstance.QueryTypes.UPSERT,
   });
@@ -1896,4 +1952,105 @@ export async function upsertMonitor(dataObj) {
   });
 
   return result;
+}
+
+export async function getProcessorMode(model) {
+  const sqlQuery = `
+  select * from proccessor_model pm where pm.model = :model
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { model },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+
+export async function getRamType(ramType) {
+  const sqlQuery = `
+  select * from ram_type rt where rt.ram_type = :ramType
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { ramType },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+
+export async function getFormFactor(formFactor) {
+  const sqlQuery = `
+  select * from form_factor where form_factor = :formFactor
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { formFactor },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function getGpuInterface(gpuInterface, gpuVersion) {
+  const sqlQuery = `
+  select * from graphics_interface gi  where interface_type = :gpuInterface and gpu_version = :gpuVersion
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { gpuInterface, gpuVersion },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function getStorageInterface(storageInterface) {
+  const sqlQuery = `
+  select * from storage_interface si  where storage_interface = :storageInterface
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { storageInterface },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+export async function upsertMotherboardSupportRam(
+  motherboardId,
+  ramTypeId,
+  ramMinRate,
+  ramMaxRate,
+) {
+  const sqlQuery = `
+    INSERT INTO public.motherboard_support_ram (
+      motherboard_id,
+      support_ram_type,
+      support_min_ram_seq,
+      support_max_ram_seq,
+      created_at
+    ) VALUES (
+      :motherboardId,
+      :ramTypeId,
+      :ramMinRate,
+      :ramMaxRate,
+      now()
+    )
+    ON CONFLICT (motherboard_id, support_ram_type) DO UPDATE
+    SET
+      support_min_ram_seq = EXCLUDED.support_min_ram_seq,
+      support_max_ram_seq = EXCLUDED.support_max_ram_seq
+    RETURNING *;
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId, ramTypeId, ramMinRate, ramMaxRate },
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
 }

@@ -302,6 +302,63 @@ WHERE
     replacements: { productIds },
   });
 }
+export async function deleteAllGallery(productId) {
+  const sqlQuery = `
+DELETE FROM 
+  product_gallery
+WHERE
+  product_id = :productId
+`;
+
+  await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+    replacements: { productId },
+  });
+}
+export async function deleteAllSpecByProductID(productId) {
+  const sqlQuery = `
+DELETE FROM public.case_cooler_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.case_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.cooler_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.graphics_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.monitor_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.motherboard_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.motherboard_support_processor 
+WHERE motherboard_id = :productId;
+
+DELETE FROM public.motherboard_support_ram  
+WHERE motherboard_id = :productId;
+
+DELETE FROM public.power_supply_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.processor_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.ram_specification 
+WHERE product_id = :productId;
+
+DELETE FROM public.storage_specification 
+WHERE product_id = :productId;
+`;
+
+  await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.DELETE,
+    replacements: { productId },
+  });
+}
 
 export async function getMonitor() {
   const sqlQuery = `
@@ -1526,7 +1583,6 @@ export async function upsertMotherboard(dataObj) {
       wifi_antenna,
       memory_slots,
       memory_supports,
-      maximum_capacity,
       channel_architecture,
       sata,
       m2,
@@ -1542,7 +1598,7 @@ export async function upsertMotherboard(dataObj) {
       form_factor,
       brand
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (product_id) DO UPDATE SET
       product_id = EXCLUDED.product_id,
       product_specification_type = EXCLUDED.product_specification_type,
@@ -1554,7 +1610,6 @@ export async function upsertMotherboard(dataObj) {
       wifi_antenna = EXCLUDED.wifi_antenna,
       memory_slots = EXCLUDED.memory_slots,
       memory_supports = EXCLUDED.memory_supports,
-      maximum_capacity = EXCLUDED.maximum_capacity,
       channel_architecture = EXCLUDED.channel_architecture,
       sata = EXCLUDED.sata,
       m2 = EXCLUDED.m2,
@@ -1584,7 +1639,6 @@ export async function upsertMotherboard(dataObj) {
       wifi_antenna,
       memory_slots,
       memory_supports,
-      maximum_capacity,
       channel_architecture,
       sata,
       m2,
@@ -2064,11 +2118,10 @@ export async function getGpuInterface(gpuInterface, gpuVersion) {
 }
 export async function getStorageInterface(storageInterface) {
   const sqlQuery = `
-  select * from storage_interface si  where storage_interface = :storageInterface
+   SELECT * FROM storage_interface WHERE storage_interface = '${storageInterface}'
 `;
-
   const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: { storageInterface },
+    replacements: { storageInterface: storageInterface },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -2082,31 +2135,33 @@ export async function upsertMotherboardSupportRam(
   ramMaxRate,
 ) {
   const sqlQuery = `
-    INSERT INTO public.motherboard_support_ram (
-      motherboard_id,
-      support_ram_type,
-      support_min_ram_seq,
-      support_max_ram_seq,
-      created_at
-    ) VALUES (
-      :motherboardId,
-      :ramTypeId,
-      :ramMinRate,
-      :ramMaxRate,
-      now()
-    )
-    ON CONFLICT (motherboard_id, support_ram_type) DO UPDATE
-    SET
-      support_min_ram_seq = EXCLUDED.support_min_ram_seq,
-      support_max_ram_seq = EXCLUDED.support_max_ram_seq
-    RETURNING *;
-`;
-
+      INSERT INTO public.motherboard_support_ram (
+        motherboard_id,
+        support_ram_type,
+        support_min_ram_seq,
+        support_max_ram_seq,
+        created_at
+      ) VALUES (
+        '${motherboardId}',
+        '${ramTypeId}',
+        '${ramMinRate}',
+        '${ramMaxRate}',
+        now()
+      )
+      ON CONFLICT (motherboard_id, support_ram_type) DO UPDATE
+      SET
+        support_min_ram_seq = EXCLUDED.support_min_ram_seq,
+        support_max_ram_seq = EXCLUDED.support_max_ram_seq,
+        created_at = now()
+      RETURNING *;
+    `;
   const result = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherboardId, ramTypeId, ramMinRate, ramMaxRate },
-    type: SequelizeInstance.QueryTypes.INSERT,
-    raw: true,
+    type: SequelizeInstance.QueryTypes.INSERT, // Use QueryTypes.INSERT for the INSERT query
+    raw: true, // Return raw data (without Sequelize model instances)
   });
+
+  return result;
 }
 export async function upsertMotherboardSupportProcessor(
   motherboardId,
@@ -2117,7 +2172,7 @@ export async function upsertMotherboardSupportProcessor(
   const sqlQuery = `
    INSERT INTO public.motherboard_support_processor (motherboard_id, support_proccessor_type, support_proccessor_min_seq, support_proccessor_max_seq, created_at)
 VALUES
-    (:motherboard_id, :cpuTypeId, :cpuMinRate, :cpuMaxRate, now())
+    ('${motherboardId}', '${cpuTypeId}', '${cpuMinRate}', '${cpuMaxRate}', now())
 ON CONFLICT (motherboard_id, support_proccessor_type)
 DO UPDATE SET
     support_proccessor_min_seq = EXCLUDED.support_proccessor_min_seq,

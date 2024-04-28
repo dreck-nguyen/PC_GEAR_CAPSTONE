@@ -60,10 +60,15 @@ export async function createProductImage(productId, path) {
   return result;
 }
 export async function deleteProductByID(productId) {
+  await deleteAllSpecByProductID(productId);
   return await productDAL.deleteProductByID(productId);
 }
 export async function deleteProductsByID(productId) {
   return await productDAL.deleteProductsByID(productId);
+}
+export async function deleteAllSpecByProductID(productId) {
+  await productDAL.deleteAllSpecByProductID(productId);
+  await productDAL.deleteAllGallery(productId);
 }
 export async function getMonitor() {
   return await productDAL.getMonitor();
@@ -207,19 +212,19 @@ export async function upsertMotherboard(motherboardId, dataObj) {
   const gpuInterfaceType = dataObj.gpu_interface.split('x')[0];
   const [gpuInterface] = await productDAL.getGpuInterface(
     gpuInterfaceType,
-    commonFunction.getGpuVersion(gpu_interface),
+    commonFunction.getGpuVersion(dataObj.gpu_interface),
   );
   dataObj.gpu_interface = gpuInterface.id || 1;
   const [storageInterface] = await productDAL.getStorageInterface(
     dataObj.storage_interface,
   );
-  dataObj.storage_interface = storageInterface.id || 1;
-  const ramSupport = dataObj.ram_support.split(';');
+  dataObj.storage_interface = storageInterface?.id || 1;
+  const ramSupport = dataObj.ram_supports.split(';');
   for (const ram of ramSupport) {
-    const ramType = ram.split('|')[0];
-    const ramRate = ram.split('|')[1];
-    const ramMinRate = ramRate.split('-')[0];
-    const ramMaxRate = ramRate.split('-')[1];
+    const ramType = ram.split('|')[0].trim();
+    const ramRate = ram.split('|')[1].trim();
+    const ramMinRate = ramRate.split('-')[0].trim();
+    const ramMaxRate = ramRate.split('-')[1].trim();
     const [ramTypeObj] = await productDAL.getRamType(ramType);
     await productDAL.upsertMotherboardSupportRam(
       motherboardId,
@@ -230,11 +235,14 @@ export async function upsertMotherboard(motherboardId, dataObj) {
   }
   const processorSupport = dataObj?.processor_supports.split(';') || [];
   for (const cpu of processorSupport) {
-    const cpuType = cpu.split('|')[0];
-    const cpuRate = cpu.split('|')[1];
-    const cpuMinRate = cpuRate.split('-')[0];
-    const cpuMaxRate = cpuRate.split('-')[1];
-    const [cpuTypeObject] = await productDAL.getCpuType(cpuType.toLowerCase());
+    const cpuType = cpu.split('|')[0].trim();
+    const cpuRate = cpu.split('|')[1].trim();
+    const cpuMinRate = cpuRate.split('-')[0].trim();
+    const cpuMaxRate = cpuRate.split('-')[1].trim();
+    const [cpuTypeObject] = await productDAL.getCpuType(
+      cpuType.toLowerCase().trim(),
+    );
+    console.log(`~~~>`, cpuTypeObject);
     await productDAL.upsertMotherboardSupportProcessor(
       motherboardId,
       Number(cpuTypeObject.id) || 1,

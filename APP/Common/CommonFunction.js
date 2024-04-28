@@ -369,6 +369,6 @@ export function getRamRate(ramInfo) {
 }
 export function getGpuVersion(gpuVersion) {
   const regex = /x(\d+)/;
-  const match = ramInfo.match(regex);
+  const match = gpuVersion.match(regex);
   return match ? Number(match[1]) : 4;
 }

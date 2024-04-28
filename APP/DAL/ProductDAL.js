@@ -710,27 +710,43 @@ GROUP BY
 export async function getGraphicsCardById(gpuId) {
   const sqlQuery = `
 SELECT 
-  p.product_id,
+ p.product_id,
   p."name",
   p.description,
-  p.product_brand_id,
+  pb.product_brand_id ,
   TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
   p.discount,
   p.sold,
   c."name" AS category_name,
   pb.product_brand_name AS brand_name,
   ARRAY_AGG(pg.image) AS image_links,
-  gs.*
+  gs.specification_id
+  , gs.product_id
+  , gs.product_specification_type
+  , gs.brand
+  , gs.chipset
+  , gs.memory
+  , gs.benchmark
+  , gs.max_power_consumption
+  , gs.base_clock_speed
+  , gs.length
+  , gs.cooler_type
+  , gs.interface
+  , gs."VRAM"
+  , gi.interface_type as gpu_interface
+  , gs.gpu_version
+  , gs.gpu_physical_size
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg ON pg.product_id = p.product_id
 INNER JOIN graphics_specification gs  on p.product_id = gs.product_id
+inner join graphics_interface gi 
+on gi.id = gs.gpu_interface 
 WHERE p.product_id = '${gpuId}'
 GROUP BY 
-  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
-`;
+  gi.interface_type, p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id`;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
@@ -1121,7 +1137,7 @@ ORDER BY
 
 export async function getCase(motherboardId, gpuId, caseBrandId) {
   let sqlQuery = `
-  select
+select
 	p.product_id,
 	p."name",
 	p.description,
@@ -1167,7 +1183,7 @@ where
 (:caseBrandId is null
 		  or p.product_brand_id = :caseBrandId
     ) 
-  group by
+group by
 	p.product_id,
 	c.category_id,
 	pb.product_brand_id,
@@ -2013,6 +2029,20 @@ export async function getRamType(ramType) {
   return result;
 }
 
+export async function getCpuType(cpuType) {
+  const sqlQuery = `
+  select * from proccessor_model pm  where pm.model = :cpuType
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { cpuType },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return result;
+}
+
 export async function getFormFactor(formFactor) {
   const sqlQuery = `
   select * from form_factor where form_factor = :formFactor
@@ -2081,6 +2111,29 @@ export async function upsertMotherboardSupportRam(
 
   const result = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherboardId, ramTypeId, ramMinRate, ramMaxRate },
+    type: SequelizeInstance.QueryTypes.INSERT,
+    raw: true,
+  });
+}
+export async function upsertMotherboardSupportProcessor(
+  motherboardId,
+  cpuTypeId,
+  cpuMinRate,
+  cpuMaxRate,
+) {
+  const sqlQuery = `
+   INSERT INTO public.motherboard_support_processor (motherboard_id, support_proccessor_type, support_proccessor_min_seq, support_proccessor_max_seq, created_at)
+VALUES
+    (:motherboard_id, :cpuTypeId, :cpuMinRate, :cpuMaxRate, now())
+ON CONFLICT (motherboard_id, support_proccessor_type)
+DO UPDATE SET
+    support_proccessor_min_seq = EXCLUDED.support_proccessor_min_seq,
+    support_proccessor_max_seq = EXCLUDED.support_proccessor_max_seq
+    RETURNING *;
+`;
+
+  const result = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardId, cpuTypeId, cpuMinRate, cpuMaxRate },
     type: SequelizeInstance.QueryTypes.INSERT,
     raw: true,
   });

@@ -176,12 +176,72 @@ export async function getStorage(dataObj) {
 export async function upsertProcessorSpec(processorId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = processorId;
-  await productDAL.upsertProcessorSpec(dataObj);
+  const brand = dataObj?.brand;
+  let model = '';
+  let rate = '';
+  if (brand === 'Intel') {
+    model = commonFunction.getIntelModel(dataObj.model);
+    rate = commonFunction.getIntelRate(dataObj.model);
+  } else {
+    model = commonFunction.getAmdModel(dataObj.model);
+    rate = commonFunction.getAmdRate(dataObj.model);
+  }
+
+  const [processorModel] = await productDAL.getProcessorMode(model);
+  dataObj.model = processorModel.id;
+  dataObj.model_number = rate;
+  // const ramType = commonFunction.getRamModel(dataObj.memory_support);
+  const [ramDB] = await productDAL.getRamType(
+    dataObj.memory_support.toUpperCase(),
+  );
+  dataObj.memory_support = ramDB.id;
+
+  // await productDAL.upsertProcessorSpec(dataObj);
 }
 
 export async function upsertMotherboard(motherboardId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = motherboardId;
+  const [formFactor] = await productDAL.getFormFactor(dataObj.form_factor);
+  dataObj.form_factor = formFactor.id || 1;
+  const gpuInterfaceType = dataObj.gpu_interface.split('x')[0];
+  const [gpuInterface] = await productDAL.getGpuInterface(
+    gpuInterfaceType,
+    commonFunction.getGpuVersion(gpu_interface),
+  );
+  dataObj.gpu_interface = gpuInterface.id || 1;
+  const [storageInterface] = await productDAL.getStorageInterface(
+    dataObj.storage_interface,
+  );
+  dataObj.storage_interface = storageInterface.id || 1;
+  const ramSupport = dataObj.ram_support.split(';');
+  for (const ram of ramSupport) {
+    const ramType = ram.split('|')[0];
+    const ramRate = ram.split('|')[1];
+    const ramMinRate = ramRate.split('-')[0];
+    const ramMaxRate = ramRate.split('-')[1];
+    const [ramTypeObj] = await productDAL.getRamType(ramType);
+    await productDAL.upsertMotherboardSupportRam(
+      motherboardId,
+      Number(ramTypeObj.id) || 1,
+      Number(ramMinRate),
+      Number(ramMaxRate),
+    );
+  }
+  const processorSupport = dataObj?.processor_supports.split(';') || [];
+  for (const cpu of processorSupport) {
+    const cpuType = cpu.split('|')[0];
+    const cpuRate = cpu.split('|')[1];
+    const cpuMinRate = cpuRate.split('-')[0];
+    const cpuMaxRate = cpuRate.split('-')[1];
+    const [cpuTypeObject] = await productDAL.getCpuType(cpuType.toLowerCase());
+    await productDAL.upsertMotherboardSupportProcessor(
+      motherboardId,
+      Number(cpuTypeObject.id) || 1,
+      Number(cpuMinRate),
+      Number(cpuMaxRate),
+    );
+  }
   await productDAL.upsertMotherboard(dataObj);
 }
 
@@ -194,12 +254,19 @@ export async function upsertCase(caseId, dataObj) {
 export async function upsertGraphicsCard(gpuId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = gpuId;
+
   await productDAL.upsertGraphicsCard(dataObj);
 }
 
 export async function upsertRam(ramId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = ramId;
+
+  const ramType = commonFunction.getRamModel(dataObj.ram_type);
+  const ramRate = commonFunction.getRamRate(dataObj.ram_type);
+  const [ram] = await productDAL.getRamType(ramType.toUpperCase());
+  dataObj.ram_type = ram.id;
+  dataObj.ram_speed = Number(ramRate) || 3500;
   await productDAL.upsertRam(dataObj);
 }
 
@@ -223,6 +290,8 @@ export async function upsertCpuCooler(cpuCoolerId, dataObj) {
 export async function upsertPsu(psuId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = psuId;
+  const [formFactor] = await productDAL.getFormFactor(dataObj.form_factor);
+  dataObj.form_factor = formFactor.id || 1;
   await productDAL.upsertPsu(dataObj);
 }
 

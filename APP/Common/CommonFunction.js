@@ -308,3 +308,67 @@ export function filterForOfficeForStorageForObject(storage) {
     convertStorageToGB(storage.capacity) >= 500
   );
 }
+
+export function getIntelModel(cpuName) {
+  const regex = /(i\d+)/;
+  const match = cpuName.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Model not found';
+  }
+}
+
+export function getAmdModel(cpuName) {
+  const regex = /(Ryzen\s+\d+)/;
+  const match = cpuName.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Model not found';
+  }
+}
+export function getIntelRate(cpuName) {
+  const regex = /i\d+-(\d+)/;
+  const match = cpuName.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Rate not found';
+  }
+}
+
+export function getAmdRate(cpuName) {
+  const regex = /Ryzen\s+\d+\s+(\w+)/;
+  const match = cpuName.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Rate not found';
+  }
+}
+
+export function getRamModel(ramInfo) {
+  const regex = /(DDR\d+)/;
+  const match = ramInfo.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Model not found';
+  }
+}
+
+export function getRamRate(ramInfo) {
+  const regex = /(\d+)\s+MHz/;
+  const match = ramInfo.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return 'Rate not found';
+  }
+}
+export function getGpuVersion(gpuVersion) {
+  const regex = /x(\d+)/;
+  const match = ramInfo.match(regex);
+  return match ? Number(match[1]) : 4;
+}

@@ -836,7 +836,7 @@ router.delete(
  *             memory_supports:
  *               type: string
  *               description: The memory support of the motherboard.
- *               example: "DDR4 2133, 2400, 2666, 2800, 3733, 3800, 4133, 4266, 4333, 4400, 4600, 4733 MHz"
+ *               example: "DDR4 2133-4733"
  *             motherboard_id:
  *               type: string
  *               description: The ID of the motherboard.
@@ -1282,7 +1282,7 @@ router.get(
  *             clock_speed: 3.50 GHz
  *             boost_speed_max: 4.00 GHz
  *             cache: 12
- *             memory_support: DDR4 - 3200 MHz
+ *             memory_support: DDR4
  *             channel_architecture: Dual Channel
  *             power: 120
  *             chipset: Intel
@@ -1408,6 +1408,12 @@ router.get(
  *               brand:
  *                 type: string
  *                 description: Brand of the motherboard
+ *               processor_supports:
+ *                 type: string
+ *                 description: Processor support by motherboard
+ *               ram_supports:
+ *                 type: string
+ *                 description: Ram support by motherboard
  *           example:
  *             product_specification_type: "MOTHERBOARD"
  *             chipset: "TEST MOTHER BOARD"
@@ -1417,7 +1423,7 @@ router.get(
  *             ethernet_controller: "1 x Intel® 10GbE LAN chip (10 Gbit/5 Gbit/2.5 Gbit/1 Gbit/100 Mbit), supporting 2 RJ-45 ports"
  *             wifi_antenna: "2 x Connector"
  *             memory_slots: "8"
- *             memory_supports: "DDR4 2133, 2400, 2666, 2933, 3200 MHz"
+ *             memory_supports: "DDR4 2133-3200"
  *             maximum_capacity: "256 GB"
  *             channel_architecture: "Quad Channel"
  *             sata: "4 x SATA III"
@@ -1433,6 +1439,8 @@ router.get(
  *             wifi: "Intel® Wi-Fi 6 AX200"
  *             form_factor: "ATX"
  *             brand: "GIGABYTE"
+ *             processor_supports: "i3|12000-14999; i7|12000-14999; i5|12000-14999"
+ *             ram_supports: "DDR4|2133-5000"
  *     responses:
  *       '200':
  *         description: A successful response indicating the motherboard specification has been updated.

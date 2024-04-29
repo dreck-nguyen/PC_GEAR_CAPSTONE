@@ -715,7 +715,7 @@ left join
       , ms.wifi
       , ff.form_factor
       , ms.brand
-      , gi.interface_type
+      , gi.interface_type as gpu_interface
       , si.storage_interface
       , msr.ram_supports
       , msp.processor_supports
@@ -1318,7 +1318,7 @@ left join
       , ms.wifi
       , ff.form_factor
       , ms.brand
-      , gi.interface_type
+      , gi.interface_type as gpu_interface
       , si.storage_interface
       , msr.ram_supports
       , msp.processor_supports

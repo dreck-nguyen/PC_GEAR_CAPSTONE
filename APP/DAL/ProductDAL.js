@@ -955,37 +955,50 @@ GROUP BY
 export async function getRamById(ramId) {
   const sqlQuery = `
 select
-	p.product_id,
-	p."name",
-	p.description,
+  p.product_id,
+  p."name",
+  p.description,
   p.product_brand_id,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
-	p.discount,
-	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
-	rs.*
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
+  p.discount,
+  p.sold,
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  rs.specification_id
+  , rs.product_id
+  , rs.product_specification_type
+  , rs.brand
+  , rs.warranty
+  , rs.memory
+  , rt.ram_type
+  , rs.cas_latency
+  , rs.dimm_type
+  , rs.voltage
+  , rs.ram_speed
 from
-	product p
+  product p
 left outer join category c on
-	c.category_id = p.category_id
+  c.category_id = p.category_id
 left outer join product_brand pb on
-	pb.product_brand_id = p.product_brand_id
+  pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg on
-	pg.product_id = p.product_id
+  pg.product_id = p.product_id
 inner join ram_specification rs on
-	p.product_id = rs.product_id
+  p.product_id = rs.product_id
+inner join ram_type rt 
+on rt.id = rs.ram_type 
 where
-	p.product_id = '${ramId}'
+  p.product_id = '${ramId}'
 group by
 p.product_brand_id,
-	p.product_id,
-	c.category_id,
-	pb.product_brand_id,
-	rs.product_id,
-	rs.specification_id
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id,
+  rs.product_id,
+  rs.specification_id,
+  rt.ram_type
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {

@@ -815,50 +815,61 @@ on
   upb.motherboard_id = ms.primary_product_id
 left join 
 (
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    ps.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join processor_specification ps on
-    p.product_id = ps.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    ps.product_id
-    ,
-    ps.specification_id
+select
+  p.product_id as primary_product_id,
+  p."name",
+  p.description,
+  pb.product_brand_id ,
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
+  p.discount,
+  p.sold,
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  ps.specification_id,
+  ps.product_id,
+  ps.product_specification_type,
+  ps.brand,
+  pm.model || '-' || ps.model_number as model, 
+  ps.socket,
+  ps.micro_architecture,
+  ps.core_quantity,
+  ps.threads_quantity,
+  ps.clock_speed,
+  ps.boost_speed_max,
+  ps."cache",
+  rt.ram_type as memory_support,
+  ps.channel_architecture,
+  ps.power,
+  ps.chipset
+from
+  product p
+left join category c on
+  c.category_id = p.category_id
+left join product_brand pb on
+  pb.product_brand_id = p.product_brand_id
+inner join product_gallery pg on
+  pg.product_id = p.product_id
+inner join processor_specification ps on
+  p.product_id = ps.product_id
+left join motherboard_support_processor msp on
+  ps.model = msp.support_proccessor_type
+  and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
+inner join ram_type rt 
+on rt.id = ps.memory_support
+inner join proccessor_model pm  
+on
+  1 = 1
+  and pm.id = ps.model
+group by
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id,
+  ps.product_id,
+  ps.specification_id ,
+  pm.model,
+  rt.ram_type
 ) ps 
 on
   upb.processor_id = ps.primary_product_id
@@ -963,49 +974,48 @@ on
 left join 
 (
   select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    rs.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join ram_specification rs on
-    p.product_id = rs.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    rs.product_id
-    ,
-    rs.specification_id
+  p.product_id as primary_product_id,
+  p."name",
+  p.description,
+  p.product_brand_id,
+  TO_CHAR(p.unit_price,
+  'FM999,999,999') as unit_price,
+  p.discount,
+  p.sold,
+  c."name" as category_name,
+  pb.product_brand_name as brand_name,
+  ARRAY_AGG(pg.image) as image_links,
+  rs.specification_id
+  , rs.product_id
+  , rs.product_specification_type
+  , rs.brand
+  , rs.warranty
+  , rs.memory
+  , rt.ram_type
+  , rs.cas_latency
+  , rs.dimm_type
+  , rs.voltage
+  , rs.ram_speed
+from
+  product p
+left outer join category c on
+  c.category_id = p.category_id
+left outer join product_brand pb on
+  pb.product_brand_id = p.product_brand_id
+inner join product_gallery pg on
+  pg.product_id = p.product_id
+inner join ram_specification rs on
+  p.product_id = rs.product_id
+inner join ram_type rt 
+on rt.id = rs.ram_type
+group by
+p.product_brand_id,
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id,
+  rs.product_id,
+  rs.specification_id,
+  rt.ram_type
 ) rs 
 on
   upb.ram_id = rs.primary_product_id

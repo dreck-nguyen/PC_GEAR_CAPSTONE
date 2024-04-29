@@ -1203,9 +1203,7 @@ inner join (
 on
 		pm.id = msp.support_proccessor_type
 	group by
-		msp.motherboard_id,
-		msp.support_proccessor_min_seq,
-		msp.support_proccessor_max_seq) msp
+		msp.motherboard_id) msp
   on
 	1 = 1
 	and msp.motherboard_id = ms.product_id
@@ -1227,10 +1225,7 @@ inner join (
 on
 		rt.id = msr.support_ram_type
 	group by
-		msr.motherboard_id,
-		msr.support_min_ram_seq,
-		msr.support_max_ram_seq,
-    msr.support_ram_type
+		msr.motherboard_id
 ) msr 
   on
 	1 = 1

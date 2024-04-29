@@ -1210,9 +1210,6 @@ on
 inner join (
 	select
 		msr.motherboard_id,
-    msr.support_max_ram_seq,
-    msr.support_min_ram_seq,
-    msr.support_ram_type,
 		STRING_AGG(CONCAT(rt.ram_type ,
 		'|',
 		msr.support_min_ram_seq ,
@@ -1261,7 +1258,7 @@ on
   if (processorId)
     sqlQuery += `
   inner join (
-  select motherboard_id  from processor_specification ps 
+  select motherboard_id from processor_specification ps 
   inner join proccessor_model pm 
   on 1=1
   and ps.model = pm.id

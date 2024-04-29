@@ -710,10 +710,155 @@ FROM
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN motherboard_specification ms on p.product_id = ms.product_id
+INNER JOIN (select 
+ms.specification_id
+  , ms.product_id
+  , ms.product_specification_type
+  , ms.chipset
+  , ms.spu_socket
+  , ms.usb_details
+  , ms.audio
+  , ms.ethernet_controller
+  , ms.wifi_antenna
+  , ms.memory_slots
+  , ms.memory_supports
+  , ms.channel_architecture
+  , ms.sata
+  , ms.m2
+  , ms.raid_support
+  , ms.expansion_slots
+  , ms.air_cooling
+  , ms.power_connectors
+  , ms.audio_internal
+  , ms.rom
+  , ms.audio_codec
+  , ms.bluetooth
+  , ms.wifi
+  , ff.form_factor
+  , ms.brand
+  , gi.interface_type 
+  , si.storage_interface
+  , msr.ram_supports
+  , msp.processor_supports
+from motherboard_specification ms 
+inner join (
+  select
+    msp.motherboard_id,
+    STRING_AGG(CONCAT(pm.model,
+    '|',
+    msp.support_proccessor_min_seq,
+    '-',
+    msp.support_proccessor_max_seq),
+    '; ') as processor_supports
+  from
+    motherboard_support_processor msp
+  inner join proccessor_model pm 
+on
+    pm.id = msp.support_proccessor_type
+  group by
+    msp.motherboard_id,
+    msp.support_proccessor_min_seq,
+    msp.support_proccessor_max_seq) msp
+  on
+  1 = 1
+  and msp.motherboard_id = ms.product_id
+inner join (
+  select
+    msr.motherboard_id,
+    msr.support_max_ram_seq,
+    msr.support_min_ram_seq,
+    msr.support_ram_type,
+    STRING_AGG(CONCAT(rt.ram_type ,
+    '|',
+    msr.support_min_ram_seq ,
+    '-',
+    msr.support_max_ram_seq ),
+    '; ') as ram_supports
+  from
+    motherboard_support_ram msr
+  inner join ram_type rt  
+on
+    rt.id = msr.support_ram_type
+  group by
+    msr.motherboard_id,
+    msr.support_min_ram_seq,
+    msr.support_max_ram_seq,
+    msr.support_ram_type
+) msr 
+  on
+  1 = 1
+  and msr.motherboard_id = ms.product_id
+inner join graphics_interface gi 
+on gi.id = ms.gpu_interface 
+inner join storage_interface si 
+on si.id = ms.storage_interface 
+inner join form_factor ff 
+on ff.id = ms.form_factor 
+group by 
+ms.specification_id
+, ms.product_id, ff.form_factor, gi.interface_type
+, si.storage_interface 
+, msr.support_min_ram_seq
+, msr.support_max_ram_seq
+, msp.motherboard_id
+, msr.motherboard_id
+, ms.product_id
+, msr.support_ram_type
+, msr.ram_supports
+, msp.processor_supports
+, ms.product_id
+, ms.product_specification_type
+, ms.chipset
+, ms.spu_socket
+, ms.usb_details
+, ms.audio
+, ms.ethernet_controller
+, ms.wifi_antenna
+, ms.memory_slots
+, ms.memory_supports
+, ms.channel_architecture
+, ms.sata
+, ms.m2
+, ms.raid_support
+, ms.expansion_slots
+, ms.air_cooling
+, ms.power_connectors
+, ms.audio_internal
+, ms.rom
+, ms.audio_codec
+, ms.bluetooth
+, ms.wifi
+) ms on p.product_id = ms.product_id
 WHERE p.product_id = '${motherBoardId}'
 GROUP BY 
   p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
+  , ms.product_specification_type
+, ms.chipset
+, ms.spu_socket
+, ms.usb_details
+, ms.audio
+, ms.ethernet_controller
+, ms.wifi_antenna
+, ms.memory_slots
+, ms.memory_supports
+, ms.channel_architecture
+, ms.sata
+, ms.m2
+, ms.raid_support
+, ms.expansion_slots
+, ms.air_cooling
+, ms.power_connectors
+, ms.audio_internal
+, ms.rom
+, ms.audio_codec
+, ms.bluetooth
+, ms.wifi
+, ms.form_factor
+, ms.brand
+, ms.interface_type
+, ms.storage_interface
+, ms.ram_supports
+, ms.processor_supports
 `;
 
   const motherBoardList = await SequelizeInstance.query(sqlQuery, {

@@ -710,7 +710,8 @@ FROM
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN (select 
+INNER JOIN (
+select 
 ms.specification_id
   , ms.product_id
   , ms.product_specification_type

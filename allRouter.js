@@ -1448,7 +1448,7 @@ router.get(
  *             processor_supports: "i3|12000-14999; i7|12000-14999; i5|12000-14999"
  *             ram_supports: "DDR4|2133-5000"
  *             gpu_interface: "PCIex4"
- *             storage_interface: "PCIe 3.0"
+ *             storage_interface: "PCIex3"
  *     responses:
  *       '200':
  *         description: A successful response indicating the motherboard specification has been updated.

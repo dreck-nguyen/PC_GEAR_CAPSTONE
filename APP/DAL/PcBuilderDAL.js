@@ -925,29 +925,33 @@ on
 left join 
 (
   select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    gs.*
+    p.product_id as primary_product_id,
+    p."name",
+    p.description,
+    p.unit_price,
+    TO_CHAR(p.unit_price,
+    'FM999,999,999') as price,
+    p.discount,
+    p.sold,
+    c."name" as category_name,
+    pb.product_brand_name as brand_name,
+    ARRAY_AGG(pg.image) as image_links,
+     gs.specification_id
+  , gs.product_id
+  , gs.product_specification_type
+  , gs.brand
+  , gs.chipset
+  , gs.memory
+  , gs.benchmark
+  , gs.max_power_consumption
+  , gs.base_clock_speed
+  , gs.length
+  , gs.cooler_type
+  , gs.interface
+  , gs."VRAM"
+  , gi.interface_type as gpu_interface
+  , gs.gpu_version
+  , gs.gpu_physical_size
   from
     product p
   left outer join category c on
@@ -958,16 +962,14 @@ left join
     pg.product_id = p.product_id
   inner join graphics_specification gs on
     p.product_id = gs.product_id
+  inner join graphics_interface gi 
+  on gi.id = gs.gpu_interface 
   group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    gs.product_id
-    ,
-    gs.specification_id
+    p.product_id,
+    c.category_id,
+    pb.product_brand_id,
+    gs.product_id,
+    gs.specification_id, gi.interface_type
 ) gs 
 on
   upb.gpu_id = gs.primary_product_id

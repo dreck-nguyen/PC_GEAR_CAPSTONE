@@ -250,6 +250,7 @@ export async function updateOrderStatus(loginUser, orderId, statusId) {
   let status = await orderDAL.getOrderStatus();
   status = status.filter((e) => e.status_id === statusId)[0];
   const [user] = await userDAL.getUserByOrder(orderId);
+  if (!user) throw new Error('No user found');
   const message = mailHelper.orderUpdate
     .replace('[Customer Name]', user.user_name)
     .replace('[New Order Status]', status.status_detail)

@@ -1579,8 +1579,8 @@ inner join storage_specification ss on
     sqlQuery += `
 inner join motherboard_specification ms 
 on 1=1
-and ms.storage_interface = ss.interface 
 and ms.product_id  = :motherboardId
+and (ms.sata is not null and ms.m2 is not null or ms.storage_interface = ss.interface)
 `;
 
   sqlQuery += `

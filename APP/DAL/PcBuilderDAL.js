@@ -981,7 +981,7 @@ left join
   p."name",
   p.description,
   p.product_brand_id,
-  p.unit_price
+  p.unit_price,
   TO_CHAR(p.unit_price,
   'FM999,999,999') as price,
   p.discount,

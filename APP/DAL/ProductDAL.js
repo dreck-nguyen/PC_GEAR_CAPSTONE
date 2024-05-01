@@ -1204,6 +1204,9 @@ inner join storage_interface si
 inner join (
 	select
 		msp.motherboard_id,
+    msp.support_proccessor_type,
+    msp.support_proccessor_min_seq,
+    msp.support_proccessor_max_seq,
 		STRING_AGG(CONCAT(pm.model,
 		'|',
 		msp.support_proccessor_min_seq,
@@ -1216,7 +1219,8 @@ inner join (
 on
 		pm.id = msp.support_proccessor_type
 	group by
-		msp.motherboard_id) msp
+		msp.motherboard_id,
+    msp.support_proccessor_type) msp
   on
 	1 = 1
 	and msp.motherboard_id = ms.product_id
@@ -1224,6 +1228,8 @@ inner join (
 	select
 		msr.motherboard_id,
     msr.support_ram_type,
+    msr.support_min_ram_seq,
+    msr.support_max_ram_seq,
 		STRING_AGG(CONCAT(rt.ram_type ,
 		'|',
 		msr.support_min_ram_seq ,

@@ -1203,10 +1203,7 @@ inner join storage_interface si
 	and si.id = ms.storage_interface
 inner join (
 	select
-		msp.motherboard_id,
-    msp.support_proccessor_type,
-    msp.support_proccessor_min_seq,
-    msp.support_proccessor_max_seq,
+		msp.motherboard_id
 		STRING_AGG(CONCAT(pm.model,
 		'|',
 		msp.support_proccessor_min_seq,
@@ -1219,17 +1216,14 @@ inner join (
 on
 		pm.id = msp.support_proccessor_type
 	group by
-		msp.motherboard_id,
-    msp.support_proccessor_type) msp
+		msp.motherboard_id
+  ) msp
   on
 	1 = 1
 	and msp.motherboard_id = ms.product_id
 inner join (
 	select
-		msr.motherboard_id,
-    msr.support_ram_type,
-    msr.support_min_ram_seq,
-    msr.support_max_ram_seq,
+		msr.motherboard_id
 		STRING_AGG(CONCAT(rt.ram_type ,
 		'|',
 		msr.support_min_ram_seq ,
@@ -1242,8 +1236,7 @@ inner join (
 on
 		rt.id = msr.support_ram_type
 	group by
-		msr.motherboard_id,
-    msr.support_ram_type
+		msr.motherboard_id
 ) msr 
   on
 	1 = 1
@@ -1262,12 +1255,20 @@ on
 
   if (ramId)
     sqlQuery += `
-  inner join ram_specification rs 
+  inner join (
+   select msr.motherboard_id from ram_specification rs 
+  inner join ram_type rt 
   on 1=1
-  and rs.product_id  = :ramId
-  and rs.ram_type = msr.support_ram_type 
-  and rs.ram_speed <= msr.support_max_ram_seq 
-  and rs.ram_speed >= msr.support_min_ram_seq`;
+  and rs.ram_type = rt.id
+  inner join motherboard_support_ram msr 
+  on 1=1
+  and msr.support_ram_type  = rt.id
+  and msr.support_min_ram_seq  <= rs.ram_speed  
+  and msr.support_max_ram_seq  >= rs.ram_speed 
+  and rs.product_id = :ramId
+) ram_support
+  on 1=1
+  and ram_support.motherboard_id = ms.product_id`;
 
   if (caseId)
     sqlQuery += `
@@ -1279,7 +1280,7 @@ on
   if (processorId)
     sqlQuery += `
   inner join (
-  select motherboard_id from processor_specification ps 
+  select msp.motherboard_id from processor_specification ps 
   inner join proccessor_model pm 
   on 1=1
   and ps.model = pm.id
@@ -1288,7 +1289,8 @@ on
   and msp.support_proccessor_type = pm.id
   and msp.support_proccessor_min_seq <= ps.model_number 
   and msp.support_proccessor_max_seq >= ps.model_number
-  and ps.product_id = :processorId) proccessor_support
+  and ps.product_id = :processorId
+) proccessor_support
   on 1=1
   and proccessor_support.motherboard_id = ms.product_id `;
 
@@ -1331,7 +1333,8 @@ group by
 	gi.interface_type,
 	si.storage_interface,
 	msp.processor_supports,
-	msr.ram_supports
+	msr.ram_supports,
+  msr2.motherboard_id
 ORDER BY 
   p.unit_price ASC`;
 

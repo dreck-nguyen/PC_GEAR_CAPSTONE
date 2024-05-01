@@ -1223,6 +1223,7 @@ on
 inner join (
 	select
 		msr.motherboard_id,
+    msr.support_ram_type,
 		STRING_AGG(CONCAT(rt.ram_type ,
 		'|',
 		msr.support_min_ram_seq ,
@@ -1235,7 +1236,8 @@ inner join (
 on
 		rt.id = msr.support_ram_type
 	group by
-		msr.motherboard_id
+		msr.motherboard_id,
+    msr.support_ram_type
 ) msr 
   on
 	1 = 1

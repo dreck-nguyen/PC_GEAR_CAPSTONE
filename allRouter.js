@@ -4479,9 +4479,9 @@ router.delete(
  *                 type: object
  *                 properties:
  *                   ram_type:
- *                     type: string
+ *                     type: number
  *                     description: RAM type name
- *                     example: DDR4
+ *                     example: 1
  *                   data_rate:
  *                     type: number
  *                     description: Data rate of the RAM type
@@ -4506,9 +4506,9 @@ router.delete(
  *             type: object
  *             properties:
  *               ram_type:
- *                 type: string
+ *                 type: number
  *                 description: RAM type name
- *                 example: DDR5
+ *                 example: 1
  *               data_rate:
  *                 type: number
  *                 description: Data rate of the RAM type
@@ -4546,9 +4546,9 @@ router.delete(
  *             type: object
  *             properties:
  *               ram_type:
- *                 type: string
+ *                 type: number
  *                 description: Updated RAM type name
- *                 example: DDR6
+ *                 example: 1
  *               data_rate:
  *                 type: number
  *                 description: Updated data rate of the RAM type

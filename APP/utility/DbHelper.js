@@ -688,7 +688,8 @@ export const RamType = sequelize.define(
       primaryKey: true,
     },
     ram_type: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
     },
     data_rate: {
       type: DataTypes.INTEGER,

@@ -10,6 +10,7 @@ import {
   MotherboardSupportRam,
   GraphicsModel,
   ProccessorModel,
+  RamModel,
   SequelizeInstance,
 } from '../utility/DbHelper.js';
 import * as commonFunction from '../Common/CommonFunction.js';
@@ -580,6 +581,53 @@ export async function updateProcessorModel(
 
 export async function deleteProcessorModel(id) {
   const deletedCount = await ProccessorModel.destroy({
+    where: { id },
+  });
+  return deletedCount;
+}
+
+//
+export async function genRamModelMaxId() {
+  const sqlQuery = `SELECT coalesce(MAX(id),0) + 1 AS max_id
+                    FROM ram_model;`;
+  const [result] = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function selectRamModel() {
+  const sqlQuery = `select * from ram_model order by id`;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function createRamModel(maxId, model) {
+  const { dataValues } = await RamModel.create({
+    id: maxId,
+    model,
+  });
+  return dataValues;
+}
+
+export async function updateRamModel(id, model) {
+  const [updatedCount] = await RamModel.update(
+    {
+      model,
+    },
+    {
+      where: { id },
+    },
+  );
+  return updatedCount;
+}
+
+export async function deleteRamModel(id) {
+  const deletedCount = await RamModel.destroy({
     where: { id },
   });
   return deletedCount;

@@ -668,3 +668,58 @@ export async function deleteProcessorModel(req, res, next) {
     res.send(e);
   }
 }
+
+//
+export async function selectRamModel(req, res, next) {
+  try {
+    const result = await componentService.selectRamModel();
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function createRamModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const { model } = req.body;
+    const result = await componentService.createRamModel(model);
+    res.send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function updateRamModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const ramModelId = req.params.ramModelId;
+    const { model } = req.body;
+    await componentService.updateRamModel(ramModelId, model);
+    res.send({
+      message: `UPDATE RAM MODEL WITH ID ${ramModelId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deleteRamModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const ramModelId = req.params.ramModelId;
+    await componentService.deleteRamModel(ramModelId);
+    res.send({
+      message: `DELETE RAM MODEL WITH ID ${ramModelId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}

@@ -4024,6 +4024,18 @@ router.delete(
   componentController.deleteProcessorChipset,
 );
 
+// RamModel
+router.get('/api/component/ram-model', componentController.selectRamModel);
+router.post('/api/component/ram-model', componentController.createRamModel);
+router.put(
+  '/api/component/ram-model/:ramModelId',
+  componentController.updateRamModel,
+);
+router.delete(
+  '/api/component/ram-model/:ramModelId',
+  componentController.deleteRamModel,
+);
+
 // RamType
 router.get('/api/component/ram-type', componentController.selectRamType);
 router.post('/api/component/ram-type', componentController.createRamType);

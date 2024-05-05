@@ -284,3 +284,19 @@ export async function updateProcessorModel(
 export async function deleteProcessorModel(processorModelId) {
   return await componentDAL.deleteProcessorModel(processorModelId);
 }
+
+//
+export async function selectRamModel() {
+  return await componentDAL.selectRamModel();
+}
+
+export async function createRamModel(model) {
+  const gen = await componentDAL.genRamModelMaxId();
+  return await componentDAL.createRamModel(gen.max_id, model);
+}
+export async function updateRamModel(ramModelId, model) {
+  return await componentDAL.updateRamModel(ramModelId, model);
+}
+export async function deleteRamModel(ramModelId) {
+  return await componentDAL.deleteRamModel(ramModelId);
+}

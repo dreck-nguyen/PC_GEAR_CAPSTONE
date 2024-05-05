@@ -616,6 +616,30 @@ export const MotherboardChipset = sequelize.define(
   },
 );
 
+// tbl.ram_model
+export const RamModel = sequelize.define(
+  'ram_model',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'ram_model',
+    timestamps: false,
+  },
+);
+
 // tbl.motherboard_support_processor
 export const MotherboardSupportProcessor = sequelize.define(
   'motherboard_support_processor',

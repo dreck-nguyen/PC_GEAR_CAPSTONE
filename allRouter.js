@@ -4144,6 +4144,24 @@ router.delete(
   componentController.deleteGraphicsModel,
 );
 
+// ProccessorModel
+router.get(
+  '/api/component/processor-model',
+  componentController.selectProcessorModel,
+);
+router.post(
+  '/api/component/processor-model',
+  componentController.createProcessorModel,
+);
+router.put(
+  '/api/component/processor-model/:processorModelId',
+  componentController.updateProcessorModel,
+);
+router.delete(
+  '/api/component/processor-model/:processorModelId',
+  componentController.deleteProcessorModel,
+);
+
 /**
  * @swagger
  * /api/component/form-factor:
@@ -5191,6 +5209,162 @@ router.delete(
  *     responses:
  *       '204':
  *         description: Graphics model deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/component/processor-model:
+ *   get:
+ *     summary: Retrieve Processor Models
+ *     description: Retrieve a list of available processor models.
+ *     tags:
+ *       - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of processor models
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: Unique identifier for the processor model
+ *                   model:
+ *                     type: string
+ *                     description: Name of the processor model
+ *                   priority:
+ *                     type: integer
+ *                     description: Priority of the processor model
+ *                   chipset:
+ *                     type: integer
+ *                     description: ID of the associated chipset
+ *                   cores:
+ *                     type: integer
+ *                     description: Number of cores
+ *                   threads:
+ *                     type: integer
+ *                     description: Number of threads
+ *                   model_number:
+ *                     type: integer
+ *                     description: Model number of the processor
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Processor Model
+ *     description: Create a new processor model.
+ *     tags:
+ *       - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 description: New processor model to add
+ *                 example: Intel Core i9
+ *               priority:
+ *                 type: integer
+ *                 description: Priority of the processor model
+ *                 example: 0
+ *               chipset:
+ *                 type: integer
+ *                 description: ID of the associated chipset
+ *                 example: 2
+ *               cores:
+ *                 type: integer
+ *                 description: Number of cores
+ *                 example: 1
+ *               threads:
+ *                 type: integer
+ *                 description: Number of threads
+ *                 example: 1
+ *               model_number:
+ *                 type: integer
+ *                 description: Model number of the processor
+ *                 example: 1
+ *     responses:
+ *       '201':
+ *         description: Processor model created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/processor-model/{id}:
+ *   put:
+ *     summary: Update Processor Model
+ *     description: Update an existing processor model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the processor model to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 description: Updated processor model
+ *                 example: Intel Core i9
+ *               priority:
+ *                 type: integer
+ *                 description: Priority of the processor model
+ *                 example: 0
+ *               chipset:
+ *                 type: integer
+ *                 description: ID of the associated chipset
+ *                 example: 2
+ *               cores:
+ *                 type: integer
+ *                 description: Number of cores
+ *                 example: 1
+ *               threads:
+ *                 type: integer
+ *                 description: Number of threads
+ *                 example: 1
+ *               model_number:
+ *                 type: integer
+ *                 description: Model number of the processor
+ *                 example: 3
+ *     responses:
+ *       '200':
+ *         description: Processor model updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Processor Model
+ *     description: Delete a processor model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the processor model to delete.
+ *     responses:
+ *       '204':
+ *         description: Processor model deleted successfully
  *       '500':
  *         description: Internal server error
  */

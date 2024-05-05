@@ -9,6 +9,7 @@ import {
   MotherboardSupportProcessor,
   MotherboardSupportRam,
   GraphicsModel,
+  ProccessorModel,
   SequelizeInstance,
 } from '../utility/DbHelper.js';
 import * as commonFunction from '../Common/CommonFunction.js';
@@ -506,6 +507,79 @@ export async function updateGraphicsModel(
 
 export async function deleteGraphicsModel(id) {
   const deletedCount = await GraphicsModel.destroy({
+    where: { id },
+  });
+  return deletedCount;
+}
+
+//
+export async function genProcessorModelMaxId() {
+  const sqlQuery = `SELECT coalesce(MAX(id),0) + 1 AS max_id
+                    FROM proccessor_model;`;
+  const [result] = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function selectProcessorModel() {
+  const sqlQuery = `select * from proccessor_model order by id`;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function createProcessorModel(
+  maxId,
+  model,
+  priority,
+  chipset,
+  cores,
+  threads,
+  model_number,
+) {
+  const { dataValues } = await ProccessorModel.create({
+    id: maxId,
+    model,
+    priority,
+    chipset,
+    cores,
+    threads,
+    model_number,
+  });
+  return dataValues;
+}
+
+export async function updateProcessorModel(
+  id,
+  model,
+  priority,
+  chipset,
+  cores,
+  threads,
+  model_number,
+) {
+  const [updatedCount] = await ProccessorModel.update(
+    {
+      model,
+      priority,
+      chipset,
+      cores,
+      threads,
+      model_number,
+    },
+    {
+      where: { id },
+    },
+  );
+  return updatedCount;
+}
+
+export async function deleteProcessorModel(id) {
+  const deletedCount = await ProccessorModel.destroy({
     where: { id },
   });
   return deletedCount;

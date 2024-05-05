@@ -237,3 +237,50 @@ export async function updateGraphicsModel(
 export async function deleteGraphicsModel(graphicsModelId) {
   return await componentDAL.deleteGraphicsModel(graphicsModelId);
 }
+
+//
+export async function selectProcessorModel() {
+  return await componentDAL.selectProcessorModel();
+}
+
+export async function createProcessorModel(
+  model,
+  priority,
+  chipset,
+  cores,
+  threads,
+  model_number,
+) {
+  const gen = await componentDAL.genProcessorModelMaxId();
+  return await componentDAL.createProcessorModel(
+    gen.max_id,
+    model,
+    priority,
+    chipset,
+    cores,
+    threads,
+    model_number,
+  );
+}
+export async function updateProcessorModel(
+  processorModelId,
+  model,
+  priority,
+  chipset,
+  cores,
+  threads,
+  model_number,
+) {
+  return await componentDAL.updateProcessorModel(
+    processorModelId,
+    model,
+    priority,
+    chipset,
+    cores,
+    threads,
+    model_number,
+  );
+}
+export async function deleteProcessorModel(processorModelId) {
+  return await componentDAL.deleteProcessorModel(processorModelId);
+}

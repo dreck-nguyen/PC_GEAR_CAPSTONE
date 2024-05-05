@@ -531,6 +531,7 @@ export const GraphicsModel = sequelize.define(
     },
     priority: {
       type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
     },
     graphics_chipset: {
       type: DataTypes.TEXT,
@@ -543,6 +544,50 @@ export const GraphicsModel = sequelize.define(
   },
   {
     tableName: 'graphics_model',
+    timestamps: false,
+  },
+);
+
+// tbl.proccessor_model
+export const ProccessorModel = sequelize.define(
+  'proccessor_model',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+    },
+    priority: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    chipset: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    cores: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    threads: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    model_number: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'proccessor_model',
     timestamps: false,
   },
 );

@@ -598,3 +598,73 @@ export async function deleteGraphicsModel(req, res, next) {
     res.send(e);
   }
 }
+
+//
+export async function selectProcessorModel(req, res, next) {
+  try {
+    const result = await componentService.selectProcessorModel();
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function createProcessorModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const { model, priority, chipset, cores, threads, model_number } = req.body;
+    const result = await componentService.createProcessorModel(
+      model,
+      priority,
+      chipset,
+      cores,
+      threads,
+      model_number,
+    );
+    res.send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function updateProcessorModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const processorModelId = req.params.processorModelId;
+    const { model, priority, chipset, cores, threads, model_number } = req.body;
+    await componentService.updateProcessorModel(
+      processorModelId,
+      model,
+      priority,
+      chipset,
+      cores,
+      threads,
+      model_number,
+    );
+    res.send({
+      message: `UPDATE PROCESSOR MODEL WITH ID ${processorModelId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deleteProcessorModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const processorModelId = req.params.processorModelId;
+    await componentService.deleteProcessorModel(processorModelId);
+    res.send({
+      message: `DELETE PROCESSOR MODEL WITH ID ${processorModelId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}

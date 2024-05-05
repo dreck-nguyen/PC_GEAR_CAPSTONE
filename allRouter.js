@@ -5380,5 +5380,101 @@ router.delete(
  *       '500':
  *         description: Internal server error
  */
+/**
+ * @swagger
+ * /api/component/ram-model:
+ *   get:
+ *     summary: Retrieve RAM Models
+ *     description: Retrieve a list of available RAM models.
+ *     tags:
+ *       - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of RAM models
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: RAM model
+ *                 example: DDR4
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create RAM Model
+ *     description: Create a new RAM model.
+ *     tags:
+ *       - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 description: New RAM model to add
+ *                 example: DDR4
+ *     responses:
+ *       '201':
+ *         description: RAM model created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/ram-model/{id}:
+ *   put:
+ *     summary: Update RAM Model
+ *     description: Update an existing RAM model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the RAM model to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 description: Updated RAM model
+ *                 example: DDR5
+ *     responses:
+ *       '200':
+ *         description: RAM model updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete RAM Model
+ *     description: Delete a RAM model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the RAM model to delete.
+ *     responses:
+ *       '204':
+ *         description: RAM model deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
 
 export default router;

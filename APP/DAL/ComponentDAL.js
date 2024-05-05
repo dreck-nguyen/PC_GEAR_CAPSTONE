@@ -8,8 +8,10 @@ import {
   MotherboardChipset,
   MotherboardSupportProcessor,
   MotherboardSupportRam,
+  GraphicsModel,
   SequelizeInstance,
 } from '../utility/DbHelper.js';
+import * as commonFunction from '../Common/CommonFunction.js';
 export async function genFormFactorMaxId() {
   const sqlQuery = `SELECT coalesce(MAX(id),0) + 1 AS max_id
                     FROM form_factor;`;
@@ -444,6 +446,67 @@ export async function updateMotherboardSupportRam(
 export async function deleteMotherboardSupportRam(profileId) {
   const deletedCount = await MotherboardSupportRam.destroy({
     where: { profile_id: profileId },
+  });
+  return deletedCount;
+}
+
+//
+export async function genGraphicsModelMaxId() {
+  const sqlQuery = `SELECT coalesce(MAX(id),0) + 1 AS max_id
+                    FROM graphics_model;`;
+  const [result] = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function selectGraphicsModel() {
+  const sqlQuery = `select * from graphics_model order by id`;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function createGraphicsModel(
+  maxId,
+  graphics_model,
+  priority,
+  graphics_chipset,
+) {
+  const { dataValues } = await GraphicsModel.create({
+    id: maxId,
+    graphics_model,
+    priority,
+    graphics_chipset,
+  });
+  return dataValues;
+}
+
+export async function updateGraphicsModel(
+  id,
+  graphics_model,
+  priority,
+  graphics_chipset,
+) {
+  const [updatedCount] = await GraphicsModel.update(
+    {
+      graphics_model,
+      priority,
+      graphics_chipset,
+    },
+    {
+      where: { id },
+    },
+  );
+  return updatedCount;
+}
+
+export async function deleteGraphicsModel(id) {
+  const deletedCount = await GraphicsModel.destroy({
+    where: { id },
   });
   return deletedCount;
 }

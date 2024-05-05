@@ -4126,6 +4126,24 @@ router.delete(
   componentController.deleteMotherboardSupportRam,
 );
 
+// GraphicsModel
+router.get(
+  '/api/component/graphics-model',
+  componentController.selectGraphicsModel,
+);
+router.post(
+  '/api/component/graphics-model',
+  componentController.createGraphicsModel,
+);
+router.put(
+  '/api/component/graphics-model/:graphicsModelId',
+  componentController.updateGraphicsModel,
+);
+router.delete(
+  '/api/component/graphics-model/:graphicsModelId',
+  componentController.deleteGraphicsModel,
+);
+
 /**
  * @swagger
  * /api/component/form-factor:
@@ -5049,6 +5067,130 @@ router.delete(
  *     responses:
  *       '204':
  *         description: Motherboard support processor configuration deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/component/graphics-model:
+ *   get:
+ *     summary: Retrieve Graphics Models
+ *     description: Retrieve a list of available graphics models.
+ *     tags:
+ *       - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of graphics models
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: Unique identifier for the graphics model
+ *                   graphics_model:
+ *                     type: string
+ *                     description: Name of the graphics model
+ *                   priority:
+ *                     type: integer
+ *                     description: Priority of the graphics model
+ *                   graphics_chipset:
+ *                     type: integer
+ *                     description: ID of the associated graphics chipset
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Graphics Model
+ *     description: Create a new graphics model.
+ *     tags:
+ *       - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               graphics_model:
+ *                 type: string
+ *                 description: New graphics model to add
+ *                 example: GeForce RTX 4090
+ *               priority:
+ *                 type: integer
+ *                 description: Priority of the graphics model
+ *                 example: 0
+ *               graphics_chipset:
+ *                 type: integer
+ *                 description: ID of the associated graphics chipset
+ *                 example: 2
+ *     responses:
+ *       '201':
+ *         description: Graphics model created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/graphics-model/{id}:
+ *   put:
+ *     summary: Update Graphics Model
+ *     description: Update an existing graphics model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the graphics model to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               graphics_model:
+ *                 type: string
+ *                 description: Updated graphics model
+ *                 example: GeForce RTX 4090
+ *               priority:
+ *                 type: integer
+ *                 description: Priority of the graphics model
+ *                 example: 0
+ *               graphics_chipset:
+ *                 type: integer
+ *                 description: ID of the associated graphics chipset
+ *                 example: 6
+ *     responses:
+ *       '200':
+ *         description: Graphics model updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Graphics Model
+ *     description: Delete a graphics model by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the graphics model to delete.
+ *     responses:
+ *       '204':
+ *         description: Graphics model deleted successfully
  *       '500':
  *         description: Internal server error
  */

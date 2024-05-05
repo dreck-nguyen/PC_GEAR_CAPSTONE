@@ -372,3 +372,15 @@ export function getGpuVersion(gpuVersion) {
   const match = gpuVersion.match(regex);
   return match ? Number(match[1]) : 4;
 }
+export function validateNumber(input) {
+  let num = parseFloat(input);
+
+  if (!isNaN(num)) {
+    if (num < 0) {
+      num = 0;
+    }
+    return num;
+  } else {
+    return input;
+  }
+}

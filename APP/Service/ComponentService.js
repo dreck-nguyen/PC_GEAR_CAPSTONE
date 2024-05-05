@@ -202,3 +202,38 @@ export async function updateMotherboardSupportRam(
 export async function deleteMotherboardSupportRam(profileId) {
   return await componentDAL.deleteMotherboardSupportRam(profileId);
 }
+
+//
+export async function selectGraphicsModel() {
+  return await componentDAL.selectGraphicsModel();
+}
+
+export async function createGraphicsModel(
+  graphics_model,
+  priority,
+  graphics_chipset,
+) {
+  const gen = await componentDAL.genGraphicsModelMaxId();
+  return await componentDAL.createGraphicsModel(
+    gen.max_id,
+    graphics_model,
+    priority,
+    graphics_chipset,
+  );
+}
+export async function updateGraphicsModel(
+  graphicsModelId,
+  graphics_model,
+  priority,
+  graphics_chipset,
+) {
+  return await componentDAL.updateGraphicsModel(
+    graphicsModelId,
+    graphics_model,
+    priority,
+    graphics_chipset,
+  );
+}
+export async function deleteGraphicsModel(graphicsModelId) {
+  return await componentDAL.deleteGraphicsModel(graphicsModelId);
+}

@@ -1,4 +1,5 @@
 import { SequelizeInstance } from '../utility/DbHelper.js';
+import * as commonFunction from '../Common/CommonFunction.js';
 import * as componentService from '../Service/ComponentService.js';
 
 export async function selectFormFactor(req, res, next) {
@@ -40,7 +41,7 @@ export async function updateFormFactor(req, res, next) {
 export async function deleteFormFactor(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
-    const formFactorId = req.params.formFactorId;
+    const formFactorId = commonFunction.validateNumber(req.params.formFactorId);
     await componentService.deleteFormFactor(formFactorId);
     res.send({ message: `DELETE FORM FACTOR WITH ID ${formFactorId}` });
     t.commit();
@@ -525,6 +526,70 @@ export async function deleteMotherboardSupportRam(req, res, next) {
     await componentService.deleteMotherboardSupportRam(profileId);
     res.send({
       message: `DELETE MOTHERBOARD SUPPORT RAM WITH PROFILE ID ${profileId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+
+//
+export async function selectGraphicsModel(req, res, next) {
+  try {
+    const result = await componentService.selectGraphicsModel();
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function createGraphicsModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const { graphics_model, priority, graphics_chipset } = req.body;
+    const result = await componentService.createGraphicsModel(
+      graphics_model,
+      priority,
+      graphics_chipset,
+    );
+    res.send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function updateGraphicsModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const graphicsModelId = req.params.graphicsModelId;
+    const { graphics_model, priority, graphics_chipset } = req.body;
+    await componentService.updateGraphicsModel(
+      graphicsModelId,
+      graphics_model,
+      priority,
+      graphics_chipset,
+    );
+    res.send({
+      message: `UPDATE GRAPHICS MODEL WITH ID ${graphicsModelId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deleteGraphicsModel(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const graphicsModelId = req.params.graphicsModelId;
+    await componentService.deleteGraphicsModel(graphicsModelId);
+    res.send({
+      message: `DELETE GRAPHICS MODEL WITH ID ${graphicsModelId}`,
     });
     t.commit();
   } catch (e) {

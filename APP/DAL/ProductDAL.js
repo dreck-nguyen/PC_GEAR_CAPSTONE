@@ -3,6 +3,7 @@ import {
   ProductGallery,
   SequelizeInstance,
 } from '../utility/DbHelper.js';
+import * as commonFunction from '../Common/CommonFunction.js';
 
 export async function countProduct() {
   const sqlQuery = `
@@ -259,10 +260,10 @@ export async function createProduct(product) {
     category_id: product.category_id,
     name: product.name,
     description: product.description,
-    unit_price: product.unit_price,
-    discount: product.discount,
-    quantity: product.quantity,
-    sold: product.sold,
+    unit_price: commonFunction.validateNumber(product.unit_price),
+    discount: commonFunction.validateNumber(product.discount),
+    quantity: commonFunction.validateNumber(product.quantity),
+    sold: commonFunction.validateNumber(product.sold),
     product_brand_id: product.product_brand_id,
   });
   return result;

@@ -115,6 +115,33 @@ app.use(function (req, res, next) {
   next(err);
 });
 
+function checkKeyInObjectMiddleware(req, res, next) {
+  function recursivelyCheckKey(obj, key) {
+    for (let prop in obj) {
+      if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+        recursivelyCheckKey(obj[prop], key);
+      } else {
+        if (prop === key) {
+          if (typeof obj[prop] === 'number' && obj[prop] < 0) {
+            obj[prop] = 0;
+          }
+        }
+      }
+    }
+  }
+
+  const keyToCheck = 'myKey';
+
+  recursivelyCheckKey(req.body, keyToCheck);
+
+  next();
+}
+
+app.use(async (req, res, next) => {
+  checkKeyInObjectMiddleware(req, res, next);
+  next();
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

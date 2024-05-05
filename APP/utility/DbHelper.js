@@ -517,6 +517,36 @@ export const GraphicsInterface = sequelize.define(
   },
 );
 
+// tbl.graphics_model
+export const GraphicsModel = sequelize.define(
+  'graphics_model',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    graphics_model: {
+      type: DataTypes.TEXT,
+    },
+    priority: {
+      type: DataTypes.INTEGER,
+    },
+    graphics_chipset: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'graphics_model',
+    timestamps: false,
+  },
+);
+
 // tbl.motherboard_chipset
 export const MotherboardChipset = sequelize.define(
   'motherboard_chipset',

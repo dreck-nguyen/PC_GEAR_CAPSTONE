@@ -16,7 +16,6 @@ export async function createCart(loginUser, cartObject) {
     const newCartObj = {
       cart_id,
       user_id: userId,
-      status: cartObject.status,
     };
     await cartDAL.createCart(newCartObj);
   }
@@ -86,7 +85,6 @@ export async function uploadCartPcComponent(userId, dataObj) {
     const newCartObj = {
       cart_id,
       user_id: userId,
-      status: cartObject.status,
     };
     await cartDAL.createCart(newCartObj);
   }

@@ -445,6 +445,246 @@ const ProductGallery = sequelize.define(
     timestamps: false,
   },
 );
+// tbl.form_factor
+export const FormFactor = sequelize.define(
+  'form_factor',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    form_factor: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'form_factor',
+    timestamps: false,
+  },
+);
+
+// tbl.storage_interface
+export const StorageInterface = sequelize.define(
+  'storage_interface',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    storage_interface: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'storage_interface',
+    timestamps: false,
+  },
+);
+
+// tbl.graphics_interface
+export const GraphicsInterface = sequelize.define(
+  'graphics_interface',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    interface_type: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'graphics_interface',
+    timestamps: false,
+  },
+);
+
+// tbl.motherboard_chipset
+export const MotherboardChipset = sequelize.define(
+  'motherboard_chipset',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    chipset: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'motherboard_chipset',
+    timestamps: false,
+  },
+);
+
+// tbl.motherboard_support_processor
+export const MotherboardSupportProcessor = sequelize.define(
+  'motherboard_support_processor',
+  {
+    profile_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    motherboard_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    support_proccessor_type: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'motherboard_support_processor',
+    timestamps: false,
+  },
+);
+
+// tbl.motherboard_support_ram
+export const MotherboardSupportRam = sequelize.define(
+  'motherboard_support_ram',
+  {
+    profile_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    motherboard_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    support_ram_type: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'motherboard_support_ram',
+    timestamps: false,
+  },
+);
+
+// tbl.ram_type
+export const RamType = sequelize.define(
+  'ram_type',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    ram_type: {
+      type: DataTypes.TEXT,
+    },
+    data_rate: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    data_transfer_rate: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'ram_type',
+    timestamps: false,
+  },
+);
+
+// tbl.processor_socket
+export const ProcessorSocket = sequelize.define(
+  'processor_socket',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    socket: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'processor_socket',
+    timestamps: false,
+  },
+);
+// tbl.processor_chipset
+export const ProcessorChipset = sequelize.define(
+  'processor_chipset',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    processor_socket: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    processor_chipset: {
+      type: DataTypes.TEXT,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'processor_chipset',
+    timestamps: false,
+  },
+);
+
 // tbl.cart
 const Cart = sequelize.define(
   'Cart',
@@ -461,9 +701,6 @@ const Cart = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    status: {
-      type: DataTypes.STRING(20),
     },
   },
   {

@@ -15,6 +15,7 @@ import * as orderStatusController from './APP/Controller/OrderStatusController.j
 import * as shippingAddressController from './APP/Controller/ShippingAddressController.js';
 import * as pcBuilderController from './APP/Controller/PcBuilderController.js';
 import * as orderDetailController from './APP/Controller/OrderDetailController.js';
+import * as componentController from './APP/Controller/ComponentController.js';
 const router = express.Router();
 // PC BUILD SECTION
 
@@ -3973,4 +3974,1083 @@ router.get(
   '/api/order/order-detail/:orderDetailId',
   orderDetailController.getOrderDetailByOrderDetailId,
 );
+
+// COVER CAPSTONE
+// FormFactor
+router.get('/api/component/form-factor', componentController.selectFormFactor);
+router.post('/api/component/form-factor', componentController.createFormFactor);
+router.put(
+  '/api/component/form-factor/:formFactorId',
+  componentController.updateFormFactor,
+);
+router.delete(
+  '/api/component/form-factor/:formFactorId',
+  componentController.deleteFormFactor,
+);
+
+// ProcessorSocket
+router.get(
+  '/api/component/processor-socket',
+  componentController.selectProcessorSocket,
+);
+router.post(
+  '/api/component/processor-socket',
+  componentController.createProcessorSocket,
+);
+router.put(
+  '/api/component/processor-socket/:processorSocketId',
+  componentController.updateProcessorSocket,
+);
+router.delete(
+  '/api/component/processor-socket/:processorSocketId',
+  componentController.deleteProcessorSocket,
+);
+
+// ProcessorChipset
+router.get(
+  '/api/component/processor-chipset',
+  componentController.selectProcessorChipset,
+);
+router.post(
+  '/api/component/processor-chipset',
+  componentController.createProcessorChipset,
+);
+router.put(
+  '/api/component/processor-chipset/:processorChipsetId',
+  componentController.updateProcessorChipset,
+);
+router.delete(
+  '/api/component/processor-chipset/:processorChipsetId',
+  componentController.deleteProcessorChipset,
+);
+
+// RamType
+router.get('/api/component/ram-type', componentController.selectRamType);
+router.post('/api/component/ram-type', componentController.createRamType);
+router.put(
+  '/api/component/ram-type/:ramTypeId',
+  componentController.updateRamType,
+);
+router.delete(
+  '/api/component/ram-type/:ramTypeId',
+  componentController.deleteRamType,
+);
+
+// StorageInterface
+router.get(
+  '/api/component/storage-interface',
+  componentController.selectStorageInterface,
+);
+router.post(
+  '/api/component/storage-interface',
+  componentController.createStorageInterface,
+);
+router.put(
+  '/api/component/storage-interface/:storageInterfaceId',
+  componentController.updateStorageInterface,
+);
+router.delete(
+  '/api/component/storage-interface/:storageInterfaceId',
+  componentController.deleteStorageInterface,
+);
+
+// GraphicsInterface
+router.get(
+  '/api/component/graphics-interface',
+  componentController.selectGraphicsInterface,
+);
+router.post(
+  '/api/component/graphics-interface',
+  componentController.createGraphicsInterface,
+);
+router.put(
+  '/api/component/graphics-interface/:graphicsInterfaceId',
+  componentController.updateGraphicsInterface,
+);
+router.delete(
+  '/api/component/graphics-interface/:graphicsInterfaceId',
+  componentController.deleteGraphicsInterface,
+);
+
+// MotherboardChipset
+router.get(
+  '/api/component/motherboard-chipset',
+  componentController.selectMotherboardChipset,
+);
+router.post(
+  '/api/component/motherboard-chipset',
+  componentController.createMotherboardChipset,
+);
+router.put(
+  '/api/component/motherboard-chipset/:motherboardChipsetId',
+  componentController.updateMotherboardChipset,
+);
+router.delete(
+  '/api/component/motherboard-chipset/:motherboardChipsetId',
+  componentController.deleteMotherboardChipset,
+);
+
+// MotherboardSupportProcessor
+router.get(
+  '/api/component/motherboard-support-processor',
+  componentController.selectMotherboardSupportProcessor,
+);
+router.post(
+  '/api/component/motherboard-support-processor',
+  componentController.createMotherboardSupportProcessor,
+);
+router.put(
+  '/api/component/motherboard-support-processor/:profileId',
+  componentController.updateMotherboardSupportProcessor,
+);
+router.delete(
+  '/api/component/motherboard-support-processor/:profileId',
+  componentController.deleteMotherboardSupportProcessor,
+);
+
+// MotherboardSupportRam
+router.get(
+  '/api/component/motherboard-support-ram',
+  componentController.selectMotherboardSupportRam,
+);
+router.post(
+  '/api/component/motherboard-support-ram',
+  componentController.createMotherboardSupportRam,
+);
+router.put(
+  '/api/component/motherboard-support-ram/:profileId',
+  componentController.updateMotherboardSupportRam,
+);
+router.delete(
+  '/api/component/motherboard-support-ram/:profileId',
+  componentController.deleteMotherboardSupportRam,
+);
+
+/**
+ * @swagger
+ * /api/component/form-factor:
+ *   get:
+ *     summary: Retrieve Component Form Factors
+ *     description: Retrieve a list of available form factors for components.
+ *     tags:
+ *       - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of component form factors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Component form factor
+ *                 example: ATX
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Component Form Factor
+ *     description: Create a new form factor for components.
+ *     tags:
+ *       - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               form_factor:
+ *                 type: string
+ *                 description: New component form factor to add
+ *                 example: ATX TEST
+ *     responses:
+ *       '201':
+ *         description: Form factor created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/form-factor/{id}:
+ *   put:
+ *     summary: Update Component Form Factor
+ *     description: Update an existing form factor for components.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the form factor to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               form_factor:
+ *                 type: string
+ *                 description: Updated component form factor
+ *                 example: ATX TEST V2
+ *     responses:
+ *       '200':
+ *         description: Form factor updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Component Form Factor
+ *     description: Delete a form factor for components by ID.
+ *     tags:
+ *       - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the form factor to delete.
+ *     responses:
+ *       '204':
+ *         description: Form factor deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/component/processor-socket:
+ *   get:
+ *     summary: Retrieve Processor Sockets
+ *     description: Retrieve a list of available processor sockets for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of processor sockets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Processor socket
+ *                 example: AM4
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Processor Socket
+ *     description: Create a new processor socket for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               socket:
+ *                 type: string
+ *                 description: New processor socket to add
+ *                 example: AM6
+ *     responses:
+ *       '201':
+ *         description: Processor socket created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/processor-socket/{id}:
+ *   put:
+ *     summary: Update Processor Socket
+ *     description: Update an existing processor socket for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the processor socket to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               socket:
+ *                 type: string
+ *                 description: Updated processor socket
+ *                 example: AM6
+ *     responses:
+ *       '200':
+ *         description: Processor socket updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Processor Socket
+ *     description: Delete a processor socket for components by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the processor socket to delete.
+ *     responses:
+ *       '204':
+ *         description: Processor socket deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/component/processor-chipset:
+ *   get:
+ *     summary: Retrieve Processor Chipsets
+ *     description: Retrieve a list of available processor chipsets for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of processor chipsets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Processor chipset
+ *                 example: 1
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Processor Chipset
+ *     description: Create a new processor chipset for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               processor_chipset:
+ *                 type: string
+ *                 description: New processor chipset to add
+ *                 example: 1
+ *               processor_socket:
+ *                 type: string
+ *                 description: Processor socket associated with the chipset
+ *                 example: null
+ *     responses:
+ *       '201':
+ *         description: Processor chipset created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/processor-chipset/{id}:
+ *   put:
+ *     summary: Update Processor Chipset
+ *     description: Update an existing processor chipset for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the processor chipset to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               processor_chipset:
+ *                 type: string
+ *                 description: Updated processor chipset
+ *                 example: 1
+ *               processor_socket:
+ *                 type: string
+ *                 description: Updated processor socket associated with the chipset
+ *                 example: 1
+ *     responses:
+ *       '200':
+ *         description: Processor chipset updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Processor Chipset
+ *     description: Delete a processor chipset for components by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the processor chipset to delete.
+ *     responses:
+ *       '204':
+ *         description: Processor chipset deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/component/ram-type:
+ *   get:
+ *     summary: Retrieve RAM Types
+ *     description: Retrieve a list of available RAM types for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of RAM types
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   ram_type:
+ *                     type: string
+ *                     description: RAM type name
+ *                     example: DDR4
+ *                   data_rate:
+ *                     type: number
+ *                     description: Data rate of the RAM type
+ *                     example: 3200
+ *                   data_transfer_rate:
+ *                     type: number
+ *                     description: Data transfer rate of the RAM type
+ *                     example: 25
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create RAM Type
+ *     description: Create a new RAM type for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ram_type:
+ *                 type: string
+ *                 description: RAM type name
+ *                 example: DDR5
+ *               data_rate:
+ *                 type: number
+ *                 description: Data rate of the RAM type
+ *                 example: 1
+ *               data_transfer_rate:
+ *                 type: number
+ *                 description: Data transfer rate of the RAM type
+ *                 example: 1
+ *     responses:
+ *       '201':
+ *         description: RAM type created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/ram-type/{id}:
+ *   put:
+ *     summary: Update RAM Type
+ *     description: Update an existing RAM type for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the RAM type to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ram_type:
+ *                 type: string
+ *                 description: Updated RAM type name
+ *                 example: DDR6
+ *               data_rate:
+ *                 type: number
+ *                 description: Updated data rate of the RAM type
+ *                 example: 1
+ *               data_transfer_rate:
+ *                 type: number
+ *                 description: Updated data transfer rate of the RAM type
+ *                 example: 1
+ *     responses:
+ *       '200':
+ *         description: RAM type updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete RAM Type
+ *     description: Delete a RAM type for components by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the RAM type to delete.
+ *     responses:
+ *       '204':
+ *         description: RAM type deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/component/storage-interface:
+ *   get:
+ *     summary: Retrieve Storage Interfaces
+ *     description: Retrieve a list of available storage interfaces for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of storage interfaces
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Storage interface
+ *                 example: SATA 6
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Storage Interface
+ *     description: Create a new storage interface for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               storage_interface:
+ *                 type: string
+ *                 description: New storage interface to add
+ *                 example: SATA 6
+ *     responses:
+ *       '201':
+ *         description: Storage interface created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/storage-interface/{id}:
+ *   put:
+ *     summary: Update Storage Interface
+ *     description: Update an existing storage interface for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the storage interface to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               storage_interface:
+ *                 type: string
+ *                 description: Updated storage interface
+ *                 example: SATA 3
+ *     responses:
+ *       '200':
+ *         description: Storage interface updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Storage Interface
+ *     description: Delete a storage interface for components by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the storage interface to delete.
+ *     responses:
+ *       '204':
+ *         description: Storage interface deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/component/graphics-interface:
+ *   get:
+ *     summary: Retrieve Graphics Interfaces
+ *     description: Retrieve a list of available graphics interfaces for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of graphics interfaces
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Graphics interface
+ *                 example: AGP 2
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Graphics Interface
+ *     description: Create a new graphics interface for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               interface_type:
+ *                 type: string
+ *                 description: New graphics interface type to add
+ *                 example: AGP 2
+ *     responses:
+ *       '201':
+ *         description: Graphics interface created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/graphics-interface/{id}:
+ *   put:
+ *     summary: Update Graphics Interface
+ *     description: Update an existing graphics interface for components.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the graphics interface to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               interface_type:
+ *                 type: string
+ *                 description: Updated graphics interface type
+ *                 example: AGP
+ *     responses:
+ *       '200':
+ *         description: Graphics interface updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Graphics Interface
+ *     description: Delete a graphics interface for components by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the graphics interface to delete.
+ *     responses:
+ *       '204':
+ *         description: Graphics interface deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/component/motherboard-chipset:
+ *   get:
+ *     summary: Retrieve Motherboard Chipsets
+ *     description: Retrieve a list of available motherboard chipsets.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of motherboard chipsets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Motherboard chipset
+ *                 example: Intel® C606
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Motherboard Chipset
+ *     description: Create a new motherboard chipset.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               chipset:
+ *                 type: string
+ *                 description: New motherboard chipset to add
+ *                 example: Intel® C606
+ *     responses:
+ *       '201':
+ *         description: Motherboard chipset created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/motherboard-chipset/{id}:
+ *   put:
+ *     summary: Update Motherboard Chipset
+ *     description: Update an existing motherboard chipset by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard chipset to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               chipset:
+ *                 type: string
+ *                 description: Updated motherboard chipset
+ *                 example: Intel® C608
+ *     responses:
+ *       '200':
+ *         description: Motherboard chipset updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Motherboard Chipset
+ *     description: Delete a motherboard chipset by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard chipset to delete.
+ *     responses:
+ *       '204':
+ *         description: Motherboard chipset deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/component/motherboard-support-ram:
+ *   get:
+ *     summary: Retrieve Motherboard Support RAM
+ *     description: Retrieve a list of motherboard support RAM configurations.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of motherboard support RAM configurations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   motherboard_id:
+ *                     type: string
+ *                     description: The ID of the motherboard
+ *                   support_ram_type:
+ *                     type: integer
+ *                     description: The supported RAM type
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Motherboard Support RAM
+ *     description: Create a new motherboard support RAM configuration.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motherboard_id:
+ *                 type: string
+ *                 description: The ID of the motherboard
+ *               support_ram_type:
+ *                 type: integer
+ *                 description: The supported RAM type
+ *     responses:
+ *       '201':
+ *         description: Motherboard support RAM configuration created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/motherboard-support-ram/{id}:
+ *   put:
+ *     summary: Update Motherboard Support RAM
+ *     description: Update an existing motherboard support RAM configuration by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard support RAM configuration to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motherboard_id:
+ *                 type: string
+ *                 description: The ID of the motherboard
+ *               support_ram_type:
+ *                 type: integer
+ *                 description: The updated supported RAM type
+ *     responses:
+ *       '200':
+ *         description: Motherboard support RAM configuration updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Motherboard Support RAM
+ *     description: Delete a motherboard support RAM configuration by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard support RAM configuration to delete.
+ *     responses:
+ *       '204':
+ *         description: Motherboard support RAM configuration deleted successfully
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/motherboard-support-processor:
+ *   get:
+ *     summary: Retrieve Motherboard Support Processor
+ *     description: Retrieve a list of motherboard support processor configurations.
+ *     tags:
+ *        - Cover Capstone Component
+ *     responses:
+ *       '200':
+ *         description: A list of motherboard support processor configurations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   motherboard_id:
+ *                     type: string
+ *                     description: The ID of the motherboard
+ *                   support_processor_type:
+ *                     type: integer
+ *                     description: The supported processor type
+ *                   created_at:
+ *                     type: string
+ *                     description: The creation timestamp of the support configuration
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create Motherboard Support Processor
+ *     description: Create a new motherboard support processor configuration.
+ *     tags:
+ *        - Cover Capstone Component
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motherboard_id:
+ *                 type: string
+ *                 description: The ID of the motherboard
+ *               support_processor_type:
+ *                 type: integer
+ *                 description: The supported processor type
+ *               created_at:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The creation timestamp of the support configuration
+ *     responses:
+ *       '201':
+ *         description: Motherboard support processor configuration created successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/component/motherboard-support-processor/{id}:
+ *   put:
+ *     summary: Update Motherboard Support Processor
+ *     description: Update an existing motherboard support processor configuration by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard support processor configuration to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motherboard_id:
+ *                 type: string
+ *                 description: The ID of the motherboard
+ *               support_processor_type:
+ *                 type: integer
+ *                 description: The updated supported processor type
+ *     responses:
+ *       '200':
+ *         description: Motherboard support processor configuration updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete Motherboard Support Processor
+ *     description: Delete a motherboard support processor configuration by ID.
+ *     tags:
+ *        - Cover Capstone Component
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the motherboard support processor configuration to delete.
+ *     responses:
+ *       '204':
+ *         description: Motherboard support processor configuration deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
 export default router;

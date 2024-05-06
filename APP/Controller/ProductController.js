@@ -193,10 +193,34 @@ export async function getProcessor(req, res, next) {
   }
 }
 
+export async function getProcessorSpecification(req, res, next) {
+  try {
+    const result = await productService.getProcessorSpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getProcessorById(req, res, next) {
   try {
     const processorId = req.params.processor_id;
     const result = await productService.getProcessorById(processorId);
+    res
+      .status(200)
+      .send(
+        result ? result : { message: `NO PROCESSOR FOUND ON ${processorId}` },
+      );
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getMotherboardSpecification(req, res, next) {
+  try {
+    const result = await productService.getMotherboardSpecification();
     res.status(200).send(result);
   } catch (error) {
     console.log(error);
@@ -215,10 +239,30 @@ export async function getMotherboardById(req, res, next) {
   }
 }
 
+export async function getCaseSpecification(req, res, next) {
+  try {
+    const result = await productService.getCaseSpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getCaseById(req, res, next) {
   try {
     const caseId = req.params.case_id;
     const result = await productService.getCaseById(caseId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getGraphicsCardSpecification(req, res, next) {
+  try {
+    const result = await productService.getGraphicsCardSpecification();
     res.status(200).send(result);
   } catch (error) {
     console.log(error);
@@ -248,6 +292,26 @@ export async function getRamById(req, res, next) {
   }
 }
 
+export async function getRamSpecification(req, res, next) {
+  try {
+    const result = await productService.getRamSpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getStorageSpecification(req, res, next) {
+  try {
+    const result = await productService.getStorageSpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getStorageById(req, res, next) {
   try {
     const storageId = req.params.storage_id;
@@ -270,10 +334,30 @@ export async function getCaseCoolerById(req, res, next) {
   }
 }
 
+export async function getCaseCoolerSpecification(req, res, next) {
+  try {
+    const result = await productService.getCaseCoolerSpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getCpuCoolerById(req, res, next) {
   try {
     const cpuCoolerId = req.params.cpu_cooler_id;
     const result = await productService.getCpuCoolerById(cpuCoolerId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getCpuCoolerSpecification(req, res, next) {
+  try {
+    const result = await productService.getCpuCoolerSpecification();
     res.status(200).send(result);
   } catch (error) {
     console.log(error);
@@ -292,10 +376,30 @@ export async function getPowerSupplyById(req, res, next) {
   }
 }
 
+export async function getPowerSupplySpecification(req, res, next) {
+  try {
+    const result = await productService.getPowerSupplySpecification();
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
 export async function getMonitorById(req, res, next) {
   try {
     const monitorId = req.params.monitor_id;
     const result = await productService.getMonitorById(monitorId);
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getMonitorSpecification(req, res, next) {
+  try {
+    const result = await productService.getMonitorSpecification();
     res.status(200).send(result);
   } catch (error) {
     console.log(error);
@@ -416,6 +520,21 @@ export async function upsertProcessorSpec(req, res, next) {
     t.rollback();
   }
 }
+export async function deleteProcessorSpec(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const processorId = req.params.processor_id;
+    await productService.deleteProcessorSpec(processorId);
+    res
+      .status(200)
+      .send({ mesage: `DELETE PRODUCT SPECIFICATION WITH ${processorId}` });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    await t.rollback();
+  }
+}
 
 export async function upsertMotherboard(req, res, next) {
   const t = await SequelizeInstance.transaction();
@@ -425,6 +544,22 @@ export async function upsertMotherboard(req, res, next) {
     await productService.upsertMotherboard(motherboardId, dataObj);
     const result = await productService.getMotherboardById(motherboardId);
     res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function deleteMotherboard(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const motherboardId = req.params.motherboard_id;
+    await productService.deleteMotherboard(motherboardId);
+    res.status(200).send({
+      message: `DELETE MOTHERBOARD SPECIFICATION WITH ${motherboardId}`,
+    });
     await t.commit();
   } catch (error) {
     console.log(error);
@@ -448,6 +583,22 @@ export async function upsertCase(req, res, next) {
     t.rollback();
   }
 }
+
+export async function deleteCase(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const caseId = req.params.case_id;
+    await productService.deleteCase(caseId);
+    res
+      .status(200)
+      .send({ message: `DELETE CASE SPECIFICATION WITH ID ${caseId}` });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
 export async function upsertGraphicsCard(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
@@ -463,6 +614,22 @@ export async function upsertGraphicsCard(req, res, next) {
     t.rollback();
   }
 }
+
+export async function deleteGraphicsCard(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const gpuId = req.params.gpu_id;
+    await productService.deleteGraphicsCard(gpuId);
+    res
+      .status(200)
+      .send({ mesage: `DELETE GPU SPECIFICATION WITH ID ${gpuId}` });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
 export async function upsertRam(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
@@ -471,6 +638,22 @@ export async function upsertRam(req, res, next) {
     await productService.upsertRam(ramId, dataObj);
     const result = await productService.getRamById(ramId);
     res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function deleteRam(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const ramId = req.params.ram_id;
+    await productService.deleteRam(ramId);
+    res
+      .status(200)
+      .send({ message: `DELETE RAM SPECIFICATION WITH ID ${ramId}` });
     await t.commit();
   } catch (error) {
     console.log(error);
@@ -495,6 +678,22 @@ export async function upsertStorage(req, res, next) {
   }
 }
 
+export async function deleteStorage(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const storageId = req.params.storage_id;
+    await productService.deleteStorage(storageId);
+    res
+      .status(200)
+      .send({ message: `DELETE STORAGE SPECIFICATION WITH ID ${storageId}` });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
 export async function upsertCaseCooler(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
@@ -503,6 +702,21 @@ export async function upsertCaseCooler(req, res, next) {
     await productService.upsertCaseCooler(caseCoolerId, dataObj);
     const result = await productService.getCaseCoolerById(caseCoolerId);
     res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+export async function deleteCaseCooler(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const caseCoolerId = req.params.case_cooler_id;
+    await productService.deleteCaseCooler(caseCoolerId);
+    res.status(200).send({
+      message: `DELETE CASE COOLER SPECIFICATION WITH ID ${caseCoolerId}`,
+    });
     await t.commit();
   } catch (error) {
     console.log(error);
@@ -526,6 +740,22 @@ export async function upsertCpuCooler(req, res, next) {
   }
 }
 
+export async function deleteCpuCooler(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const cpuCoolerId = req.params.cpu_cooler_id;
+    await productService.deleteCpuCooler(cpuCoolerId);
+    res.status(200).send({
+      message: `DELETE CPU COOLER SPECIFICATION WITH ID ${cpuCoolerId}`,
+    });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
 export async function upsertPsu(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
@@ -541,6 +771,22 @@ export async function upsertPsu(req, res, next) {
     t.rollback();
   }
 }
+
+export async function deletePsu(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const psuId = req.params.psu_id;
+    await productService.deletePsu(psuId);
+    res.status(200).send({
+      message: `DELETE PSU SPECIFICATION WITH ID ${psuId}`,
+    });
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
 export async function upsertMonitor(req, res, next) {
   const t = await SequelizeInstance.transaction();
   try {
@@ -549,6 +795,22 @@ export async function upsertMonitor(req, res, next) {
     await productService.upsertMonitor(monitorId, dataObj);
     const result = await productService.getMonitorById(monitorId);
     res.status(200).send(result);
+    await t.commit();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+    t.rollback();
+  }
+}
+
+export async function deleteMonitor(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const monitorId = req.params.monitor_id;
+    await productService.deleteMonitor(monitorId);
+    res
+      .status(200)
+      .send({ message: `DELETE MONITOR SPECIFICATION WITH ID ${monitorId}` });
     await t.commit();
   } catch (error) {
     console.log(error);

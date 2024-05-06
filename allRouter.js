@@ -709,221 +709,6 @@ router.delete(
 );
 
 //
-/**
- * @swagger
- * /api/pc-component/processor:
- *   post:
- *     summary: Get processor information
- *     description: Retrieve information about processors for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with processor information
- *       404:
- *         description: Processor information not found
- *
- * /api/pc-component/motherboard:
- *   post:
- *     summary: Get motherboard information
- *     description: Retrieve information about motherboards for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with motherboard information
- *       404:
- *         description: Motherboard information not found
- *
- * /api/pc-component/case:
- *   post:
- *     summary: Get case information
- *     description: Retrieve information about cases for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with case information
- *       404:
- *         description: Case information not found
- *
- * /api/pc-component/graphics-card:
- *   post:
- *     summary: Get graphics card information
- *     description: Retrieve information about graphics cards for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with graphics card information
- *       404:
- *         description: Graphics card information not found
- *
- * /api/pc-component/ram:
- *   post:
- *     summary: Get RAM information
- *     description: Retrieve information about RAM for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with RAM information
- *       404:
- *         description: RAM information not found
- *
- * /api/pc-component/storage:
- *   post:
- *     summary: Get storage information
- *     description: Retrieve information about storage for PC builds.
- *     tags:
- *       - PC Component
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/PCComponentRequestBody'
- *     responses:
- *       200:
- *         description: Successful response with storage information
- *       404:
- *         description: Storage information not found
- *
- */
-/**
- * @swagger
- * components:
- *   schemas:
- *     PCComponentRequestBody:
- *       type: object
- *       properties:
- *         motherboardDetail:
- *           type: object
- *           properties:
- *             chipset:
- *               type: string
- *               description: The chipset of the motherboard.
- *               example: AMD
- *             memory_supports:
- *               type: string
- *               description: The memory support of the motherboard.
- *               example: "DDR4 2133-4733"
- *             motherboard_id:
- *               type: string
- *               description: The ID of the motherboard.
- *               example: "5444e504-0569-4cae-8306-8a48daefb5d1"
- *         caseDetails:
- *           type: object
- *           properties:
- *             gpu_length:
- *               type: string
- *               description: The GPU length supported by the case.
- *               example: "365 mm / 14.37\""
- *             case_id:
- *               type: string
- *               description: The ID of the computer case.
- *               example: "4eb3a010-ae8c-4235-b47a-3ec4dfdd66bf"
- *         gpuDetail:
- *           type: object
- *           properties:
- *             length:
- *               type: number
- *               description: The length of the graphics card.
- *               example: 358
- *             gpu_id:
- *               type: string
- *               description: The ID of the gpu.
- *               example: "6313edd7-5ad3-4014-930b-eb6e638be819"
- *         processorDetails:
- *           type: object
- *           properties:
- *             chipset:
- *               type: string
- *               description: The chipset of the processor.
- *               example: AMD
- *             processor_id:
- *               type: string
- *               description: The ID of the processor.
- *               example: "6313edd7-5ad3-4014-930b-eb6e638be806"
- *         storageDetail:
- *           type: object
- *           properties:
- *             interface:
- *               type: string
- *               description: The interface of the storage.
- *               example: SATA III
- *             storage_id:
- *               type: string
- *               description: The ID of the storage.
- *               example: "386533d3-c19c-46bb-9cd1-cbcc2ac7f611"
- *         ramDetails:
- *           type: object
- *           properties:
- *             ram_type:
- *               type: string
- *               description: The type of RAM.
- *               example: DDR4-2133 MHz
- *             ram_id:
- *               type: string
- *               description: The ID of the RAM.
- *               example: "b1db9bd8-cc18-455e-b485-d7f5993709f3"
- *         processor_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         motherboard_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         case_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         gpu_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         ram_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         storage_brand_id:
- *           type: string
- *           example: "695d5492-7577-48d8-8742-7aa07681476e"
- *         purpose:
- *           type: string
- *           description: The purpose of this component GAMING OR OFFICE.
- *           example: GAMING || OFFICE || null
- *         price_range:
- *           type: integer
- *           description: The limit range of budget.
- *           example: 100000000
- */
 router.post('/api/pc-component/processor', productController.getProcessor);
 router.post('/api/pc-component/motherboard', productController.getMotherboard);
 router.post('/api/pc-component/case', productController.getCase);
@@ -934,1127 +719,180 @@ router.post(
 router.post('/api/pc-component/ram', productController.getRam);
 router.post('/api/pc-component/storage', productController.getStorage);
 //
-/**
- * @swagger
- * /api/pc-component/processor/{processor_id}:
- *   get:
- *     summary: Get processor by ID
- *     description: Retrieve information about a processor by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: processor_id
- *         required: true
- *         description: ID of the processor to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with processor information
- *       404:
- *         description: Processor with the specified ID not found
- *
- * /api/pc-component/motherboard/{motherboard_id}:
- *   get:
- *     summary: Get motherboard by ID
- *     description: Retrieve information about a motherboard by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: motherboard_id
- *         required: true
- *         description: ID of the motherboard to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with motherboard information
- *       404:
- *         description: Motherboard with the specified ID not found
- *
- * /api/pc-component/case/{case_id}:
- *   get:
- *     summary: Get case by ID
- *     description: Retrieve information about a case by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: case_id
- *         required: true
- *         description: ID of the case to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with case information
- *       404:
- *         description: Case with the specified ID not found
- *
- */
-/**
- * @swagger
- * /api/pc-component/graphics-card/{gpu_id}:
- *   get:
- *     summary: Get graphics card by ID
- *     description: Retrieve information about a graphics card by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: gpu_id
- *         required: true
- *         description: ID of the graphics card to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with graphics card information
- *       404:
- *         description: Graphics card with the specified ID not found
- */
 
-/**
- * @swagger
- * /api/pc-component/ram/{ram_id}:
- *   get:
- *     summary: Get RAM by ID
- *     description: Retrieve information about RAM by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: ram_id
- *         required: true
- *         description: ID of the RAM to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with RAM information
- *       404:
- *         description: RAM with the specified ID not found
- */
-
-/**
- * @swagger
- * /api/pc-component/storage/{storage_id}:
- *   get:
- *     summary: Get storage by ID
- *     description: Retrieve information about a storage device by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: storage_id
- *         required: true
- *         description: ID of the storage device to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with storage information
- *       404:
- *         description: Storage device with the specified ID not found
- */
-
-/**
- * @swagger
- * /api/pc-component/auto-gen/{auto_gen_id}:
- *   get:
- *     summary: Get auto-generated component by ID
- *     description: Retrieve information about an auto-generated component by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: auto_gen_id
- *         required: true
- *         description: ID of the auto-generated component to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with auto-generated component information
- *       404:
- *         description: Auto-generated component with the specified ID not found
- */
-/**
- * @swagger
- * /api/pc-component/case-cooler/{case_cooler_id}:
- *   get:
- *     summary: Get case cooler by ID
- *     description: Retrieve information about a case cooler by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: case_cooler_id
- *         required: true
- *         description: ID of the case cooler to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with case cooler information
- *       404:
- *         description: Case cooler with the specified ID not found
- */
-
-/**
- * @swagger
- * /api/pc-component/cpu-cooler/{cpu_cooler_id}:
- *   get:
- *     summary: Get CPU cooler by ID
- *     description: Retrieve information about a CPU cooler by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: cpu_cooler_id
- *         required: true
- *         description: ID of the CPU cooler to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with CPU cooler information
- *       404:
- *         description: CPU cooler with the specified ID not found
- */
-
-/**
- * @swagger
- * /api/pc-component/psu/{psu_id}:
- *   get:
- *     summary: Get power supply unit by ID
- *     description: Retrieve information about a power supply unit by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: psu_id
- *         required: true
- *         description: ID of the power supply unit to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with power supply unit information
- *       404:
- *         description: Power supply unit with the specified ID not found
- */
-
-/**
- * @swagger
- * /api/pc-component/monitor/{monitor_id}:
- *   get:
- *     summary: Get monitor by ID
- *     description: Retrieve information about a monitor by its ID.
- *     tags:
- *       - PC Component
- *     parameters:
- *       - in: path
- *         name: monitor_id
- *         required: true
- *         description: ID of the monitor to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response with monitor information
- *       404:
- *         description: Monitor with the specified ID not found
- */
+//
+router.get(
+  '/api/pc-component/processor',
+  productController.getProcessorSpecification,
+);
 router.get(
   '/api/pc-component/processor/:processor_id',
   productController.getProcessorById,
+);
+router.post(
+  '/api/pc-component/processor/:processor_id',
+  productController.upsertProcessorSpec,
+);
+router.delete(
+  '/api/pc-component/processor/:processor_id',
+  productController.deleteProcessorSpec,
+);
+
+//
+router.get(
+  '/api/pc-component/motherboard',
+  productController.getMotherboardSpecification,
 );
 router.get(
   '/api/pc-component/motherboard/:motherboard_id',
   productController.getMotherboardById,
 );
+
+router.post(
+  '/api/pc-component/motherboard/:motherboard_id',
+  productController.upsertMotherboard,
+);
+
+router.delete(
+  '/api/pc-component/motherboard/:motherboard_id',
+  productController.deleteMotherboard,
+);
+
+//
+router.get('/api/pc-component/case', productController.getCaseSpecification);
+
 router.get('/api/pc-component/case/:case_id', productController.getCaseById);
+
+router.post('/api/pc-component/case/:case_id', productController.upsertCase);
+
+router.delete('/api/pc-component/case/:case_id', productController.deleteCase);
+
+//
+router.get(
+  '/api/pc-component/graphics-card',
+  productController.getGraphicsCardSpecification,
+);
 router.get(
   '/api/pc-component/graphics-card/:gpu_id',
   productController.getGraphicsCardById,
 );
+
+router.post(
+  '/api/pc-component/graphics-card/:gpu_id',
+  productController.upsertGraphicsCard,
+);
+
+router.delete(
+  '/api/pc-component/graphics-card/:gpu_id',
+  productController.deleteGraphicsCard,
+);
+
+//
+
+router.get('/api/pc-component/ram', productController.getRamSpecification);
 router.get('/api/pc-component/ram/:ram_id', productController.getRamById);
+
+router.post('/api/pc-component/ram/:ram_id', productController.upsertRam);
+
+router.delete('/api/pc-component/ram/:ram_id', productController.deleteRam);
+
+//
+
+router.get(
+  '/api/pc-component/storage',
+  productController.getStorageSpecification,
+);
+
 router.get(
   '/api/pc-component/storage/:storage_id',
   productController.getStorageById,
 );
 
+router.post(
+  '/api/pc-component/storage/:storage_id',
+  productController.upsertStorage,
+);
+
+router.delete(
+  '/api/pc-component/storage/:storage_id',
+  productController.deleteStorage,
+);
+
+//
+router.get(
+  '/api/pc-component/case-cooler',
+  productController.getCaseCoolerSpecification,
+);
 router.get(
   '/api/pc-component/case-cooler/:case_cooler_id',
   productController.getCaseCoolerById,
 );
+
+router.post(
+  '/api/pc-component/case-cooler/:case_cooler_id',
+  productController.upsertCaseCooler,
+);
+
+router.delete(
+  '/api/pc-component/case-cooler/:case_cooler_id',
+  productController.deleteCaseCooler,
+);
+
+//
+
+router.get(
+  '/api/pc-component/cpu-cooler',
+  productController.getCpuCoolerSpecification,
+);
+
 router.get(
   '/api/pc-component/cpu-cooler/:cpu_cooler_id',
   productController.getCpuCoolerById,
+);
+
+router.post(
+  '/api/pc-component/cpu-cooler/:cpu_cooler_id',
+  productController.upsertCpuCooler,
+);
+
+router.delete(
+  '/api/pc-component/cpu-cooler/:cpu_cooler_id',
+  productController.deleteCpuCooler,
+);
+//
+
+router.get(
+  '/api/pc-component/psu',
+  productController.getPowerSupplySpecification,
 );
 router.get(
   '/api/pc-component/psu/:psu_id',
   productController.getPowerSupplyById,
 );
+router.post('/api/pc-component/psu/:psu_id', productController.upsertPsu);
+router.delete('/api/pc-component/psu/:psu_id', productController.deletePsu);
+
+//
+
+router.get(
+  '/api/pc-component/monitor',
+  productController.getMonitorSpecification,
+);
+
 router.get(
   '/api/pc-component/monitor/:monitor_id',
   productController.getMonitorById,
 );
-//
-/**
- * @swagger
- * /api/pc-component/processor/{processorId}:
- *   post:
- *     summary: Update processor specification
- *     description: Update the specification of a processor component.
- *     security:
- *       - BearerAuth: []
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: processorId
- *         required: true
- *         description: ID of the processor component to update.
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 6313edd7-5ad3-4014-930b-eb6e638be999
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 description: Type of the product specification.
- *               brand:
- *                 type: string
- *                 description: Brand of the processor.
- *               model:
- *                 type: string
- *                 description: Model of the processor.
- *               socket:
- *                 type: string
- *                 description: Socket type of the processor.
- *               micro_architecture:
- *                 type: string
- *                 description: Microarchitecture of the processor.
- *               core_quantity:
- *                 type: integer
- *                 description: Number of cores in the processor.
- *               threads_quantity:
- *                 type: integer
- *                 description: Number of threads in the processor.
- *               clock_speed:
- *                 type: string
- *                 description: Base clock speed of the processor.
- *               boost_speed_max:
- *                 type: string
- *                 description: Maximum boost clock speed of the processor.
- *               cache:
- *                 type: integer
- *                 description: Cache size of the processor in MB.
- *               memory_support:
- *                 type: string
- *                 description: Memory support specification for the processor.
- *               channel_architecture:
- *                 type: string
- *                 description: Memory channel architecture for the processor.
- *               power:
- *                 type: integer
- *                 description: Power consumption of the processor in watts.
- *               chipset:
- *                 type: string
- *                 description: Chipset compatibility of the processor.
- *           example:
- *             product_specification_type: PROCESSOR
- *             brand: Intel
- *             model: Intel Core i3-14100
- *             socket: LGA 1700
- *             micro_architecture: Raptor Lake Refresh
- *             core_quantity: 4
- *             threads_quantity: 8
- *             clock_speed: 3.50 GHz
- *             boost_speed_max: 4.00 GHz
- *             cache: 12
- *             memory_support: DDR4
- *             channel_architecture: Dual Channel
- *             power: 120
- *             chipset: Intel
- *     responses:
- *       '200':
- *         description: A successful response indicating the processor specification has been updated.
- *         content:
- *           application/json:
- *             example:
- *               message: Processor specification updated successfully.
- *       '400':
- *         description: Bad request, missing or invalid parameters.
- *         content:
- *           application/json:
- *             example:
- *               error: Bad request, missing or invalid parameters.
- *       '401':
- *         description: Unauthorized, missing or invalid authorization token.
- *         content:
- *           application/json:
- *             example:
- *               error: Unauthorized, missing or invalid authorization token.
- *       '500':
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             example:
- *               error: Internal server error.
- */
-/**
- * @swagger
- * /api/pc-component/motherboard/{motherboardId}:
- *   post:
- *     summary: Update motherboard specification by ID
- *     description: Update the motherboard specification with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: motherboardId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 5444e504-0569-4cae-8306-8a48daefb999
- *         description: ID of the motherboard to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 description: Type of product specification (e.g., MOTHERBOARD)
- *               chipset:
- *                 type: string
- *                 description: Chipset of the motherboard
- *               spu_socket:
- *                 type: string
- *                 description: Socket type of the motherboard
- *               usb_details:
- *                 type: string
- *                 description: USB details of the motherboard
- *               audio:
- *                 type: string
- *                 description: Audio details of the motherboard
- *               ethernet_controller:
- *                 type: string
- *                 description: Ethernet controller details of the motherboard
- *               wifi_antenna:
- *                 type: string
- *                 description: WiFi antenna details of the motherboard
- *               memory_slots:
- *                 type: string
- *                 description: Number of memory slots of the motherboard
- *               memory_supports:
- *                 type: string
- *                 description: Memory support details of the motherboard
- *               maximum_capacity:
- *                 type: string
- *                 description: Maximum memory capacity supported by the motherboard
- *               channel_architecture:
- *                 type: string
- *                 description: Channel architecture of the motherboard
- *               sata:
- *                 type: string
- *                 description: SATA details of the motherboard
- *               m2:
- *                 type: string
- *                 description: M.2 details of the motherboard
- *               raid_support:
- *                 type: string
- *                 description: RAID support details of the motherboard
- *               expansion_slots:
- *                 type: string
- *                 description: Expansion slot details of the motherboard
- *               air_cooling:
- *                 type: string
- *                 description: Air cooling details of the motherboard
- *               power_connectors:
- *                 type: string
- *                 description: Power connector details of the motherboard
- *               audio_internal:
- *                 type: string
- *                 description: Internal audio details of the motherboard
- *               rom:
- *                 type: string
- *                 description: ROM details of the motherboard
- *               audio_codec:
- *                 type: string
- *                 description: Audio codec details of the motherboard
- *               bluetooth:
- *                 type: string
- *                 description: Bluetooth version of the motherboard
- *               wifi:
- *                 type: string
- *                 description: WiFi version of the motherboard
- *               form_factor:
- *                 type: string
- *                 description: Form factor of the motherboard
- *               brand:
- *                 type: string
- *                 description: Brand of the motherboard
- *               processor_supports:
- *                 type: string
- *                 description: Processor support by motherboard
- *               ram_supports:
- *                 type: string
- *                 description: Ram support by motherboard
- *               gpu_interface:
- *                 type: string
- *                 description: Ram support by motherboard
- *               storage_interface:
- *                 type: string
- *                 description: Ram support by motherboard
- *           example:
- *             product_specification_type: "MOTHERBOARD"
- *             chipset: "TEST MOTHER BOARD"
- *             spu_socket: "TRX4"
- *             usb_details: "1 x USB 3.2 Gen 2x2 Type-C,6 x USB 3.1 / USB 3.2 Gen 2 Type-A,1 x USB 3.1 / USB 3.2 Gen 2 Type-C,4 x USB 3.1 / USB 3.2 Gen 1 Type-A"
- *             audio: "1 x S/PDIF,5 x 3.5 mm"
- *             ethernet_controller: "1 x Intel® 10GbE LAN chip (10 Gbit/5 Gbit/2.5 Gbit/1 Gbit/100 Mbit), supporting 2 RJ-45 ports"
- *             wifi_antenna: "2 x Connector"
- *             memory_slots: "8"
- *             memory_supports: "DDR4 2133-3200"
- *             maximum_capacity: "256 GB"
- *             channel_architecture: "Quad Channel"
- *             sata: "4 x SATA III"
- *             m2: "1 x PCIe 3.0 x4"
- *             raid_support: "RAID 0, 1, 10"
- *             expansion_slots: "2 x PCIe 4.0 x16"
- *             air_cooling: "2 x 4-Pin CPU,2 x 4-Pin System,1 x 2-Pin W_IN,1 x 2-Pin W_OUT,1 x 3-Pin W_FLOW"
- *             power_connectors: "1 x 6-Pin ATX,1 x 24-Pin Mainboard,2 x 8-Pin ATX,1 x 4-Pin Molex"
- *             audio_internal: "1 x Speaker"
- *             rom: "2 x 128 Mb"
- *             audio_codec: "Realtek® ALC4050H codec+Realtek® ALC1220-VB codec"
- *             bluetooth: "5.00"
- *             wifi: "Intel® Wi-Fi 6 AX200"
- *             form_factor: "ATX"
- *             brand: "GIGABYTE"
- *             processor_supports: "i3|12000-14999; i7|12000-14999; i5|12000-14999"
- *             ram_supports: "DDR4|2133-5000"
- *             gpu_interface: "PCIex4"
- *             storage_interface: "PCIex3"
- *     responses:
- *       '200':
- *         description: A successful response indicating the motherboard specification has been updated.
- *         content:
- *           application/json:
- *             example:
- *               message: Motherboard specification updated successfully
- *       '400':
- *         description: Bad request, missing or invalid parameters.
- *         content:
- *           application/json:
- *             example:
- *               error: Bad request, missing or invalid parameters.
- *       '401':
- *         description: Unauthorized, user not authenticated.
- *         content:
- *           application/json:
- *             example:
- *               error: Unauthorized, user not authenticated.
- *       '404':
- *         description: Motherboard specification not found.
- *         content:
- *           application/json:
- *             example:
- *               error: Motherboard specification not found.
- *       '500':
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             example:
- *               error: Internal server error
- */
 
-/**
- * @swagger
- * /api/pc-component/case/{caseId}:
- *   post:
- *     summary: Update case specification by ID
- *     description: Update the case specification with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: caseId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 24d408df-c423-4545-bdf0-41445adeb999
- *         description: ID of the case to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 description: Type of product specification (e.g., CASE)
- *               brand:
- *                 type: string
- *                 description: Brand of the case
- *               cabinet_type:
- *                 type: string
- *                 description: Type of cabinet
- *               side_panel_type:
- *                 type: string
- *                 description: Type of side panel
- *               color:
- *                 type: string
- *                 description: Color of the case
- *               motherboard_supports:
- *                 type: string
- *                 description: Motherboard support details
- *               internal_drive_size:
- *                 type: string
- *                 description: Internal drive size details
- *               gpu_length:
- *                 type: string
- *                 description: Maximum GPU length supported
- *               support_psu_size:
- *                 type: string
- *                 description: Supported PSU size
- *               front_panel:
- *                 type: string
- *                 description: Front panel details
- *               cpu_cooler_support_size:
- *                 type: string
- *                 description: CPU cooler support size
- *             example:
- *               product_specification_type: "TESST CASSE V@"
- *               brand: "Thermaltake CSAS"
- *               cabinet_type: "Full Tower"
- *               side_panel_type: "Tempered Glass"
- *               color: "BLACK"
- *               motherboard_supports: "E-ATX, ATX, Micro ATX, Mini ITX"
- *               internal_drive_size: "2 x 3.5\", 2 x 2.5\""
- *               gpu_length: "440 mm"
- *               support_psu_size: "ATX"
- *               front_panel: "1 x USB 3.2 Gen 1 Type-A"
- *               cpu_cooler_support_size: "175 mm"
- *     responses:
- *       '200':
- *         description: Case specification updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Success message
- *       '400':
- *         description: Bad request, missing or invalid parameters
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
- *       '401':
- *         description: Unauthorized, user not authenticated
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
- *       '404':
- *         description: Case specification not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: Error message
- */
-/**
- * @swagger
- * /api/pc-component/graphics-card/{gpu_id}:
- *   post:
- *     summary: Update graphics card specification by ID
- *     description: Update the graphics card specification with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: gpu_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 6313edd7-5ad3-4014-930b-eb6e638b9999
- *         description: ID of the graphics card to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 enum: [GRAPHICS_CARD]
- *                 example: GRAPHICS_CARD
- *               brand:
- *                 type: string
- *                 example: MSI
- *               chipset:
- *                 type: string
- *                 example: GeForce RTX 3050
- *               memory:
- *                 type: string
- *                 example: 8 GB (GDDR6)
- *               benchmark:
- *                 type: string
- *                 example: 39647.00
- *               max_power_consumption:
- *                 type: integer
- *                 example: 252
- *               base_clock_speed:
- *                 type: integer
- *                 example: 1552
- *               length:
- *                 type: string
- *                 example: 213.00
- *               cooler_type:
- *                 type: string
- *                 example: 2 x Fan
- *               interface_type:
- *                 type: string
- *                 example: PCIe 4.0 x 10
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-/**
- * @swagger
- * /api/pc-component/ram/{ram_id}:
- *   post:
- *     summary: Update RAM information by ID
- *     description: Update RAM information with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: ram_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 252d452b-5b6d-4a87-9213-b43f6cac9999
- *         description: ID of the RAM to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 enum: [RAM]
- *                 example: RAM
- *               brand:
- *                 type: string
- *                 example: TEAMGROUP
- *               warranty:
- *                 type: string
- *                 example: 3.00
- *               memory:
- *                 type: string
- *                 example: 32 GB (1 x 32 GB)
- *               ram_type:
- *                 type: string
- *                 example: DDR4-3200 MHz
- *               cas_latency:
- *                 type: string
- *                 example: CL16
- *               dimm_type:
- *                 type: string
- *                 example: 260-PIN
- *               voltage:
- *                 type: string
- *                 example: 1.5
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-/**
- * @swagger
- * /api/pc-component/storage/{storage_id}:
- *   post:
- *     summary: Update Storage information by ID
- *     description: Update Storage information with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: storage_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 252d452b-5b6d-4a87-9213-b43f6cac9999
- *         description: ID of the storage to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 enum: [STORAGE]
- *                 example: STORAGE
- *               brand:
- *                 type: string
- *                 example: Samsung
- *               model:
- *                 type: string
- *                 example: EVO 970
- *               type:
- *                 type: string
- *                 example: SSD
- *               interface_type:
- *                 type: string
- *                 example: PCIe 3.0 x4
- *               form_factor:
- *                 type: string
- *                 example: M.2-2280
- *               capacity:
- *                 type: string
- *                 example: 1 TB
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-/**
- * @swagger
- * /api/pc-component/case-cooler/{case_cooler_id}:
- *   post:
- *     summary: Update Case Cooler information by ID
- *     description: Update Case Cooler information with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: case_cooler_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: c892e071-3a9e-4344-bdb4-b5faac099999
- *         description: ID of the case cooler to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 enum: [CASE_COOLER]
- *                 example: CASE_COOLER
- *               brand:
- *                 type: string
- *                 example: ARCTIC
- *               model:
- *                 type: string
- *                 example: P12 PST
- *               airflow:
- *                 type: string
- *                 example: 56.30
- *               fan_rpm:
- *                 type: integer
- *                 example: 1800
- *               size:
- *                 type: string
- *                 example: 1203.00
- *               color:
- *                 type: string
- *                 example: Black
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-/**
- * @swagger
- * /api/pc-component/psu/{psu_id}:
- *   post:
- *     summary: Update PSU Information by ID
- *     description: Update PSU information with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: psu_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 71e81089-08a0-4fd9-a7d3-a05d4e989999
- *         description: ID of the PSU to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 example: TEST PSU V2
- *               brand:
- *                 type: string
- *                 example: Thermaltake
- *               model:
- *                 type: string
- *                 example: Toughpower PF1
- *               form_factor:
- *                 type: string
- *                 example: ATX
- *               power:
- *                 type: integer
- *                 example: 850
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-/**
- * @swagger
- * /api/pc-component/monitor/{monitor_id}:
- *   post:
- *     summary: Update Monitor Information by ID
- *     description: Update Monitor information with the specified ID.
- *     tags:
- *       - PC COMPONENT SECTION
- *     parameters:
- *       - in: path
- *         name: monitor_id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *           example: 136f2f7f-2bf5-463a-8839-bc1135b9c999
- *         description: ID of the monitor to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               product_specification_type:
- *                 type: string
- *                 example: TESST MONITOR SPEC
- *               brand:
- *                 type: string
- *                 example: DELL
- *               model:
- *                 type: string
- *                 example: SE2719H
- *               screen_size:
- *                 type: string
- *                 example: 27.00
- *               resolution:
- *                 type: string
- *                 example: 1920 x 1080
- *               response_time:
- *                 type: string
- *                 example: 5.00
- *               aspect_ratio:
- *                 type: string
- *                 example: 16:9
- *               refresh_rate:
- *                 type: string
- *                 example: 60.00
- *               panel_type:
- *                 type: string
- *                 example: IPS
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: Bad Request
- *       '401':
- *         description: Unauthorized
- *       '404':
- *         description: Not Found
- *       '500':
- *         description: Internal Server Error
- */
-router.post(
-  '/api/pc-component/processor/:processor_id',
-  productController.upsertProcessorSpec,
-);
-router.post(
-  '/api/pc-component/motherboard/:motherboard_id',
-  productController.upsertMotherboard,
-);
-router.post('/api/pc-component/case/:case_id', productController.upsertCase);
-router.post(
-  '/api/pc-component/graphics-card/:gpu_id',
-  productController.upsertGraphicsCard,
-);
-router.post('/api/pc-component/ram/:ram_id', productController.upsertRam);
-router.post(
-  '/api/pc-component/storage/:storage_id',
-  productController.upsertStorage,
-);
-router.post(
-  '/api/pc-component/case-cooler/:case_cooler_id',
-  productController.upsertCaseCooler,
-);
-router.post(
-  '/api/pc-component/cpu-cooler/:cpu_cooler_id',
-  productController.upsertCpuCooler,
-);
-router.post('/api/pc-component/psu/:psu_id', productController.upsertPsu);
 router.post(
   '/api/pc-component/monitor/:monitor_id',
   productController.upsertMonitor,
 );
-//
-/**
- * @swagger
- * /api/pc-component/case-cooler:
- *   get:
- *     summary: Get case cooler information
- *     description: Retrieve information about case coolers for PC builds.
- *     tags:
- *       - PC Component
- *     responses:
- *       200:
- *         description: Successful response with case cooler information
- *       404:
- *         description: Case cooler information not found
- */
-/**
- * @swagger
- * /api/pc-component/cpu-cooler:
- *   get:
- *     summary: Get CPU cooler information
- *     description: Retrieve information about CPU coolers for PC Components.
- *     tags:
- *       - PC Component
- *     responses:
- *       200:
- *         description: Successful response with CPU cooler information
- *       404:
- *         description: CPU cooler information not found
- */
-/**
- * @swagger
- * /api/pc-component/psu:
- *   get:
- *     summary: Get power supply unit (PSU) information
- *     description: Retrieve information about power supply units (PSUs) for PC Components.
- *     tags:
- *       - PC Component
- *     responses:
- *       200:
- *         description: Successful response with power supply unit information
- *       404:
- *         description: Power supply unit information not found
- */
-/**
- * @swagger
- * /api/pc-component/monitor:
- *   get:
- *     summary: Get monitor information
- *     description: Retrieve information about monitors for PC Components.
- *     tags:
- *       - PC Component
- *     responses:
- *       200:
- *         description: Successful response with monitor information
- *       404:
- *         description: Monitor information not found
- */
 
-router.get('/api/pc-component/case-cooler', productController.getCaseCooler);
-router.get('/api/pc-component/cpu-cooler', productController.getCpuCooler);
-router.get('/api/pc-component/psu', productController.getPowerSupply);
-router.get('/api/pc-component/monitor', productController.getMonitor);
+router.delete(
+  '/api/pc-component/monitor/:monitor_id',
+  productController.deleteMonitor,
+);
 
 //CATEGORY SECTION
 /**
@@ -5477,4 +4315,971 @@ router.delete(
  *         description: Internal server error
  */
 
+// VERSION 2
+/**
+ * @swagger
+ * /api/pc-component/processor:
+ *   get:
+ *     summary: Retrieve all processors
+ *     description: Retrieve a list of all PC component processors.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component processors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: DDR4
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/processor/{processor_id}:
+ *   get:
+ *     summary: Retrieve a processor by ID
+ *     description: Retrieve details of a PC component processor by ID.
+ *     parameters:
+ *       - in: path
+ *         name: processor_id
+ *         required: true
+ *         description: ID of the processor to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Processor details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: Processor not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a processor
+ *     description: Update details of a PC component processor by ID.
+ *     parameters:
+ *       - in: path
+ *         name: processor_id
+ *         required: true
+ *         description: ID of the processor to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 description: Updated processor model
+ *     responses:
+ *       '200':
+ *         description: Processor updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a processor
+ *     description: Delete a PC component processor by ID.
+ *     parameters:
+ *       - in: path
+ *         name: processor_id
+ *         required: true
+ *         description: ID of the processor to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Processor deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/motherboard:
+ *   get:
+ *     summary: Retrieve all motherboards
+ *     description: Retrieve a list of all PC component motherboards.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component motherboards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: Motherboard1, Motherboard2
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/motherboard/{motherboard_id}:
+ *   get:
+ *     summary: Retrieve a motherboard by ID
+ *     description: Retrieve details of a PC component motherboard by ID.
+ *     parameters:
+ *       - in: path
+ *         name: motherboard_id
+ *         required: true
+ *         description: ID of the motherboard to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Motherboard details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: Motherboard not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a motherboard
+ *     description: Update details of a PC component motherboard by ID.
+ *     parameters:
+ *       - in: path
+ *         name: motherboard_id
+ *         required: true
+ *         description: ID of the motherboard to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cpu_socket:
+ *                 type: string
+ *               usb_details:
+ *                 type: string
+ *               audio:
+ *                 type: string
+ *               memory_slots:
+ *                 type: string
+ *               sata:
+ *                 type: string
+ *               m2:
+ *                 type: string
+ *               power_connectors:
+ *                 type: string
+ *               wifi:
+ *                 type: string
+ *               form_factor:
+ *                 type: string
+ *               gpu_interface:
+ *                 type: string
+ *               storage_interface:
+ *                 type: string
+ *               chipset:
+ *                 type: string
+ *               power:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Motherboard updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a motherboard
+ *     description: Delete a PC component motherboard by ID.
+ *     parameters:
+ *       - in: path
+ *         name: motherboard_id
+ *         required: true
+ *         description: ID of the motherboard to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Motherboard deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/case:
+ *   get:
+ *     summary: Retrieve all PC component cases
+ *     description: Retrieve a list of all PC component cases.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component cases
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: Case1, Case2
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/case/{case_id}:
+ *   get:
+ *     summary: Retrieve a PC component case by ID
+ *     description: Retrieve details of a PC component case by ID.
+ *     parameters:
+ *       - in: path
+ *         name: case_id
+ *         required: true
+ *         description: ID of the PC component case to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: PC component case details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: PC component case not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a PC component case
+ *     description: Update details of a PC component case by ID.
+ *     parameters:
+ *       - in: path
+ *         name: case_id
+ *         required: true
+ *         description: ID of the PC component case to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cabinet_type:
+ *                 type: string
+ *               side_panel_type:
+ *                 type: string
+ *               internal_drive_size:
+ *                 type: string
+ *               front_panel:
+ *                 type: string
+ *               cpu_cooler_support_size:
+ *                 type: number
+ *               case_cooler_support_size:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: PC component case updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a PC component case
+ *     description: Delete a PC component case by ID.
+ *     parameters:
+ *       - in: path
+ *         name: case_id
+ *         required: true
+ *         description: ID of the PC component case to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: PC component case deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/pc-component/graphics-card:
+ *   get:
+ *     summary: Retrieve all graphics cards
+ *     description: Retrieve a list of all PC component graphics cards.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component graphics cards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: GraphicsCard1, GraphicsCard2
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/graphics-card/{gpu_id}:
+ *   get:
+ *     summary: Retrieve a graphics card by ID
+ *     description: Retrieve details of a PC component graphics card by ID.
+ *     parameters:
+ *       - in: path
+ *         name: gpu_id
+ *         required: true
+ *         description: ID of the graphics card to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Graphics card details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: Graphics card not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a graphics card
+ *     description: Update details of a PC component graphics card by ID.
+ *     parameters:
+ *       - in: path
+ *         name: gpu_id
+ *         required: true
+ *         description: ID of the graphics card to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               chipset:
+ *                 type: number
+ *               memory:
+ *                 type: number
+ *               max_power_consumption:
+ *                 type: number
+ *               base_clock_speed:
+ *                 type: number
+ *               length:
+ *                 type: string
+ *               cooler_type:
+ *                 type: string
+ *               interface:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: Graphics card updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a graphics card
+ *     description: Delete a PC component graphics card by ID.
+ *     parameters:
+ *       - in: path
+ *         name: gpu_id
+ *         required: true
+ *         description: ID of the graphics card to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Graphics card deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/ram:
+ *   get:
+ *     summary: Retrieve all RAM components
+ *     description: Retrieve a list of all PC component RAM modules.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component RAM modules
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: RAM1, RAM2
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/ram/{ram_id}:
+ *   get:
+ *     summary: Retrieve a RAM module by ID
+ *     description: Retrieve details of a PC component RAM module by ID.
+ *     parameters:
+ *       - in: path
+ *         name: ram_id
+ *         required: true
+ *         description: ID of the RAM module to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: RAM module details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: RAM module not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a RAM module
+ *     description: Update details of a PC component RAM module by ID.
+ *     parameters:
+ *       - in: path
+ *         name: ram_id
+ *         required: true
+ *         description: ID of the RAM module to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               memory:
+ *                 type: number
+ *               ram_type:
+ *                 type: number
+ *               cas_latency:
+ *                 type: string
+ *               dimm_type:
+ *                 type: string
+ *               voltage:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: RAM module updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a RAM module
+ *     description: Delete a PC component RAM module by ID.
+ *     parameters:
+ *       - in: path
+ *         name: ram_id
+ *         required: true
+ *         description: ID of the RAM module to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: RAM module deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/storage:
+ *   get:
+ *     summary: Retrieve all storage components
+ *     description: Retrieve a list of all PC component storage devices.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component storage devices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: SSD1, HDD2
+ *       '500':
+ *         description: Internal server error
+ *
+ *
+ * /api/pc-component/storage/{storage_id}:
+ *   get:
+ *     summary: Retrieve a storage device by ID
+ *     description: Retrieve details of a PC component storage device by ID.
+ *     parameters:
+ *       - in: path
+ *         name: storage_id
+ *         required: true
+ *         description: ID of the storage device to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Storage device details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       '404':
+ *         description: Storage device not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Update a storage device
+ *     description: Update details of a PC component storage device by ID.
+ *     parameters:
+ *       - in: path
+ *         name: storage_id
+ *         required: true
+ *         description: ID of the storage device to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               model:
+ *                 type: string
+ *               type:
+ *                 type: number
+ *               interface:
+ *                 type: number
+ *               form_factor:
+ *                 type: string
+ *               capacity:
+ *                 type: number
+ *               voltage:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: Storage device updated successfully
+ *       '400':
+ *         description: Bad request - invalid input
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a storage device
+ *     description: Delete a PC component storage device by ID.
+ *     parameters:
+ *       - in: path
+ *         name: storage_id
+ *         required: true
+ *         description: ID of the storage device to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Storage device deleted successfully
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/case-cooler:
+ *   get:
+ *     summary: Retrieve all PC component case coolers
+ *     description: Retrieve a list of all PC component case cooler devices.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component case cooler devices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: ["P12 PST", "P8 PST"]
+ *       '500':
+ *         description: Internal server error
+ *
+ *   /api/pc-component/case-cooler/{case_cooler_id}:
+ *     get:
+ *       summary: Retrieve a case cooler by ID
+ *       description: Retrieve details of a PC component case cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: case_cooler_id
+ *           required: true
+ *           description: ID of the case cooler device to retrieve
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '200':
+ *           description: Case cooler details retrieved successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *         '404':
+ *           description: Case cooler not found
+ *         '500':
+ *           description: Internal server error
+ *
+ *     post:
+ *       summary: Update a case cooler
+ *       description: Update details of a PC component case cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: case_cooler_id
+ *           required: true
+ *           description: ID of the case cooler device to update
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 model:
+ *                   type: string
+ *                 airflow:
+ *                   type: number
+ *                 fan_rpm:
+ *                   type: number
+ *                 size:
+ *                   type: number
+ *                 voltage:
+ *                   type: number
+ *       responses:
+ *         '200':
+ *           description: Case cooler updated successfully
+ *         '400':
+ *           description: Bad request - invalid input
+ *         '500':
+ *           description: Internal server error
+ *
+ *     delete:
+ *       summary: Delete a case cooler
+ *       description: Delete a PC component case cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: case_cooler_id
+ *           required: true
+ *           description: ID of the case cooler device to delete
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '204':
+ *           description: Case cooler deleted successfully
+ *         '500':
+ *           description: Internal server error
+ */
+/**
+ * @swagger
+ * /api/pc-component/cpu-cooler:
+ *   get:
+ *     summary: Retrieve all PC component CPU coolers
+ *     description: Retrieve a list of all PC component CPU cooler devices.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component CPU cooler devices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: ["Hyper 212 EVO", "Noctua NH-D15"]
+ *       '500':
+ *         description: Internal server error
+ *
+ *   /api/pc-component/cpu-cooler/{cpu_cooler_id}:
+ *     get:
+ *       summary: Retrieve a CPU cooler by ID
+ *       description: Retrieve details of a PC component CPU cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: cpu_cooler_id
+ *           required: true
+ *           description: ID of the CPU cooler device to retrieve
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '200':
+ *           description: CPU cooler details retrieved successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *         '404':
+ *           description: CPU cooler not found
+ *         '500':
+ *           description: Internal server error
+ *
+ *     post:
+ *       summary: Update a CPU cooler
+ *       description: Update details of a PC component CPU cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: cpu_cooler_id
+ *           required: true
+ *           description: ID of the CPU cooler device to update
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 model:
+ *                   type: string
+ *                 cpu_cooler:
+ *                   type: string
+ *                 fan_rpm:
+ *                   type: number
+ *                 noise_level:
+ *                   type: string
+ *                 fan_number:
+ *                   type: number
+ *                 cpu_cooler_size:
+ *                   type: number
+ *                 fan_cfm:
+ *                   type: number
+ *                 voltage:
+ *                   type: number
+ *       responses:
+ *         '200':
+ *           description: CPU cooler updated successfully
+ *         '400':
+ *           description: Bad request - invalid input
+ *         '500':
+ *           description: Internal server error
+ *
+ *     delete:
+ *       summary: Delete a CPU cooler
+ *       description: Delete a PC component CPU cooler device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: cpu_cooler_id
+ *           required: true
+ *           description: ID of the CPU cooler device to delete
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '204':
+ *           description: CPU cooler deleted successfully
+ *         '500':
+ *           description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/psu:
+ *   get:
+ *     summary: Retrieve all PC component PSUs
+ *     description: Retrieve a list of all PC component PSU devices.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component PSU devices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: ["Toughpower PF1 TESST", "Corsair RM850x"]
+ *       '500':
+ *         description: Internal server error
+ *
+ *   /api/pc-component/psu/{psu_id}:
+ *     get:
+ *       summary: Retrieve a PSU by ID
+ *       description: Retrieve details of a PC component PSU device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: psu_id
+ *           required: true
+ *           description: ID of the PSU device to retrieve
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '200':
+ *           description: PSU details retrieved successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *         '404':
+ *           description: PSU not found
+ *         '500':
+ *           description: Internal server error
+ *
+ *     post:
+ *       summary: Update a PSU
+ *       description: Update details of a PC component PSU device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: psu_id
+ *           required: true
+ *           description: ID of the PSU device to update
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 model:
+ *                   type: string
+ *                 power:
+ *                   type: number
+ *       responses:
+ *         '200':
+ *           description: PSU updated successfully
+ *         '400':
+ *           description: Bad request - invalid input
+ *         '500':
+ *           description: Internal server error
+ *
+ *     delete:
+ *       summary: Delete a PSU
+ *       description: Delete a PC component PSU device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: psu_id
+ *           required: true
+ *           description: ID of the PSU device to delete
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '204':
+ *           description: PSU deleted successfully
+ *         '500':
+ *           description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/pc-component/monitor:
+ *   get:
+ *     summary: Retrieve all PC component monitors
+ *     description: Retrieve a list of all PC component monitor devices.
+ *     responses:
+ *       '200':
+ *         description: A list of PC component monitor devices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: ["SE2719H", "Dell U2718Q"]
+ *       '500':
+ *         description: Internal server error
+ *
+ *   /api/pc-component/monitor/{monitor_id}:
+ *     get:
+ *       summary: Retrieve a monitor by ID
+ *       description: Retrieve details of a PC component monitor device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: monitor_id
+ *           required: true
+ *           description: ID of the monitor device to retrieve
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '200':
+ *           description: Monitor details retrieved successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *         '404':
+ *           description: Monitor not found
+ *         '500':
+ *           description: Internal server error
+ *
+ *     post:
+ *       summary: Update a monitor
+ *       description: Update details of a PC component monitor device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: monitor_id
+ *           required: true
+ *           description: ID of the monitor device to update
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 model:
+ *                   type: string
+ *                 screen_size:
+ *                   type: number
+ *                 resolution:
+ *                   type: string
+ *                 response_time:
+ *                   type: number
+ *                 aspect_ratio:
+ *                   type: string
+ *                 refresh_rate:
+ *                   type: number
+ *                 panel_type:
+ *                   type: string
+ *                 voltage:
+ *                   type: number
+ *       responses:
+ *         '200':
+ *           description: Monitor updated successfully
+ *         '400':
+ *           description: Bad request - invalid input
+ *         '500':
+ *           description: Internal server error
+ *
+ *     delete:
+ *       summary: Delete a monitor
+ *       description: Delete a PC component monitor device by ID.
+ *       parameters:
+ *         - in: path
+ *           name: monitor_id
+ *           required: true
+ *           description: ID of the monitor device to delete
+ *           schema:
+ *             type: string
+ *       responses:
+ *         '204':
+ *           description: Monitor deleted successfully
+ *         '500':
+ *           description: Internal server error
+ */
 export default router;

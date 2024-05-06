@@ -87,25 +87,57 @@ export async function getMonitorById(monitorId) {
   const [result] = await productDAL.getMonitorById(monitorId);
   return result;
 }
+
+export async function getMonitorSpecification() {
+  const result = await productDAL.getMonitorSpecification();
+  return result;
+}
 export async function getPowerSupplyById(psuId) {
   const [result] = await productDAL.getPowerSupplyById(psuId);
+  return result;
+}
+
+export async function getPowerSupplySpecification() {
+  const result = await productDAL.getPowerSupplySpecification();
   return result;
 }
 export async function getCpuCoolerById(cpuCoolerId) {
   const [result] = await productDAL.getCpuCoolerById(cpuCoolerId);
   return result;
 }
+
+export async function getCpuCoolerSpecification() {
+  const result = await productDAL.getCpuCoolerSpecification();
+  return result;
+}
 export async function getCaseCoolerById(caseCoolerId) {
   const [result] = await productDAL.getCaseCoolerById(caseCoolerId);
   return result;
 }
+
+export async function getCaseCoolerSpecification() {
+  const result = await productDAL.getCaseCoolerSpecification();
+  return result;
+}
 //
+export async function getProcessorSpecification() {
+  const result = await productDAL.getProcessorSpecification();
+  return result;
+}
 export async function getProcessorById(processorId) {
   const [result] = await productDAL.getProcessorById(processorId);
   return result;
 }
+export async function getMotherboardSpecification() {
+  const result = await productDAL.getMotherboardSpecification();
+  return result;
+}
 export async function getMotherboardById(motherBoardId) {
   const [result] = await productDAL.getMotherboardById(motherBoardId);
+  return result;
+}
+export async function getCaseSpecification() {
+  const result = await productDAL.getCaseSpecification();
   return result;
 }
 export async function getCaseById(caseId) {
@@ -116,14 +148,28 @@ export async function getGraphicsCardById(gpuId) {
   const [result] = await productDAL.getGraphicsCardById(gpuId);
   return result;
 }
+export async function getGraphicsCardSpecification() {
+  const result = await productDAL.getGraphicsCardSpecification();
+  return result;
+}
 
 export async function getRamById(ramId) {
   const [result] = await productDAL.getRamById(ramId);
   return result;
 }
 
+export async function getRamSpecification() {
+  const result = await productDAL.getRamSpecification();
+  return result;
+}
+
 export async function getStorageById(storageId) {
   const [result] = await productDAL.getStorageById(storageId);
+  return result;
+}
+
+export async function getStorageSpecification() {
+  const result = await productDAL.getStorageSpecification();
   return result;
 }
 
@@ -181,76 +227,19 @@ export async function getStorage(dataObj) {
 export async function upsertProcessorSpec(processorId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = processorId;
-  const brand = dataObj?.brand;
-  let model = '';
-  let rate = '';
-  if (brand === 'Intel') {
-    model = commonFunction.getIntelModel(dataObj.model);
-    rate = commonFunction.getIntelRate(dataObj.model);
-  } else {
-    model = commonFunction.getAmdModel(dataObj.model);
-    rate = commonFunction.getAmdRate(dataObj.model);
-  }
-
-  const [processorModel] = await productDAL.getProcessorMode(model);
-  dataObj.model = processorModel.id;
-  dataObj.model_number = rate;
-  // const ramType = commonFunction.getRamModel(dataObj.memory_support);
-  const [ramDB] = await productDAL.getRamType(
-    dataObj.memory_support.toUpperCase(),
-  );
-  dataObj.memory_support = ramDB.id;
-
-  // await productDAL.upsertProcessorSpec(dataObj);
+  await productDAL.upsertProcessorSpec(dataObj);
+}
+export async function deleteProcessorSpec(processorId) {
+  await productDAL.deleteProcessorSpec(processorId);
 }
 
 export async function upsertMotherboard(motherboardId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = motherboardId;
-  const [formFactor] = await productDAL.getFormFactor(dataObj.form_factor);
-  dataObj.form_factor = formFactor.id || 1;
-  const gpuInterfaceType = dataObj.gpu_interface.split('x')[0];
-  const [gpuInterface] = await productDAL.getGpuInterface(
-    gpuInterfaceType,
-    commonFunction.getGpuVersion(dataObj.gpu_interface),
-  );
-  dataObj.gpu_interface = gpuInterface.id || 1;
-  const [storageInterface] = await productDAL.getStorageInterface(
-    dataObj.storage_interface,
-  );
-  dataObj.storage_interface = storageInterface?.id || 1;
-  const ramSupport = dataObj.ram_supports.split(';');
-  for (const ram of ramSupport) {
-    const ramType = ram.split('|')[0].trim();
-    const ramRate = ram.split('|')[1].trim();
-    const ramMinRate = ramRate.split('-')[0].trim();
-    const ramMaxRate = ramRate.split('-')[1].trim();
-    const [ramTypeObj] = await productDAL.getRamType(ramType);
-    await productDAL.upsertMotherboardSupportRam(
-      motherboardId,
-      Number(ramTypeObj.id) || 1,
-      Number(ramMinRate),
-      Number(ramMaxRate),
-    );
-  }
-  const processorSupport = dataObj?.processor_supports.split(';') || [];
-  for (const cpu of processorSupport) {
-    const cpuType = cpu.split('|')[0].trim();
-    const cpuRate = cpu.split('|')[1].trim();
-    const cpuMinRate = cpuRate.split('-')[0].trim();
-    const cpuMaxRate = cpuRate.split('-')[1].trim();
-    const [cpuTypeObject] = await productDAL.getCpuType(
-      cpuType.toLowerCase().trim(),
-    );
-    console.log(`~~~>`, cpuTypeObject);
-    await productDAL.upsertMotherboardSupportProcessor(
-      motherboardId,
-      Number(cpuTypeObject.id) || 1,
-      Number(cpuMinRate),
-      Number(cpuMaxRate),
-    );
-  }
   await productDAL.upsertMotherboard(dataObj);
+}
+export async function deleteMotherboard(id) {
+  await productDAL.deleteMotherboard(id);
 }
 
 export async function upsertCase(caseId, dataObj) {
@@ -259,23 +248,27 @@ export async function upsertCase(caseId, dataObj) {
   await productDAL.upsertCase(dataObj);
 }
 
+export async function deleteCase(id) {
+  await productDAL.deleteCase(id);
+}
+
 export async function upsertGraphicsCard(gpuId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = gpuId;
-
   await productDAL.upsertGraphicsCard(dataObj);
+}
+
+export async function deleteGraphicsCard(id) {
+  await productDAL.deleteGraphicsCard(id);
 }
 
 export async function upsertRam(ramId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = ramId;
-
-  const ramType = commonFunction.getRamModel(dataObj.ram_type);
-  const ramRate = commonFunction.getRamRate(dataObj.ram_type);
-  const [ram] = await productDAL.getRamType(ramType.toUpperCase());
-  dataObj.ram_type = ram.id;
-  dataObj.ram_speed = Number(ramRate) || 3500;
   await productDAL.upsertRam(dataObj);
+}
+export async function deleteRam(id) {
+  await productDAL.deleteRam(id);
 }
 
 export async function upsertStorage(storageId, dataObj) {
@@ -283,10 +276,19 @@ export async function upsertStorage(storageId, dataObj) {
   dataObj.product_id = storageId;
   await productDAL.upsertStorage(dataObj);
 }
+
+export async function deleteStorage(id) {
+  await productDAL.deleteStorage(id);
+}
+
 export async function upsertCaseCooler(caseCoolerId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = caseCoolerId;
   await productDAL.upsertCaseCooler(dataObj);
+}
+
+export async function deleteCaseCooler(id) {
+  await productDAL.deleteCaseCooler(id);
 }
 
 export async function upsertCpuCooler(cpuCoolerId, dataObj) {
@@ -295,16 +297,26 @@ export async function upsertCpuCooler(cpuCoolerId, dataObj) {
   await productDAL.upsertCpuCooler(dataObj);
 }
 
+export async function deleteCpuCooler(id) {
+  await productDAL.deleteCpuCooler(id);
+}
+
 export async function upsertPsu(psuId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = psuId;
-  const [formFactor] = await productDAL.getFormFactor(dataObj.form_factor);
-  dataObj.form_factor = formFactor.id || 1;
   await productDAL.upsertPsu(dataObj);
+}
+export async function deletePsu(id) {
+  await productDAL.deletePsu(id);
 }
 
 export async function upsertMonitor(monitorId, dataObj) {
   dataObj.specification_id = uuidv4();
   dataObj.product_id = monitorId;
+  console.log(dataObj);
   await productDAL.upsertMonitor(dataObj);
+}
+
+export async function deleteMonitor(id) {
+  await productDAL.deleteMonitor(id);
 }

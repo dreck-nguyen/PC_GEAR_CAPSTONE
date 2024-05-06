@@ -1,7 +1,17 @@
 import {
   Product,
   ProductGallery,
+  ProcessorSpecification,
+  MotherboardSpecification,
   SequelizeInstance,
+  CaseSpecification,
+  GpuSpecification,
+  RamSpecification,
+  StorageSpecification,
+  CaseCoolerSpecification,
+  CpuCoolerSpecification,
+  PsuSpecification,
+  MonitorSpecification,
 } from '../utility/DbHelper.js';
 import * as commonFunction from '../Common/CommonFunction.js';
 
@@ -491,27 +501,20 @@ GROUP BY
 
 export async function getMonitorById(monitorId) {
   const sqlQuery = `
-SELECT 
-p.product_id,
-p."name",
-p.description,
-TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-p.discount,
-p.sold,
-c."name" AS category_name,
-pb.product_brand_name AS brand_name,
-ARRAY_AGG(pg.image) AS image_links,
-pb.product_brand_id,
-ms.*
-FROM 
-product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN monitor_specification ms on p.product_id = ms.product_id
-WHERE P.product_id = '${monitorId}'
-GROUP BY 
-p.product_id, c.category_id, pb.product_brand_id, ms.product_id ,ms.specification_id
+select * from monitor_specification ms where product_id = :monitorId
+`;
+
+  const monitorList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { monitorId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return monitorList;
+}
+export async function getMonitorSpecification() {
+  const sqlQuery = `
+select * from monitor_specification ms 
 `;
 
   const monitorList = await SequelizeInstance.query(sqlQuery, {
@@ -524,27 +527,21 @@ p.product_id, c.category_id, pb.product_brand_id, ms.product_id ,ms.specificatio
 
 export async function getPowerSupplyById(psuId) {
   const sqlQuery = `
-SELECT 
-  p.product_id,
-  p."name",
-  p.description,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  pss.*
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN power_supply_specification pss on p.product_id = pss.product_id
-WHERE p.product_id = '${psuId}'
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, pss.product_id, pss.specification_id
+  select * from power_supply_specification pss where product_id =:psuId
+`;
+
+  const powerSupplyList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { psuId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return powerSupplyList;
+}
+
+export async function getPowerSupplySpecification() {
+  const sqlQuery = `
+  select * from power_supply_specification pss 
 `;
 
   const powerSupplyList = await SequelizeInstance.query(sqlQuery, {
@@ -557,27 +554,21 @@ GROUP BY
 
 export async function getCpuCoolerById(cpuCoolerId) {
   const sqlQuery = `
-SELECT 
-  p.product_id,
-  p."name",
-  p.description,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  cs.*
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN cooler_specification cs  on p.product_id = cs.product_id 
-WHERE p.product_id = '${cpuCoolerId}'
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+select * from cooler_specification cs where cs.product_id = :cpuCoolerId
+`;
+
+  const cpuCoolerList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { cpuCoolerId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return cpuCoolerList;
+}
+
+export async function getCpuCoolerSpecification() {
+  const sqlQuery = `
+select * from cooler_specification cs 
 `;
 
   const cpuCoolerList = await SequelizeInstance.query(sqlQuery, {
@@ -590,27 +581,21 @@ GROUP BY
 
 export async function getCaseCoolerById(caseCoolerId) {
   const sqlQuery = `
-SELECT 
-  p.product_id,
-  p."name",
-  p.description,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  pb.product_brand_id,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  ccs.*
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN case_cooler_specification ccs  on p.product_id = ccs.product_id 
-WHERE p.product_id = '${caseCoolerId}'
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ccs.product_id, ccs.specification_id
+select * from case_cooler_specification ccs where product_id =:caseCoolerId
+`;
+
+  const caseCoolerList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { caseCoolerId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return caseCoolerList;
+}
+
+export async function getCaseCoolerSpecification() {
+  const sqlQuery = `
+  select * from case_cooler_specification ccs 
 `;
 
   const caseCoolerList = await SequelizeInstance.query(sqlQuery, {
@@ -621,9 +606,30 @@ GROUP BY
   return caseCoolerList;
 }
 
-export async function getProcessorById(processorId) {
+export async function getProcessorSpecification() {
   const sqlQuery = `
-
+select
+  specification_id
+  , product_id
+  , pm.model
+  , micro_architecture
+  , clock_speed
+  , boost_speed_max
+  , "cache"
+  , memory_support
+  , power
+  , pc.*
+from
+  public.processor_specification ps
+inner join (
+select pc.*, pc.processor_chipset || '-' || ps.socket as label  from processor_chipset pc
+inner join processor_socket ps 
+on pc.processor_socket = ps.id 
+)
+pc 
+on pc.id  = ps.chipset 
+inner join proccessor_model pm 
+on pm.id = ps.model 
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -634,9 +640,71 @@ export async function getProcessorById(processorId) {
   return processorList;
 }
 
-export async function getMotherboardById(motherBoardId) {
+export async function getProcessorById(processorId) {
   const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , pm.model
+  , micro_architecture
+  , clock_speed
+  , boost_speed_max
+  , "cache"
+  , memory_support
+  , power
+  , pc.*
+from
+  public.processor_specification ps
+inner join (
+select pc.*, pc.processor_chipset || '-' || ps.socket as label  from processor_chipset pc
+inner join processor_socket ps 
+on pc.processor_socket = ps.id 
+)
+pc 
+on pc.id  = ps.chipset 
+inner join proccessor_model pm 
+on pm.id = ps.model 
+where ps.product_id = :processorId
 
+`;
+  const proccessorModel = await SequelizeInstance.query(sqlQuery, {
+    replacements: { processorId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return proccessorModel;
+}
+
+export async function getMotherboardSpecification() {
+  const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , ps.socket as cpu_socket
+  , usb_details
+  , audio
+  , memory_slots
+  , sata
+  , m2
+  , power_connectors
+  , wifi
+  , ff.form_factor
+  , gi.interface_type  as gpu_interface
+  , si.storage_interface as storage_interface
+  , mc.chipset
+from
+  public.motherboard_specification ms
+inner join processor_socket ps
+on ms.cpu_socket = ps.id
+inner join form_factor ff 
+on ff.id = ms.form_factor
+inner join graphics_interface gi
+on gi.id = ms.gpu_interface
+inner join storage_interface si 
+on si.id = ms.storage_interface
+inner join motherboard_chipset mc 
+on mc.id = ms.chipset 
 `;
 
   const motherBoardList = await SequelizeInstance.query(sqlQuery, {
@@ -647,29 +715,50 @@ export async function getMotherboardById(motherBoardId) {
   return motherBoardList;
 }
 
-export async function getCaseById(caseId) {
+export async function getMotherboardById(motherBoardId) {
   const sqlQuery = `
-SELECT 
-  p.product_id,
-  p."name",
-  p.description,
-  p.product_brand_id,
-  TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
-  p.discount,
-  p.sold,
-  c."name" AS category_name,
-  pb.product_brand_name AS brand_name,
-  ARRAY_AGG(pg.image) AS image_links,
-  cs.*
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN case_specification cs on p.product_id = cs.product_id
-WHERE p.product_id = '${caseId}'
-GROUP BY 
-  p.product_brand_id,p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+select
+  specification_id
+  , product_id
+  , ps.socket as cpu_socket
+  , usb_details
+  , audio
+  , memory_slots
+  , sata
+  , m2
+  , power_connectors
+  , wifi
+  , ff.form_factor
+  , gi.interface_type  as gpu_interface
+  , si.storage_interface as storage_interface
+  , mc.chipset
+from
+  public.motherboard_specification ms
+inner join processor_socket ps
+on ms.cpu_socket = ps.id
+inner join form_factor ff 
+on ff.id = ms.form_factor
+inner join graphics_interface gi
+on gi.id = ms.gpu_interface
+inner join storage_interface si 
+on si.id = ms.storage_interface
+inner join motherboard_chipset mc 
+on mc.id = ms.chipset
+where ms.product_id = :motherBoardId
+`;
+
+  const motherBoardList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherBoardId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return motherBoardList;
+}
+
+export async function getCaseSpecification() {
+  const sqlQuery = `
+  select * from case_specification 
 `;
 
   const caseList = await SequelizeInstance.query(sqlQuery, {
@@ -680,8 +769,41 @@ GROUP BY
   return caseList;
 }
 
-export async function getGraphicsCardById(gpuId) {
+export async function getCaseById(caseId) {
   const sqlQuery = `
+  select * from case_specification where product_id =:caseId
+
+`;
+
+  const caseList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { caseId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return caseList;
+}
+
+export async function getGraphicsCardSpecification() {
+  const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , gc.graphics_chipset  || '- ' || gm.graphics_model  as chipset
+  , memory
+  , max_power_consumption
+  , base_clock_speed
+  , length
+  , cooler_type
+  , gi.interface_type  as interface
+from
+  public.graphics_specification gs
+inner join graphics_interface gi 
+on gi.id = gs.interface 
+inner join graphics_model gm
+on gm.id = gs.chipset
+inner join graphics_chipset gc 
+on gc.id  = gm.graphics_chipset 
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
@@ -692,8 +814,109 @@ export async function getGraphicsCardById(gpuId) {
   return gpuList;
 }
 
+export async function getGraphicsCardById(gpuId) {
+  const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , gc.graphics_chipset  || '- ' || gm.graphics_model  as chipset
+  , memory
+  , max_power_consumption
+  , base_clock_speed
+  , length
+  , cooler_type
+  , gi.interface_type  as interface
+from
+  public.graphics_specification gs
+inner join graphics_interface gi 
+on gi.id = gs.interface 
+inner join graphics_model gm
+on gm.id = gs.chipset
+inner join graphics_chipset gc 
+on gc.id  = gm.graphics_chipset
+where gs.product_id = :gpuId
+`;
+
+  const gpuList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { gpuId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return gpuList;
+}
+
+export async function getRamSpecification() {
+  const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , memory
+  , rm.model || '- ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
+  , cas_latency
+  , dimm_type
+  , voltage
+from
+  public.ram_specification rs 
+inner join ram_type rt 
+on rs.ram_type  = rt.id 
+inner join ram_model rm 
+on rt.ram_type = rm.id
+`;
+
+  const ramList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return ramList;
+}
+
 export async function getRamById(ramId) {
   const sqlQuery = `
+select
+  specification_id
+  , product_id
+  , memory
+  , rm.model || '- ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
+  , cas_latency
+  , dimm_type
+  , voltage
+from
+  public.ram_specification rs 
+inner join ram_type rt 
+on rs.ram_type  = rt.id 
+inner join ram_model rm 
+on rt.ram_type = rm.id
+where rs.product_id = :ramId
+`;
+
+  const ramList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { ramId },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return ramList;
+}
+
+export async function getStorageSpecification() {
+  const sqlQuery = `
+  select
+  specification_id
+  , product_id
+  , model
+  , st.storage_type as "type"
+  , si.storage_interface as interface
+  , form_factor
+  , capacity
+  , ss.voltage
+from
+  public.storage_specification ss
+inner join storage_type st 
+on ss."type"  = st.id
+inner join storage_interface si 
+on si.id = ss.interface 
 
 `;
 
@@ -707,41 +930,26 @@ export async function getRamById(ramId) {
 
 export async function getStorageById(storageId) {
   const sqlQuery = `
-select
-	p.product_id,
-	p."name",
-	p.description,
-  p.product_brand_id,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
-	p.discount,
-	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
-	ss.*
+  select
+  specification_id
+  , product_id
+  , model
+  , st.storage_type as "type"
+  , si.storage_interface as interface
+  , form_factor
+  , capacity
+  , ss.voltage
 from
-	product p
-left outer join category c on
-	c.category_id = p.category_id
-left outer join product_brand pb on
-	pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg on
-	pg.product_id = p.product_id
-inner join storage_specification ss on
-	p.product_id = ss.product_id
-where
-	p.product_id = '${storageId}'
-group by
-p.product_brand_id,
-	p.product_id,
-	c.category_id,
-	pb.product_brand_id,
-	ss.product_id,
-	ss.specification_id
+  public.storage_specification ss
+inner join storage_type st 
+on ss."type"  = st.id
+inner join storage_interface si 
+on si.id = ss.interface 
+where ss.product_id = :storageId
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { storageId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -879,561 +1087,250 @@ group by
   return ramList;
 }
 export async function upsertProcessorSpec(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    product_specification_type,
-    brand,
-    model,
-    socket,
-    micro_architecture,
-    core_quantity,
-    threads_quantity,
-    clock_speed,
-    boost_speed_max,
-    cache,
-    memory_support,
-    channel_architecture,
-    power,
-    chipset,
-    model_number,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.processor_specification (
-      specification_id
-      , product_id
-      , product_specification_type
-      , brand
-      , model
-      , socket
-      , micro_architecture
-      , core_quantity
-      , threads_quantity
-      , clock_speed
-      , boost_speed_max
-      , "cache"
-      , memory_support
-      , channel_architecture
-      , power
-      , chipset
-      , model_number
-    ) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-      product_specification_type = EXCLUDED.product_specification_type,
-      brand = EXCLUDED.brand,
-      model = EXCLUDED.model,
-      socket = EXCLUDED.socket,
-      micro_architecture = EXCLUDED.micro_architecture,
-      core_quantity = EXCLUDED.core_quantity,
-      threads_quantity = EXCLUDED.threads_quantity,
-      clock_speed = EXCLUDED.clock_speed,
-      boost_speed_max = EXCLUDED.boost_speed_max,
-      "cache" = EXCLUDED.cache,
-      memory_support = EXCLUDED.memory_support,
-      channel_architecture = EXCLUDED.channel_architecture,
-      power = EXCLUDED.power,
-      chipset = EXCLUDED.chipset
-      model_number = EXCLUDED.model_number
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      model,
-      socket,
-      micro_architecture,
-      core_quantity,
-      threads_quantity,
-      clock_speed,
-      boost_speed_max,
-      cache,
-      memory_support,
-      channel_architecture,
-      power,
-      chipset,
-      model_number,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [processorSpec, created] = await ProcessorSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await processorSpec.update({ ...otherAttributes });
+  }
+
+  return processorSpec;
+}
+export async function deleteProcessorSpec(processorId) {
+  const processorSpec = await ProcessorSpecification.findOne({
+    where: { product_id: processorId },
+  });
+
+  if (!processorSpec) {
+    throw new Error(
+      `Processor specification with ID ${processorId} not found.`,
+    );
+  }
+  await processorSpec.destroy();
 }
 export async function upsertMotherboard(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    product_specification_type,
-    chipset,
-    spu_socket,
-    usb_details,
-    audio,
-    ethernet_controller,
-    wifi_antenna,
-    memory_slots,
-    memory_supports,
-    maximum_capacity,
-    channel_architecture,
-    sata,
-    m2,
-    raid_support,
-    expansion_slots,
-    air_cooling,
-    power_connectors,
-    audio_internal,
-    rom,
-    audio_codec,
-    bluetooth,
-    wifi,
-    form_factor,
-    brand,
-  } = dataObj;
+  const { product_id, ...otherAttributes } = dataObj;
+  const [motherboardSpec, created] =
+    await MotherboardSpecification.findOrCreate({
+      where: { product_id },
+      defaults: { ...otherAttributes },
+    });
 
-  const sqlQuery = `
-    INSERT INTO public.motherboard_specification (
-      specification_id,
-      product_id,
-      product_specification_type,
-      chipset,
-      spu_socket,
-      usb_details,
-      audio,
-      ethernet_controller,
-      wifi_antenna,
-      memory_slots,
-      memory_supports,
-      channel_architecture,
-      sata,
-      m2,
-      raid_support,
-      expansion_slots,
-      air_cooling,
-      power_connectors,
-      audio_internal,
-      rom,
-      audio_codec,
-      bluetooth,
-      wifi,
-      form_factor,
-      brand
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-      product_id = EXCLUDED.product_id,
-      product_specification_type = EXCLUDED.product_specification_type,
-      chipset = EXCLUDED.chipset,
-      spu_socket = EXCLUDED.spu_socket,
-      usb_details = EXCLUDED.usb_details,
-      audio = EXCLUDED.audio,
-      ethernet_controller = EXCLUDED.ethernet_controller,
-      wifi_antenna = EXCLUDED.wifi_antenna,
-      memory_slots = EXCLUDED.memory_slots,
-      memory_supports = EXCLUDED.memory_supports,
-      channel_architecture = EXCLUDED.channel_architecture,
-      sata = EXCLUDED.sata,
-      m2 = EXCLUDED.m2,
-      raid_support = EXCLUDED.raid_support,
-      expansion_slots = EXCLUDED.expansion_slots,
-      air_cooling = EXCLUDED.air_cooling,
-      power_connectors = EXCLUDED.power_connectors,
-      audio_internal = EXCLUDED.audio_internal,
-      rom = EXCLUDED.rom,
-      audio_codec = EXCLUDED.audio_codec,
-      bluetooth = EXCLUDED.bluetooth,
-      wifi = EXCLUDED.wifi,
-      form_factor = EXCLUDED.form_factor,
-      brand = EXCLUDED.brand
-  `;
+  if (!created) {
+    await motherboardSpec.update({ ...otherAttributes });
+  }
 
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      chipset,
-      spu_socket,
-      usb_details,
-      audio,
-      ethernet_controller,
-      wifi_antenna,
-      memory_slots,
-      memory_supports,
-      channel_architecture,
-      sata,
-      m2,
-      raid_support,
-      expansion_slots,
-      air_cooling,
-      power_connectors,
-      audio_internal,
-      rom,
-      audio_codec,
-      bluetooth,
-      wifi,
-      form_factor,
-      brand,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  return motherboardSpec;
+}
+
+export async function deleteMotherboard(id) {
+  const motherboardSpec = await MotherboardSpecification.findOne({
+    where: { product_id: id },
   });
 
-  return result;
+  if (!motherboardSpec) {
+    throw new Error(`MOTHERBOARD specification with ID ${id} not found.`);
+  }
+  await motherboardSpec.destroy();
 }
 
 export async function upsertCase(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    cabinet_type,
-    side_panel_type,
-    motherboard_supports,
-    internal_drive_size,
-    gpu_length,
-    support_psu_size,
-    front_panel,
-    cpu_cooler_support_size,
-  } = dataObj;
-  const sqlQuery = `
-    INSERT INTO public.case_specification 
-    (specification_id, product_id, cabinet_type, side_panel_type
-      , motherboard_supports, internal_drive_size, gpu_length, support_psu_size, front_panel, cpu_cooler_support_size) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        cabinet_type = EXCLUDED.cabinet_type,
-        side_panel_type = EXCLUDED.side_panel_type,
-        motherboard_supports = EXCLUDED.motherboard_supports,
-        internal_drive_size = EXCLUDED.internal_drive_size,
-        gpu_length = EXCLUDED.gpu_length,
-        support_psu_size = EXCLUDED.support_psu_size,
-        front_panel = EXCLUDED.front_panel,
-        cpu_cooler_support_size = EXCLUDED.cpu_cooler_support_size
-  `;
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      cabinet_type,
-      side_panel_type,
-      motherboard_supports,
-      internal_drive_size,
-      gpu_length,
-      support_psu_size,
-      front_panel,
-      cpu_cooler_support_size,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [caseSpec, created] = await CaseSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await caseSpec.update({ ...otherAttributes });
+  }
+
+  return caseSpec;
+}
+
+export async function deleteCase(id) {
+  const caseSpec = await CaseSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!caseSpec) {
+    throw new Error(`CASE specification with ID ${id} not found.`);
+  }
+  await caseSpec.destroy();
 }
 
 export async function upsertGraphicsCard(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    chipset,
-    memory,
-    benchmark,
-    max_power_consumption,
-    base_clock_speed,
-    length,
-    cooler_type,
-    interface_type,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.graphics_specification 
-    (specification_id, product_id, chipset, memory, benchmark, max_power_consumption, base_clock_speed, length, cooler_type, interface) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        chipset = EXCLUDED.chipset,
-        memory = EXCLUDED.memory,
-        benchmark = EXCLUDED.benchmark,
-        max_power_consumption = EXCLUDED.max_power_consumption,
-        base_clock_speed = EXCLUDED.base_clock_speed,
-        length = EXCLUDED.length,
-        cooler_type = EXCLUDED.cooler_type,
-        interface = EXCLUDED.interface
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      chipset,
-      memory,
-      benchmark,
-      max_power_consumption,
-      base_clock_speed,
-      length,
-      cooler_type,
-      interface_type,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [gpuSpec, created] = await GpuSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await gpuSpec.update({ ...otherAttributes });
+  }
+
+  return gpuSpec;
+}
+export async function deleteGraphicsCard(id) {
+  const gpuSpec = await GpuSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!gpuSpec) {
+    throw new Error(`GPU specification with ID ${id} not found.`);
+  }
+  await gpuSpec.destroy();
 }
 
 export async function upsertRam(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    product_specification_type,
-    brand,
-    warranty,
-    memory,
-    ram_type,
-    cas_latency,
-    dimm_type,
-    voltage,
-    ram_speed,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.ram_specification 
-    (specification_id, product_id, product_specification_type
-      , brand, warranty, memory, ram_type, cas_latency, dimm_type, voltage,ram_speed) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        product_specification_type = EXCLUDED.product_specification_type,
-        brand = EXCLUDED.brand,
-        warranty = EXCLUDED.warranty,
-        memory = EXCLUDED.memory,
-        ram_type = EXCLUDED.ram_type,
-        cas_latency = EXCLUDED.cas_latency,
-        dimm_type = EXCLUDED.dimm_type,
-        voltage = EXCLUDED.voltage,
-        ram_speed = EXCLUDED.ram_speed
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      warranty,
-      memory,
-      ram_type,
-      cas_latency,
-      dimm_type,
-      voltage,
-      ram_speed,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [ramSpec, created] = await RamSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await ramSpec.update({ ...otherAttributes });
+  }
+
+  return ramSpec;
+}
+export async function deleteRam(id) {
+  const ramSpec = await RamSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!ramSpec) {
+    throw new Error(`RAM specification with ID ${id} not found.`);
+  }
+  await ramSpec.destroy();
 }
 
 export async function upsertStorage(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    product_specification_type,
-    brand,
-    model,
-    type,
-    interface_type,
-    form_factor,
-    capacity,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.storage_specification 
-    (specification_id, product_id, product_specification_type, brand, model, "type", form_factor, capacity, "interface") 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        product_specification_type = EXCLUDED.product_specification_type,
-        brand = EXCLUDED.brand,
-        model = EXCLUDED.model,
-        "type" = EXCLUDED."type",
-        form_factor = EXCLUDED.form_factor,
-        capacity = EXCLUDED.capacity,
-        "interface" = EXCLUDED.interface
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      model,
-      type,
-      form_factor,
-      capacity,
-      interface_type,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [storageSpec, created] = await StorageSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await storageSpec.update({ ...otherAttributes });
+  }
+
+  return storageSpec;
+}
+
+export async function deleteStorage(id) {
+  const storageSpec = await StorageSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!storageSpec) {
+    throw new Error(`STORAGE specification with ID ${id} not found.`);
+  }
+  await storageSpec.destroy();
 }
 
 export async function upsertCaseCooler(dataObj) {
-  const { specification_id, product_id, model, airflow, fan_rpm, size } =
-    dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.case_cooler_specification 
-    (specification_id, product_id, model, airflow, fan_rpm, "size") 
-    VALUES (?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        model = EXCLUDED.model,
-        airflow = EXCLUDED.airflow,
-        fan_rpm = EXCLUDED.fan_rpm,
-        "size" = EXCLUDED."size"
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      model,
-      airflow,
-      fan_rpm,
-      size,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [spec, created] = await CaseCoolerSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await spec.update({ ...otherAttributes });
+  }
+
+  return spec;
 }
-export async function upsertCpuCooler(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    model,
-    cpu_cooler,
-    fan_rpm,
-    noise_level,
-    fan_number,
-    cpu_cooler_size,
-    fan_cfm,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.cooler_specification 
-    (specification_id, product_id, model, cpu_cooler, fan_rpm, noise_level, fan_number, cpu_cooler_size,fan_cfm) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        model = EXCLUDED.model,
-        cpu_cooler = EXCLUDED.cpu_cooler,
-        fan_rpm = EXCLUDED.fan_rpm,
-        noise_level = EXCLUDED.noise_level,
-        fan_number = EXCLUDED.fan_number,
-        cpu_cooler_size = EXCLUDED.cpu_cooler_size,
-        fan_cfm = EXCLUDED.fan_cfm
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      model,
-      cpu_cooler,
-      fan_rpm,
-      noise_level,
-      fan_number,
-      cpu_cooler_size,
-      fan_cfm,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+export async function deleteCaseCooler(id) {
+  const spec = await CaseCoolerSpecification.findOne({
+    where: { product_id: id },
   });
 
-  return result;
+  if (!spec) {
+    throw new Error(`CASE COOLER specification with ID ${id} not found.`);
+  }
+  await spec.destroy();
+}
+
+export async function upsertCpuCooler(dataObj) {
+  const { product_id, ...otherAttributes } = dataObj;
+  const [spec, created] = await CpuCoolerSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
+  });
+
+  if (!created) {
+    await spec.update({ ...otherAttributes });
+  }
+
+  return spec;
+}
+export async function deleteCpuCooler(id) {
+  const spec = await CpuCoolerSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!spec) {
+    throw new Error(`CPU COOLER specification with ID ${id} not found.`);
+  }
+  await spec.destroy();
 }
 
 export async function upsertPsu(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    product_specification_type,
-    brand,
-    model,
-    form_factor,
-    power,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.power_supply_specification 
-    (specification_id, product_id, product_specification_type, brand, model, form_factor, power) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        product_specification_type = EXCLUDED.product_specification_type,
-        brand = EXCLUDED.brand,
-        model = EXCLUDED.model,
-        form_factor = EXCLUDED.form_factor,
-        power = EXCLUDED.power
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      product_specification_type,
-      brand,
-      model,
-      form_factor,
-      power,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [spec, created] = await PsuSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await spec.update({ ...otherAttributes });
+  }
+
+  return spec;
+}
+
+export async function deletePsu(id) {
+  const spec = await PsuSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!spec) {
+    throw new Error(`CPU COOLER specification with ID ${id} not found.`);
+  }
+  await spec.destroy();
 }
 
 export async function upsertMonitor(dataObj) {
-  const {
-    specification_id,
-    product_id,
-    model,
-    screen_size,
-    resolution,
-    response_time,
-    aspect_ratio,
-    refresh_rate,
-    panel_type,
-  } = dataObj;
-
-  const sqlQuery = `
-    INSERT INTO public.monitor_specification 
-    (specification_id, product_id, model, screen_size, resolution, response_time, aspect_ratio, refresh_rate, panel_type) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (product_id) DO UPDATE SET
-        model = EXCLUDED.model,
-        screen_size = EXCLUDED.screen_size,
-        resolution = EXCLUDED.resolution,
-        response_time = EXCLUDED.response_time,
-        aspect_ratio = EXCLUDED.aspect_ratio,
-        refresh_rate = EXCLUDED.refresh_rate,
-        panel_type = EXCLUDED.panel_type
-  `;
-
-  const result = await SequelizeInstance.query(sqlQuery, {
-    replacements: [
-      specification_id,
-      product_id,
-      model,
-      screen_size,
-      resolution,
-      response_time,
-      aspect_ratio,
-      refresh_rate,
-      panel_type,
-    ],
-    type: SequelizeInstance.QueryTypes.UPSERT,
+  const { product_id, ...otherAttributes } = dataObj;
+  const [spec, created] = await MonitorSpecification.findOrCreate({
+    where: { product_id },
+    defaults: { ...otherAttributes },
   });
 
-  return result;
+  if (!created) {
+    await spec.update({ ...otherAttributes });
+  }
+
+  return spec;
+}
+
+export async function deleteMonitor(id) {
+  const spec = await MonitorSpecification.findOne({
+    where: { product_id: id },
+  });
+
+  if (!spec) {
+    throw new Error(`MONITOR specification with ID ${id} not found.`);
+  }
+  await spec.destroy();
 }
 
 export async function getProcessorMode(model) {

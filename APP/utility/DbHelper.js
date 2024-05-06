@@ -548,6 +548,363 @@ export const GraphicsModel = sequelize.define(
   },
 );
 
+// tbl.case_specification
+export const CaseSpecification = sequelize.define(
+  'case_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    cabinet_type: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    side_panel_type: {
+      type: DataTypes.TEXT,
+    },
+    internal_drive_size: {
+      type: DataTypes.TEXT,
+    },
+    front_panel: {
+      type: DataTypes.TEXT,
+    },
+    cpu_cooler_support_size: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    case_cooler_support_size: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'case_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.graphics_specification
+export const GpuSpecification = sequelize.define(
+  'graphics_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    chipset: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    memory: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    max_power_consumption: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    base_clock_speed: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    length: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    cooler_type: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    interface: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'graphics_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.ram_specification
+export const RamSpecification = sequelize.define(
+  'ram_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    memory: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    ram_type: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+
+    cas_latency: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    dimm_type: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    voltage: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'ram_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.storage_specification
+export const StorageSpecification = sequelize.define(
+  'storage_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    type: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+
+    interface: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    form_factor: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    capacity: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+    voltage: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'storage_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.case_cooler_specification
+export const CaseCoolerSpecification = sequelize.define(
+  'case_cooler_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    airflow: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    fan_rpm: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    size: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    voltage: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'case_cooler_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.cooler_specification
+export const CpuCoolerSpecification = sequelize.define(
+  'cooler_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    cpu_cooler: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    fan_rpm: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    noise_level: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    fan_number: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    cpu_cooler_size: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    fan_cfm: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    voltage: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'cooler_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.power_supply_specification
+export const PsuSpecification = sequelize.define(
+  'power_supply_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    power: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'power_supply_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.monitor_specification
+export const MonitorSpecification = sequelize.define(
+  'monitor_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      primaryKey: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      unique: true,
+    },
+    model: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    screen_size: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    resolution: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    response_time: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    aspect_ratio: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+
+    refresh_rate: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+
+    panel_type: {
+      type: DataTypes.TEXT,
+      typeAttributes: { JSONB: true },
+    },
+    voltage: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'monitor_specification',
+    timestamps: false,
+  },
+);
+
 // tbl.proccessor_model
 export const ProccessorModel = sequelize.define(
   'proccessor_model',
@@ -588,6 +945,121 @@ export const ProccessorModel = sequelize.define(
   },
   {
     tableName: 'proccessor_model',
+    timestamps: false,
+  },
+);
+
+// tbl.processor_specification
+export const ProcessorSpecification = sequelize.define(
+  'processor_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      unique: true,
+    },
+    model: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    micro_architecture: {
+      type: DataTypes.TEXT,
+    },
+    clock_speed: {
+      type: DataTypes.NUMBER,
+    },
+    boost_speed_max: {
+      type: DataTypes.NUMBER,
+    },
+    cache: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    memory_support: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    chipset: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    power: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'processor_specification',
+    timestamps: false,
+  },
+);
+
+// tbl.motherboard_specification
+export const MotherboardSpecification = sequelize.define(
+  'motherboard_specification',
+  {
+    specification_id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      unique: true,
+    },
+    cpu_socket: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    usb_details: {
+      type: DataTypes.TEXT,
+    },
+    audio: {
+      type: DataTypes.TEXT,
+    },
+    memory_slots: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+    sata: {
+      type: DataTypes.TEXT,
+    },
+    m2: {
+      type: DataTypes.TEXT,
+    },
+    power_connectors: {
+      type: DataTypes.TEXT,
+    },
+    wifi: {
+      type: DataTypes.TEXT,
+    },
+    form_factor: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    storage_interface: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    gpu_interface: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    chipset: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+    power: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+    },
+  },
+  {
+    tableName: 'motherboard_specification',
     timestamps: false,
   },
 );

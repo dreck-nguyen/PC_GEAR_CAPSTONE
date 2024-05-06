@@ -25,29 +25,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies
 
-// const loggerMiddleware = async (req, res, next) => {
-//   const query = req.query || {};
-//   const body = req.body || {};
-//   const agent = req.headers['user-agent'] || '';
-//   const method = req.method || '';
-//   const url = req.url || '';
-//   const accessToken =
-//     (req.headers.authorization && req.headers.authorization.split(' ')[1]) ||
-//     '';
-//   const dataObj = { query, body, agent, method, url, accessToken };
-//   const t = await SequelizeInstance.transaction();
-//   try {
-//     await loggingService.writeLog(dataObj);
-//     console.log(`LOGGING API`);
-//     next();
-//     t.commit();
-//   } catch (e) {
-//     const message = `LOGGING GOT ERROR ${e.message} with data`;
-//     res.send(dataObj);
-//     t.rollback();
-//   }
-// };
-// app.use(loggerMiddleware);
 const getUserInfoMiddleware = async (req, res, next) => {
   const accessToken =
     req.headers.authorization && req.headers.authorization.split(' ')[1];
@@ -94,6 +71,47 @@ app.get('/', (req, res, next) => {
   res.send('Welcome to the PC_GEAR_CAPSTONE');
 });
 
+// Middleware function to check and modify numeric fields to be non-negative
+function checkNonNegativeFields(req, res, next) {
+  const fieldsToCheck = [];
+
+  // Add numeric fields from req.params to fieldsToCheck array
+  Object.entries(req.params).forEach(([key, value]) => {
+    if (typeof value === 'number' && value < 0) {
+      fieldsToCheck.push({ source: 'params', key });
+    }
+  });
+
+  // Add numeric fields from req.query to fieldsToCheck array
+  Object.entries(req.query).forEach(([key, value]) => {
+    if (typeof value === 'number' && value < 0) {
+      fieldsToCheck.push({ source: 'query', key });
+    }
+  });
+
+  // Add numeric fields from req.body to fieldsToCheck array
+  Object.entries(req.body).forEach(([key, value]) => {
+    if (typeof value === 'number' && value < 0) {
+      fieldsToCheck.push({ source: 'body', key });
+    }
+  });
+
+  // Modify negative numeric fields to be 0
+  fieldsToCheck.forEach(({ source, key }) => {
+    if (req[source][key] < 0) {
+      console.log(
+        `Found negative numeric field '${key}' in ${source}: ${req[source][key]}. Setting it to 0.`,
+      );
+      req[source][key] = 0; // Set the value to 0 in the corresponding source (params, query, or body)
+    }
+  });
+
+  console.log('~~~~~~~~~~~VALIDATED');
+  next(); // Proceed to the next middleware or route handler
+}
+
+app.use(checkNonNegativeFields);
+
 app.use(allRouter);
 
 app.use(function (err, req, res, next) {
@@ -113,33 +131,6 @@ app.use(function (req, res, next) {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
-});
-
-function checkKeyInObjectMiddleware(req, res, next) {
-  function recursivelyCheckKey(obj, key) {
-    for (let prop in obj) {
-      if (typeof obj[prop] === 'object' && obj[prop] !== null) {
-        recursivelyCheckKey(obj[prop], key);
-      } else {
-        if (prop === key) {
-          if (typeof obj[prop] === 'number' && obj[prop] < 0) {
-            obj[prop] = 0;
-          }
-        }
-      }
-    }
-  }
-
-  const keyToCheck = 'myKey';
-
-  recursivelyCheckKey(req.body, keyToCheck);
-
-  next();
-}
-
-app.use(async (req, res, next) => {
-  checkKeyInObjectMiddleware(req, res, next);
-  next();
 });
 
 app.listen(PORT, () => {

@@ -616,7 +616,7 @@ select
   , clock_speed
   , boost_speed_max
   , "cache"
-  , memory_support
+  , rm.model as memory_support
   , power
   , pc.*
 from
@@ -629,7 +629,9 @@ on pc.processor_socket = ps.id
 pc 
 on pc.id  = ps.chipset 
 inner join proccessor_model pm 
-on pm.id = ps.model 
+on pm.id = ps.model
+inner join ram_model rm
+on rm.id = ps.memory_support 
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -650,7 +652,7 @@ select
   , clock_speed
   , boost_speed_max
   , "cache"
-  , memory_support
+  , rm.model as memory_support
   , power
   , pc.*
 from
@@ -663,7 +665,9 @@ on pc.processor_socket = ps.id
 pc 
 on pc.id  = ps.chipset 
 inner join proccessor_model pm 
-on pm.id = ps.model 
+on pm.id = ps.model
+inner join ram_model rm
+on rm.id = ps.memory_support  
 where ps.product_id = :processorId
 
 `;

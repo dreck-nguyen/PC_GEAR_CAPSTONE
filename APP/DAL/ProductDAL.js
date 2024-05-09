@@ -963,6 +963,57 @@ where ss.product_id = :storageId
 //
 export async function getProcessor(motherboardId, brandId) {
   let sqlQuery = `
+with cpu_spec as(
+select ps.* 
+from processor_specification ps
+inner join proccessor_model pm 
+on 1=1
+and pm.id = ps.model
+inner join processor_chipset pc
+on 1=1
+and pc.id = ps.chipset
+inner join  processor_socket ps2
+on 1=1
+and ps2.id = pc.processor_socket
+),cpu_ram as(
+select cs.* from cpu_spec cs
+inner join ram_specification rs 
+on 1=1
+and rs.ram_type = cs.memory_support
+), cpu_main as(
+select cr.* from cpu_ram cr
+inner join (
+select pm.*  from motherboard_support_processor msp 
+inner join proccessor_model pm 
+on msp.support_proccessor_type = pm.id
+and(:motherboardId is null or msp.motherboard_id = :motherboardId)
+) msp
+on msp.id = cr.model
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from cpu_main)
+AND (:brandId is null or pb.product_brand_id = :brandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const processorList = await SequelizeInstance.query(sqlQuery, {
@@ -982,6 +1033,49 @@ export async function getMotherboard(
   motherboardBrandId,
 ) {
   let sqlQuery = `
+  with base as(
+    select distinct ms.* from motherboard_specification ms
+    inner join storage_specification ss
+    on ms.storage_interface = ss.interface
+    and (:storageId is null or ss.product_id = :storageId) 
+    inner join case_support_form_factor csff 
+    on csff.form_factor = ms.form_factor
+    and (:caseId is null or csff.case_id = :caseId) 
+    inner join motherboard_support_ram msr
+    on msr.motherboard_id = ms.product_id 
+    inner join ram_specification rs 
+    on rs.ram_type = msr.support_ram_type
+    and (:ramId is null or rs.product_id = :ramId) 
+    inner join motherboard_support_processor msp 
+    on msp.motherboard_id = ms.product_id 
+    inner join processor_specification ps 
+    on ps.model = msp.support_proccessor_type 
+    and (:processorId is null or ps.product_id = :processorId) 
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from base)
+AND (:motherboardBrandId is null or pb.product_brand_id = :motherboardBrandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
@@ -993,12 +1087,44 @@ export async function getMotherboard(
   return motherboardList;
 }
 
-export async function getCase(motherboardId, gpuId, caseBrandId) {
+export async function getCase(motherboardId, caseBrandId) {
   let sqlQuery = `
+  with base as(
+select cs.* from case_specification cs 
+inner join case_support_form_factor csff 
+on csff.case_id = cs.product_id
+inner join motherboard_specification ms 
+on ms.form_factor = csff.form_factor
+and (:motherboardId is null or ms.product_id = :motherboardId)
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from base)
+AND (:caseBrandId is null or pb.product_brand_id = :caseBrandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 
 `;
   const caseList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId, gpuId, caseBrandId },
+    replacements: { motherboardId, caseBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1007,7 +1133,36 @@ export async function getCase(motherboardId, gpuId, caseBrandId) {
 }
 export async function getGraphicsCard(motherBoardId, gpuBrandId) {
   let sqlQuery = `
-
+  with base as(
+select gs.* from graphics_specification gs 
+inner join motherboard_specification ms 
+on ms.gpu_interface = gs.interface
+and (:motherBoardId is null or gs.product_id = :motherBoardId)
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from base)
+AND (:gpuBrandId is null or pb.product_brand_id = :gpuBrandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
@@ -1019,13 +1174,45 @@ export async function getGraphicsCard(motherBoardId, gpuBrandId) {
   return gpuList;
 }
 
-export async function getRam(motherboardId, ramBrandId) {
+export async function getRam(motherboardId, processorId, ramBrandId) {
   let sqlQuery = `
-
+  with base as(
+select * from ram_specification rs 
+inner join motherboard_support_ram msr 
+on msr.support_ram_type = rs.ram_type
+and (:motherboardId is null or msr.motherboard_id = :motherboardId)
+inner join proccessor_support_ram psr 
+on psr.ram_type = rs.ram_type
+and (:processorId is null or psr.processor_id = :processorId)
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from base)
+AND (:ramBrandId is null or pb.product_brand_id = :ramBrandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { motherboardId, ramBrandId },
+    replacements: { motherboardId, processorId, ramBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1035,51 +1222,36 @@ export async function getRam(motherboardId, ramBrandId) {
 
 export async function getStorage(motherboardId, storageBrandId) {
   let sqlQuery = `
-select
-	p.product_id,
-	p."name",
-	p.description,
-  p.product_brand_id ,
-	TO_CHAR(p.unit_price,
-	'FM999,999,999') as unit_price,
-	p.discount,
-	p.sold,
-	c."name" as category_name,
-	pb.product_brand_name as brand_name,
-	ARRAY_AGG(pg.image) as image_links,
-	ss.*
-from
-	product p
-left outer join category c on
-	c.category_id = p.category_id
-left outer join product_brand pb on
-	pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg on
-	pg.product_id = p.product_id
-inner join storage_specification ss on
-	p.product_id = ss.product_id
-`;
-  if (motherboardId)
-    sqlQuery += `
-inner join motherboard_specification ms 
-on 1=1
-and ms.product_id  = :motherboardId
-and (ms.sata is not null and ms.m2 is not null or ms.storage_interface = ss.interface)
-`;
-
-  sqlQuery += `
-where
-(:storageBrandId is null
-		  or p.product_brand_id = :storageBrandId
-    ) 
-group by
-	p.product_id,
-	c.category_id,
-	pb.product_brand_id,
-	ss.product_id,
-	ss.specification_id
-  ORDER BY 
-  p.unit_price ASC
+  with base as(
+select ss.* from storage_specification ss
+inner join motherboard_specification ms
+on ms.storage_interface = ss.interface
+and (:motherboardId is null or ms.product_id = :motherboardId)
+)
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from base)
+AND (:storageBrandId is null or pb.product_brand_id = :storageBrandId)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {

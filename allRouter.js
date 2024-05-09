@@ -2976,6 +2976,42 @@ router.delete(
   componentController.deleteMotherboardSupportRam,
 );
 
+// CaseSupportFormFactor
+router.get(
+  '/api/component/case-support-form-factor',
+  componentController.selectCaseSupportFormFactor,
+);
+router.post(
+  '/api/component/case-support-form-factor',
+  componentController.createCaseSupportFormFactor,
+);
+router.put(
+  '/api/component/case-support-form-factor/:profileId',
+  componentController.updateCaseSupportFormFactor,
+);
+router.delete(
+  '/api/component/case-support-form-factor/:profileId',
+  componentController.deleteCaseSupportFormFactor,
+);
+
+// ProcessorSupportRam
+router.get(
+  '/api/component/processor-support-ram',
+  componentController.selectProcessorSupportRam,
+);
+router.post(
+  '/api/component/processor-support-ram',
+  componentController.createProcessorSupportRam,
+);
+router.put(
+  '/api/component/processor-support-ram/:profileId',
+  componentController.updateProcessorSupportRam,
+);
+router.delete(
+  '/api/component/processor-support-ram/:profileId',
+  componentController.deleteProcessorSupportRam,
+);
+
 // GraphicsModel
 router.get(
   '/api/component/graphics-model',

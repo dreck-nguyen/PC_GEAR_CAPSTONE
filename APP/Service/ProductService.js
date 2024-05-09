@@ -197,9 +197,9 @@ export async function getMotherboard(dataObj) {
 }
 export async function getCase(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
-  const gpuId = dataObj?.motherboardDetail?.gpu_id || null;
+  // const gpuId = dataObj?.motherboardDetail?.gpu_id || null;
   const caseBrandId = dataObj?.case_brand_id || null;
-  let result = await productDAL.getCase(motherboardId, gpuId, caseBrandId);
+  let result = await productDAL.getCase(motherboardId, caseBrandId);
   return result;
 }
 export async function getGraphicsCard(dataObj) {
@@ -211,9 +211,10 @@ export async function getGraphicsCard(dataObj) {
 }
 export async function getRam(dataObj) {
   const motherboardId = dataObj?.motherboardDetail?.motherboard_id || null;
+  const processorId = dataObj?.processorDetails?.processor_id || null;
   const ramBrandId = dataObj?.ram_brand_id || null;
 
-  let result = await productDAL.getRam(motherboardId, ramBrandId);
+  let result = await productDAL.getRam(motherboardId, processorId, ramBrandId);
 
   return result;
 }

@@ -300,3 +300,49 @@ export async function updateRamModel(ramModelId, model) {
 export async function deleteRamModel(ramModelId) {
   return await componentDAL.deleteRamModel(ramModelId);
 }
+
+//
+export async function selectCaseSupportFormFactor() {
+  return await componentDAL.selectCaseSupportFormFactor();
+}
+
+export async function createCaseSupportFormFactor(case_id, form_factor) {
+  return await componentDAL.createCaseSupportFormFactor(case_id, form_factor);
+}
+export async function updateCaseSupportFormFactor(
+  profileId,
+  case_id,
+  form_factor,
+) {
+  return await componentDAL.updateCaseSupportFormFactor(
+    profileId,
+    case_id,
+    form_factor,
+  );
+}
+export async function deleteCaseSupportFormFactor(profileId) {
+  return await componentDAL.deleteCaseSupportFormFactor(profileId);
+}
+
+//
+export async function selectProcessorSupportRam() {
+  return await componentDAL.selectProcessorSupportRam();
+}
+
+export async function createProcessorSupportRam(processor_id, ram_type) {
+  return await componentDAL.createProcessorSupportRam(processor_id, ram_type);
+}
+export async function updateProcessorSupportRam(
+  profileId,
+  processor_id,
+  ram_type,
+) {
+  return await componentDAL.updateProcessorSupportRam(
+    profileId,
+    processor_id,
+    ram_type,
+  );
+}
+export async function deleteProcessorSupportRam(profileId) {
+  return await componentDAL.deleteProcessorSupportRam(profileId);
+}

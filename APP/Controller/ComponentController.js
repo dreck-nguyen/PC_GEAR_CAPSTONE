@@ -723,3 +723,127 @@ export async function deleteRamModel(req, res, next) {
     res.send(e);
   }
 }
+
+//
+export async function selectCaseSupportFormFactor(req, res, next) {
+  try {
+    const result = await componentService.selectCaseSupportFormFactor();
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function createCaseSupportFormFactor(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const { case_id, form_factor } = req.body;
+    const result = await componentService.createCaseSupportFormFactor(
+      case_id,
+      form_factor,
+    );
+    res.send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function updateCaseSupportFormFactor(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const profileId = req.params.profileId;
+    const { processor_id, ram_type } = req.body;
+    await componentService.updateCaseSupportFormFactor(
+      profileId,
+      case_id,
+      form_factor,
+    );
+    res.send({
+      message: `UPDATE CASE SUPPORT FORM FACTOR WITH PROFILE ID ${profileId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deleteCaseSupportFormFactor(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const profileId = req.params.profileId;
+    await componentService.deleteCaseSupportFormFactor(profileId);
+    res.send({
+      message: `DELETE CASE SUPPORT FORM FACTOR WITH PROFILE ID ${profileId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+
+//
+export async function selectProcessorSupportRam(req, res, next) {
+  try {
+    const result = await componentService.selectProcessorSupportRam();
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function createProcessorSupportRam(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const { processor_id, ram_type } = req.body;
+    const result = await componentService.createProcessorSupportRam(
+      processor_id,
+      ram_type,
+    );
+    res.send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function updateProcessorSupportRam(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const profileId = req.params.profileId;
+    const { processor_id, ram_type } = req.body;
+    await componentService.updateProcessorSupportRam(
+      profileId,
+      processor_id,
+      ram_type,
+    );
+    res.send({
+      message: `UPDATE PROCESSOR SUPPORT RAM WITH PROFILE ID ${profileId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deleteProcessorSupportRam(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const profileId = req.params.profileId;
+    await componentService.deleteProcessorSupportRam(profileId);
+    res.send({
+      message: `DELETE PROCESSOR SUPPORT RAM WITH PROFILE ID ${profileId}`,
+    });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}

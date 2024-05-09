@@ -12,6 +12,8 @@ import {
   ProccessorModel,
   RamModel,
   SequelizeInstance,
+  CaseSupportFormFactor,
+  ProcessorSupportRam,
 } from '../utility/DbHelper.js';
 import * as commonFunction from '../Common/CommonFunction.js';
 export async function genFormFactorMaxId() {
@@ -629,6 +631,89 @@ export async function updateRamModel(id, model) {
 export async function deleteRamModel(id) {
   const deletedCount = await RamModel.destroy({
     where: { id },
+  });
+  return deletedCount;
+}
+
+//
+export async function selectCaseSupportFormFactor() {
+  const sqlQuery = `select csff.*, ff.form_factor as label from case_support_form_factor csff
+    inner join form_factor ff
+    on 1=1
+    and csff.form_factor = ff.id`;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function createCaseSupportFormFactor(case_id, form_factor) {
+  const { dataValues } = await CaseSupportFormFactor.create({
+    case_id,
+    form_factor,
+  });
+  return dataValues;
+}
+
+export async function updateCaseSupportFormFactor(id, case_id, form_factor) {
+  const [updatedCount] = await CaseSupportFormFactor.update(
+    {
+      case_id,
+      form_factor,
+    },
+    {
+      where: { profile_id: id },
+    },
+  );
+  return updatedCount;
+}
+
+export async function deleteCaseSupportFormFactor(id) {
+  const deletedCount = await CaseSupportFormFactor.destroy({
+    where: { profile_id: id },
+  });
+  return deletedCount;
+}
+
+//
+export async function selectProcessorSupportRam() {
+  const sqlQuery = `
+  select psr.*, rt.ram_type || '-' || rt.data_rate as label
+  from proccessor_support_ram psr
+  inner join ram_type rt
+  on rt.id = psr.ram_type`;
+  const result = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+  return result;
+}
+
+export async function createProcessorSupportRam(processor_id, ram_type) {
+  const { dataValues } = await ProcessorSupportRam.create({
+    processor_id,
+    ram_type,
+  });
+  return dataValues;
+}
+
+export async function updateProcessorSupportRam(id, processor_id, ram_type) {
+  const [updatedCount] = await ProcessorSupportRam.update(
+    {
+      processor_id,
+      ram_type,
+    },
+    {
+      where: { profile_id: id },
+    },
+  );
+  return updatedCount;
+}
+
+export async function deleteProcessorSupportRam(id) {
+  const deletedCount = await ProcessorSupportRam.destroy({
+    where: { profile_id: id },
   });
   return deletedCount;
 }

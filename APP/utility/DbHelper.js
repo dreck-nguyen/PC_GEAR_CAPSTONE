@@ -850,6 +850,64 @@ export const PsuSpecification = sequelize.define(
   },
 );
 
+// tbl.case_support_form_factor
+export const CaseSupportFormFactor = sequelize.define(
+  'case_support_form_factor',
+  {
+    profile_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    case_id: {
+      type: DataTypes.UUID,
+    },
+    form_factor: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'case_support_form_factor',
+    timestamps: false,
+  },
+);
+
+// tbl.proccessor_support_ram
+export const ProcessorSupportRam = sequelize.define(
+  'proccessor_support_ram',
+  {
+    profile_id: {
+      type: DataTypes.UUID,
+      typeAttributes: { JSONB: true },
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    processor_id: {
+      type: DataTypes.UUID,
+    },
+    ram_type: {
+      type: DataTypes.NUMBER,
+      typeAttributes: { JSONB: true },
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+  },
+  {
+    tableName: 'proccessor_support_ram',
+    timestamps: false,
+  },
+);
+
 // tbl.monitor_specification
 export const MonitorSpecification = sequelize.define(
   'monitor_specification',

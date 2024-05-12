@@ -401,6 +401,44 @@ export async function deletePersonalBuildPc(userId, userPcBuildId) {
 }
 export async function getPersonalBuildPc(userId) {
   const sqlQuery = `
+with base as (
+select
+    p.product_id as primary_product_id
+    ,
+    p."name"
+    ,
+    p.description
+    ,
+    p.unit_price
+    ,
+    TO_CHAR(p.unit_price
+    ,
+    'FM999,999,999') as price
+    ,
+    p.discount
+    ,
+    p.sold
+    ,
+    c."name" as category_name
+    ,
+    pb.product_brand_name as brand_name
+    ,
+    ARRAY_AGG(pg.image) as image_links
+  from
+    product p
+  left outer join category c on
+    c.category_id = p.category_id
+  left outer join product_brand pb on
+    pb.product_brand_id = p.product_brand_id
+  inner join product_gallery pg on
+    pg.product_id = p.product_id
+  group by
+    p.product_id
+    ,
+    c.category_id
+    ,
+    pb.product_brand_id
+)
 select
   upb.user_pc_build_id
   ,
@@ -455,627 +493,49 @@ select
   build_purpose.purpose_name
 from
   public.user_pc_build upb
-left join (
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    pss.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join power_supply_specification pss 
-    on
-    pss.product_id = p.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    pss.product_id
-    ,
-    pss.specification_id
-  ) psu
+left join base AS psu
 on
   1 = 1
   and psu.primary_product_id = upb.psu_id
-left join (
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    ccs.specification_id
-    , ccs.product_id
-    , ccs.product_specification_type
-    , ccs.brand
-    , ccs.model::text
-    , ccs.airflow::text
-    , ccs.fan_rpm
-    , ccs."size"::text
-    , ccs.color
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join case_cooler_specification ccs 
-      on
-    ccs.product_id = p.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    ccs.product_id
-    ,
-    ccs.specification_id
-  ) case_cooler
+left join base as case_cooler
 on
   1 = 1
   and case_cooler.primary_product_id = upb.case_cooler_id
-left join (
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-  ) monitor
+left join base as monitor
 on
   1 = 1
   and monitor.primary_product_id = upb.monitor_id
-left join (
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    cs.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join cooler_specification cs 
-    on
-    cs.product_id = p.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    cs.product_id
-    ,
-    cs.specification_id 
-  ) cpu_cooler
+left join base as cpu_cooler
 on
   1 = 1
   and cpu_cooler.primary_product_id = upb.cpu_cooler_id
-left join 
-(
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    ms.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join (
-    select
-      ms.specification_id
-      , ms.product_id
-      , ms.product_specification_type
-      , ms.chipset
-      , ms.spu_socket
-      , ms.usb_details
-      , ms.audio
-      , ms.ethernet_controller
-      , ms.wifi_antenna
-      , ms.memory_slots
-      , ms.memory_supports
-      , ms.channel_architecture
-      , ms.sata
-      , ms.m2
-      , ms.raid_support
-      , ms.expansion_slots
-      , ms.air_cooling
-      , ms.power_connectors
-      , ms.audio_internal
-      , ms.rom
-      , ms.audio_codec
-      , ms.bluetooth
-      , ms.wifi
-      , ff.form_factor
-      , ms.brand
-      , gi.interface_type as gpu_interface
-      , si.storage_interface
-      , msr.ram_supports
-      , msp.processor_supports
-    from
-      motherboard_specification ms
-    inner join (
-      select
-        msp.motherboard_id
-        , STRING_AGG(CONCAT(pm.model, '|', msp.support_proccessor_min_seq, '-', msp.support_proccessor_max_seq), '; ') as processor_supports
-      from
-        motherboard_support_processor msp
-      inner join proccessor_model pm 
-      on
-        pm.id = msp.support_proccessor_type
-      group by
-        msp.motherboard_id
-    ) msp
-  on
-      1 = 1
-      and msp.motherboard_id = ms.product_id
-    inner join (
-      select
-        msr.motherboard_id
-        , STRING_AGG(CONCAT(rt.ram_type, '|', msr.support_min_ram_seq, '-', msr.support_max_ram_seq), '; ') as ram_supports
-      from
-        motherboard_support_ram msr
-      inner join ram_type rt  
-      on
-        rt.id = msr.support_ram_type
-      group by
-        msr.motherboard_id
-
-    ) msr 
-      on
-      1 = 1
-      and msr.motherboard_id = ms.product_id
-    inner join graphics_interface gi 
-    on
-      gi.id = ms.gpu_interface
-    inner join storage_interface si 
-    on
-      si.id = ms.storage_interface
-    inner join form_factor ff 
-    on
-      ff.id = ms.form_factor
-    group by
-      ms.specification_id
-      , ms.product_id
-      , ff.form_factor
-      , gi.interface_type
-      , si.storage_interface
-      , msr.ram_supports
-      , msp.processor_supports
-) ms on
-    p.product_id = ms.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    ms.product_id
-    ,
-    ms.specification_id
-    , ms.product_id
-    , ms.form_factor
-    , ms.gpu_interface
-    , ms.storage_interface
-    , ms.ram_supports
-    , ms.processor_supports
-    , ms.product_id
-    , ms.product_specification_type
-    , ms.chipset
-    , ms.spu_socket
-    , ms.usb_details
-    , ms.audio
-    , ms.ethernet_controller
-    , ms.wifi_antenna
-    , ms.memory_slots
-    , ms.memory_supports
-    , ms.channel_architecture
-    , ms.sata
-    , ms.m2
-    , ms.raid_support
-    , ms.expansion_slots
-    , ms.air_cooling
-    , ms.power_connectors
-    , ms.audio_internal
-    , ms.rom
-    , ms.audio_codec
-    , ms.bluetooth
-    , ms.wifi
-    , ms.brand
-)ms 
+left join base as ms 
 on
   upb.motherboard_id = ms.primary_product_id
 left join 
-(
-select
-  p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  pb.product_brand_id ,
-  p.unit_price,
-  TO_CHAR(p.unit_price,
-  'FM999,999,999') as price,
-  p.discount,
-  p.sold,
-  c."name" as category_name,
-  pb.product_brand_name as brand_name,
-  ARRAY_AGG(pg.image) as image_links,
-  ps.specification_id,
-  ps.product_id,
-  ps.product_specification_type,
-  ps.brand,
-  pm.model || '-' || ps.model_number as model, 
-  ps.socket,
-  ps.micro_architecture,
-  ps.core_quantity,
-  ps.threads_quantity,
-  ps.clock_speed,
-  ps.boost_speed_max,
-  ps."cache",
-  rt.ram_type as memory_support,
-  ps.channel_architecture,
-  ps.power,
-  ps.chipset
-from
-  product p
-left join category c on
-  c.category_id = p.category_id
-left join product_brand pb on
-  pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg on
-  pg.product_id = p.product_id
-inner join processor_specification ps on
-  p.product_id = ps.product_id
-left join motherboard_support_processor msp on
-  ps.model = msp.support_proccessor_type
-  and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
-inner join ram_type rt 
-on rt.id = ps.memory_support
-inner join proccessor_model pm  
-on
-  1 = 1
-  and pm.id = ps.model
-group by
-  p.product_id,
-  c.category_id,
-  pb.product_brand_id,
-  ps.product_id,
-  ps.specification_id ,
-  pm.model,
-  rt.ram_type
-) ps 
+base as  ps 
 on
   upb.processor_id = ps.primary_product_id
 left join 
-(
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    cs.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join case_specification cs on
-    p.product_id = cs.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    cs.product_id
-    ,
-    cs.specification_id
-) cs 
+base as  cs 
 on
   upb.case_id = cs.primary_product_id
 left join 
-(
-  select
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price,
-    TO_CHAR(p.unit_price,
-    'FM999,999,999') as price,
-    p.discount,
-    p.sold,
-    c."name" as category_name,
-    pb.product_brand_name as brand_name,
-    ARRAY_AGG(pg.image) as image_links,
-     gs.specification_id
-  , gs.product_id
-  , gs.product_specification_type
-  , gs.brand
-  , gs.chipset
-  , gs.memory
-  , gs.benchmark
-  , gs.max_power_consumption
-  , gs.base_clock_speed
-  , gs.length
-  , gs.cooler_type
-  , gs.interface
-  , gs."VRAM"
-  , gi.interface_type as gpu_interface
-  , gs.gpu_version
-  , gs.gpu_physical_size
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join graphics_specification gs on
-    p.product_id = gs.product_id
-  inner join graphics_interface gi 
-  on gi.id = gs.gpu_interface 
-  group by
-    p.product_id,
-    c.category_id,
-    pb.product_brand_id,
-    gs.product_id,
-    gs.specification_id, gi.interface_type
-) gs 
+base as  gs 
 on
   upb.gpu_id = gs.primary_product_id
 left join 
-(
-  select
-  p.product_id as primary_product_id,
-  p."name",
-  p.description,
-  p.product_brand_id,
-  p.unit_price,
-  TO_CHAR(p.unit_price,
-  'FM999,999,999') as price,
-  p.discount,
-  p.sold,
-  c."name" as category_name,
-  pb.product_brand_name as brand_name,
-  ARRAY_AGG(pg.image) as image_links,
-  rs.specification_id
-  , rs.product_id
-  , rs.product_specification_type
-  , rs.brand
-  , rs.warranty
-  , rs.memory
-  , rt.ram_type
-  , rs.cas_latency
-  , rs.dimm_type
-  , rs.voltage
-  , rs.ram_speed
-from
-  product p
-left outer join category c on
-  c.category_id = p.category_id
-left outer join product_brand pb on
-  pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg on
-  pg.product_id = p.product_id
-inner join ram_specification rs on
-  p.product_id = rs.product_id
-inner join ram_type rt 
-on rt.id = rs.ram_type
-group by
-p.product_brand_id,
-  p.product_id,
-  c.category_id,
-  pb.product_brand_id,
-  rs.product_id,
-  rs.specification_id,
-  rt.ram_type
-) rs 
+base as  rs 
 on
   upb.ram_id = rs.primary_product_id
 left join 
-(
-  select
-    p.product_id as primary_product_id
-    ,
-    p."name"
-    ,
-    p.description
-    ,
-    p.unit_price
-    ,
-    TO_CHAR(p.unit_price
-    ,
-    'FM999,999,999') as price
-    ,
-    p.discount
-    ,
-    p.sold
-    ,
-    c."name" as category_name
-    ,
-    pb.product_brand_name as brand_name
-    ,
-    ARRAY_AGG(pg.image) as image_links
-    ,
-    ss.*
-  from
-    product p
-  left outer join category c on
-    c.category_id = p.category_id
-  left outer join product_brand pb on
-    pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg on
-    pg.product_id = p.product_id
-  inner join storage_specification ss on
-    p.product_id = ss.product_id
-  group by
-    p.product_id
-    ,
-    c.category_id
-    ,
-    pb.product_brand_id
-    ,
-    ss.product_id
-    ,
-    ss.specification_id
-) ss 
+base as  ss 
 on
   upb.storage_id = ss.primary_product_id
 inner join build_purpose
 on
   build_purpose.purpose_id = upb.purpose_id
-  where
+  where 
     upb.user_id = '${userId}'
 group by
   upb.user_pc_build_id
@@ -1285,8 +745,7 @@ left join
     p.sold,
     c."name" as category_name,
     pb.product_brand_name as brand_name,
-    ARRAY_AGG(pg.image) as image_links,
-    ms.*
+    ARRAY_AGG(pg.image) as image_links
   from
     product p
   left outer join category c on
@@ -1295,123 +754,11 @@ left join
     pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg on
     pg.product_id = p.product_id
-  inner join (
-  select
-      ms.specification_id
-      , ms.product_id
-      , ms.product_specification_type
-      , ms.chipset
-      , ms.spu_socket
-      , ms.usb_details
-      , ms.audio
-      , ms.ethernet_controller
-      , ms.wifi_antenna
-      , ms.memory_slots
-      , ms.memory_supports
-      , ms.channel_architecture
-      , ms.sata
-      , ms.m2
-      , ms.raid_support
-      , ms.expansion_slots
-      , ms.air_cooling
-      , ms.power_connectors
-      , ms.audio_internal
-      , ms.rom
-      , ms.audio_codec
-      , ms.bluetooth
-      , ms.wifi
-      , ff.form_factor
-      , ms.brand
-      , gi.interface_type as gpu_interface
-      , si.storage_interface
-      , msr.ram_supports
-      , msp.processor_supports
-    from
-      motherboard_specification ms
-    inner join (
-      select
-        msp.motherboard_id
-        , STRING_AGG(CONCAT(pm.model, '|', msp.support_proccessor_min_seq, '-', msp.support_proccessor_max_seq), '; ') as processor_supports
-      from
-        motherboard_support_processor msp
-      inner join proccessor_model pm 
-      on
-        pm.id = msp.support_proccessor_type
-      group by
-        msp.motherboard_id
-    ) msp
-  on
-      1 = 1
-      and msp.motherboard_id = ms.product_id
-    inner join (
-      select
-        msr.motherboard_id
-        , STRING_AGG(CONCAT(rt.ram_type, '|', msr.support_min_ram_seq, '-', msr.support_max_ram_seq), '; ') as ram_supports
-      from
-        motherboard_support_ram msr
-      inner join ram_type rt  
-      on
-        rt.id = msr.support_ram_type
-      group by
-        msr.motherboard_id
-    ) msr 
-      on
-      1 = 1
-      and msr.motherboard_id = ms.product_id
-    inner join graphics_interface gi 
-    on
-      gi.id = ms.gpu_interface
-    inner join storage_interface si 
-    on
-      si.id = ms.storage_interface
-    inner join form_factor ff 
-    on
-      ff.id = ms.form_factor
-    group by
-      ms.specification_id
-      , ms.product_id
-      , ff.form_factor
-      , ms.gpu_interface
-      , si.storage_interface
-      , msr.ram_supports
-      , msp.processor_supports
-      , gi.interface_type
-  ) ms on
-    p.product_id = ms.product_id
+ 
   group by
     p.product_id,
     c.category_id,
-    pb.product_brand_id,
-    ms.specification_id
-    , ms.product_id
-    , ms.form_factor
-    , ms.gpu_interface
-    , ms.storage_interface
-    , ms.ram_supports
-    , ms.processor_supports
-    , ms.product_id
-    , ms.product_specification_type
-    , ms.chipset
-    , ms.spu_socket
-    , ms.usb_details
-    , ms.audio
-    , ms.ethernet_controller
-    , ms.wifi_antenna
-    , ms.memory_slots
-    , ms.memory_supports
-    , ms.channel_architecture
-    , ms.sata
-    , ms.m2
-    , ms.raid_support
-    , ms.expansion_slots
-    , ms.air_cooling
-    , ms.power_connectors
-    , ms.audio_internal
-    , ms.rom
-    , ms.audio_codec
-    , ms.bluetooth
-    , ms.wifi
-    , ms.brand
+    pb.product_brand_id
 )ms 
 on
   upb.motherboard_id = ms.primary_product_id
@@ -1429,23 +776,7 @@ left join
   p.sold,
   c."name" as category_name,
   pb.product_brand_name as brand_name,
-  ARRAY_AGG(pg.image) as image_links,
-  ps.specification_id,
-  ps.product_id,
-  ps.product_specification_type,
-  ps.brand,
-  pm.model || '-' || ps.model_number as model, 
-  ps.socket,
-  ps.micro_architecture,
-  ps.core_quantity,
-  ps.threads_quantity,
-  ps.clock_speed,
-  ps.boost_speed_max,
-  ps."cache",
-  rt.ram_type as memory_support,
-  ps.channel_architecture,
-  ps.power,
-  ps.chipset
+  ARRAY_AGG(pg.image) as image_links
 from
   product p
 left join category c on
@@ -1453,26 +784,14 @@ left join category c on
 left join product_brand pb on
   pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg on
-  pg.product_id = p.product_id
-inner join processor_specification ps on
-  p.product_id = ps.product_id
-left join motherboard_support_processor msp on
-  ps.model = msp.support_proccessor_type
-  and ps.model_number between msp.support_proccessor_min_seq and msp.support_proccessor_max_seq
-inner join ram_type rt 
-on rt.id = ps.memory_support
-inner join proccessor_model pm  
+  pg.product_id = p.product_id 
 on
   1 = 1
   and pm.id = ps.model
 group by
   p.product_id,
   c.category_id,
-  pb.product_brand_id,
-  ps.product_id,
-  ps.specification_id ,
-  pm.model,
-  rt.ram_type
+  pb.product_brand_id
 ) ps 
 on
   upb.processor_id = ps.primary_product_id
@@ -1489,8 +808,7 @@ left join
     p.sold,
     c."name" as category_name,
     pb.product_brand_name as brand_name,
-    ARRAY_AGG(pg.image) as image_links,
-    cs.*
+    ARRAY_AGG(pg.image) as image_links
   from
     product p
   left outer join category c on
@@ -1499,14 +817,10 @@ left join
     pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg on
     pg.product_id = p.product_id
-  inner join case_specification cs on
-    p.product_id = cs.product_id
   group by
     p.product_id,
     c.category_id,
-    pb.product_brand_id,
-    cs.product_id,
-    cs.specification_id
+    pb.product_brand_id
 ) cs 
 on
   upb.case_id = cs.primary_product_id
@@ -1523,23 +837,7 @@ left join
     p.sold,
     c."name" as category_name,
     pb.product_brand_name as brand_name,
-    ARRAY_AGG(pg.image) as image_links,
-     gs.specification_id
-  , gs.product_id
-  , gs.product_specification_type
-  , gs.brand
-  , gs.chipset
-  , gs.memory
-  , gs.benchmark
-  , gs.max_power_consumption
-  , gs.base_clock_speed
-  , gs.length
-  , gs.cooler_type
-  , gs.interface
-  , gs."VRAM"
-  , gi.interface_type as gpu_interface
-  , gs.gpu_version
-  , gs.gpu_physical_size
+    ARRAY_AGG(pg.image) as image_links
   from
     product p
   left outer join category c on
@@ -1548,16 +846,10 @@ left join
     pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg on
     pg.product_id = p.product_id
-  inner join graphics_specification gs on
-    p.product_id = gs.product_id
-  inner join graphics_interface gi 
-  on gi.id = gs.gpu_interface 
   group by
     p.product_id,
     c.category_id,
     pb.product_brand_id,
-    gs.product_id,
-    gs.specification_id, gi.interface_type
 ) gs 
 on
   upb.gpu_id = gs.primary_product_id
@@ -1574,18 +866,7 @@ left join
   p.sold,
   c."name" as category_name,
   pb.product_brand_name as brand_name,
-  ARRAY_AGG(pg.image) as image_links,
-  rs.specification_id
-  , rs.product_id
-  , rs.product_specification_type
-  , rs.brand
-  , rs.warranty
-  , rs.memory
-  , rt.ram_type
-  , rs.cas_latency
-  , rs.dimm_type
-  , rs.voltage
-  , rs.ram_speed
+  ARRAY_AGG(pg.image) as image_links
 from
   product p
 left outer join category c on
@@ -1594,19 +875,11 @@ left outer join product_brand pb on
   pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg on
   pg.product_id = p.product_id
-inner join ram_specification rs on
-  p.product_id = rs.product_id
-inner join ram_type rt 
-on rt.id = rs.ram_type 
 group by
 p.product_brand_id,
   p.product_id,
   c.category_id,
-  pb.product_brand_id,
-  rs.product_id,
-  rs.specification_id,
-  rt.ram_type
-) rs 
+  pb.product_brand_id
 on
   upb.ram_id = rs.primary_product_id
 left join 
@@ -1622,8 +895,7 @@ left join
     p.sold,
     c."name" as category_name,
     pb.product_brand_name as brand_name,
-    ARRAY_AGG(pg.image) as image_links,
-    ss.*
+    ARRAY_AGG(pg.image) as image_links
   from
     product p
   left outer join category c on
@@ -1632,14 +904,10 @@ left join
     pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg on
     pg.product_id = p.product_id
-  inner join storage_specification ss on
-    p.product_id = ss.product_id
   group by
     p.product_id,
     c.category_id,
     pb.product_brand_id,
-    ss.product_id,
-    ss.specification_id
 ) ss 
 on
   upb.storage_id = ss.primary_product_id

@@ -328,16 +328,14 @@ SELECT
 		p.unit_price::numeric,
 		TO_CHAR(p.unit_price,
 		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links,
-  ms.*
+		ARRAY_AGG(pg.image) as image_links
 FROM 
   product p
 LEFT OUTER JOIN category c ON c.category_id = p.category_id
 LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
 inner join product_gallery pg ON pg.product_id = p.product_id
-INNER JOIN motherboard_specification ms on p.product_id = ms.product_id 
 GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id, ms.product_id, ms.specification_id
+  p.product_id, c.category_id, pb.product_brand_id
 )ms 
 ON upb.motherboard_id = ms.primary_product_id 
 LEFT JOIN 
@@ -352,16 +350,14 @@ LEFT JOIN
     p.sold,
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links,
-    ps.*
+    ARRAY_AGG(pg.image) AS image_links
   FROM 
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg ON pg.product_id = p.product_id
-  INNER JOIN processor_specification ps ON p.product_id = ps.product_id 
   GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id, ps.product_id, ps.specification_id
+    p.product_id, c.category_id, pb.product_brand_id
 ) ps 
 ON upb.processor_id = ps.primary_product_id 
 LEFT JOIN 
@@ -383,9 +379,8 @@ LEFT JOIN
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg ON pg.product_id = p.product_id
-  INNER JOIN case_specification cs ON p.product_id = cs.product_id 
   GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id, cs.product_id, cs.specification_id
+    p.product_id, c.category_id, pb.product_brand_id
 ) cs 
 ON upb.case_id = cs.primary_product_id 
 LEFT JOIN 
@@ -400,16 +395,14 @@ LEFT JOIN
     p.sold,
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links,
-    gs.*
+    ARRAY_AGG(pg.image) AS image_links
   FROM 
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg ON pg.product_id = p.product_id
-  INNER JOIN graphics_specification gs ON p.product_id = gs.product_id 
   GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id, gs.product_id, gs.specification_id
+    p.product_id, c.category_id, pb.product_brand_id
 ) gs 
 ON upb.gpu_id = gs.primary_product_id 
 LEFT JOIN 
@@ -431,9 +424,8 @@ LEFT JOIN
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg ON pg.product_id = p.product_id
-  INNER JOIN ram_specification rs ON p.product_id = rs.product_id 
   GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id, rs.product_id, rs.specification_id
+    p.product_id, c.category_id, pb.product_brand_id
 ) rs 
 ON upb.ram_id = rs.primary_product_id 
 LEFT JOIN 
@@ -448,16 +440,14 @@ LEFT JOIN
     p.sold,
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links,
-    ss.*
+    ARRAY_AGG(pg.image) AS image_links
   FROM 
     product p
   LEFT OUTER JOIN category c ON c.category_id = p.category_id
   LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
   inner join product_gallery pg ON pg.product_id = p.product_id
-  INNER JOIN storage_specification ss ON p.product_id = ss.product_id 
   GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id, ss.product_id, ss.specification_id
+    p.product_id, c.category_id, pb.product_brand_id
 ) ss 
 ON upb.storage_id = ss.primary_product_id
 group by upb.user_pc_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*, case_cooler.*, monitor.*,cpu_cooler.*,psu.*) upb 

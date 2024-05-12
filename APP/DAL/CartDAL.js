@@ -208,14 +208,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join motherboard_specification ms on
-		p.product_id = ms.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		ms.product_id,
-		ms.specification_id
+		pb.product_brand_id
 )ms 
 on
 	upb.motherboard_id = ms.primary_product_id
@@ -237,14 +233,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join processor_specification ps on
-		p.product_id = ps.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		ps.product_id,
-		ps.specification_id
+		pb.product_brand_id
 ) ps 
 on
 	upb.processor_id = ps.primary_product_id
@@ -266,14 +258,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join case_specification cs on
-		p.product_id = cs.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		cs.product_id,
-		cs.specification_id
+		pb.product_brand_id
 ) cs 
 on
 	upb.case_id = cs.primary_product_id
@@ -295,14 +283,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join graphics_specification gs on
-		p.product_id = gs.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		gs.product_id,
-		gs.specification_id
+		pb.product_brand_id
 ) gs 
 on
 	upb.gpu_id = gs.primary_product_id
@@ -324,14 +308,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join ram_specification rs on
-		p.product_id = rs.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		rs.product_id,
-		rs.specification_id
+		pb.product_brand_id
 ) rs 
 on
 	upb.ram_id = rs.primary_product_id
@@ -353,14 +333,10 @@ left join
 		pb.product_brand_id = p.product_brand_id
 	inner join product_gallery pg on
 		pg.product_id = p.product_id
-	inner join storage_specification ss on
-		p.product_id = ss.product_id
 	group by
 		p.product_id,
 		c.category_id,
-		pb.product_brand_id,
-		ss.product_id,
-		ss.specification_id
+		pb.product_brand_id
 ) ss 
 on
 	upb.storage_id = ss.primary_product_id

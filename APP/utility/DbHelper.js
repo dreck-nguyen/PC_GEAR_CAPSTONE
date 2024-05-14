@@ -908,6 +908,93 @@ export const ProcessorSupportRam = sequelize.define(
   },
 );
 
+// Define the build_purpose model
+export const BuildPurpose = sequelize.define(
+  'build_purpose',
+  {
+    purpose_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+    },
+    purpose_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: '',
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.NOW,
+    },
+    cpu_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    motherboard_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    ram_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    storage_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    psu_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    gpu_required: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    cpu_minimum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    cpu_maximum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    ram_minimum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    ram_maximum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    storage_type: {
+      type: DataTypes.INTEGER, // Assuming storage_type is an integer; adjust if it's different
+      defaultValue: 0,
+    },
+    storage_capacity_minimum_required: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    graphics_minimum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    graphics_maximum: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: '',
+    },
+  },
+  {
+    tableName: 'build_purpose',
+    timestamps: false,
+  },
+);
+
 // tbl.monitor_specification
 export const MonitorSpecification = sequelize.define(
   'monitor_specification',

@@ -23,3 +23,55 @@ export async function pcAutoBuild(req, res, next) {
     res.status(500).send({ error: error.message });
   }
 }
+
+export async function getPcBuildPurpose(req, res, next) {
+  try {
+    const result = await pcBuilderService.getPcBuildPurpose();
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+
+export async function getPcBuildPurposeById(req, res, next) {
+  try {
+    const purposeId = req.params.purposeId;
+    const result = await pcBuilderService.getPcBuildPurposeById(purposeId);
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function upsertPcBuildPurpose(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const purposeId = req.params.purposeId || null;
+    const dataObj = req.body;
+    dataObj.purpose_id = purposeId;
+    await pcBuilderService.upsertPcBuildPurpose(purposeId, dataObj);
+    const result = await pcBuilderService.getPcBuildPurposeById(purposeId);
+    res.status(200).send(result);
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}
+export async function deletePcBuildPurpose(req, res, next) {
+  const t = await SequelizeInstance.transaction();
+  try {
+    const purposeId = req.params.purposeId;
+    await pcBuilderService.deletePcBuildPurpose(purposeId);
+    res
+      .status(200)
+      .send({ message: `DELETE BUILD PC PURPOSE WITH ID ${purposeId}` });
+    t.commit();
+  } catch (e) {
+    t.rollback();
+    console.log(e);
+    res.send(e);
+  }
+}

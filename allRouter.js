@@ -759,6 +759,24 @@ router.delete(
 );
 
 //
+router.get('/api/pc-build-purpose', pcBuilderController.getPcBuildPurpose);
+
+router.get(
+  '/api/pc-build-purpose/:purposeId',
+  pcBuilderController.getPcBuildPurposeById,
+);
+
+router.put(
+  '/api/pc-build-purpose/:purposeId',
+  pcBuilderController.upsertPcBuildPurpose,
+);
+
+router.delete(
+  '/api/pc-build-purpose/:purposeId',
+  pcBuilderController.deletePcBuildPurpose,
+);
+
+//
 router.get('/api/pc-component/case', productController.getCaseSpecification);
 
 router.get('/api/pc-component/case/:case_id', productController.getCaseById);

@@ -1,6 +1,27 @@
 import * as pcBuilderDAL from '../DAL/PcBuilderDAL.js';
 import * as commonFunction from '../Common/CommonFunction.js';
 import { v4 as uuidv4 } from 'uuid';
+export async function getPcBuildPurpose() {
+  return await pcBuilderDAL.getPcBuildPurpose();
+}
+
+export async function getPcBuildPurposeById(purposeId) {
+  return await pcBuilderDAL.getPcBuildPurposeById(purposeId);
+}
+
+export async function deletePcBuildPurpose(purposeId) {
+  await pcBuilderDAL.deletePcBuildPurpose(purposeId);
+}
+
+export async function genPcBuildPurposeId() {
+  return (await pcBuilderDAL.genPcBuildPurpose()) + 1;
+}
+
+export async function upsertPcBuildPurpose(purposeId, dataObj) {
+  if (purposeId === null) dataObj.purpose_id = await genPcBuildPurposeId();
+  return await pcBuilderDAL.upsertPcBuildPurpose(dataObj);
+}
+
 export async function pcBuilderService(userId) {
   const result = [];
   //   caseCoolerSpecification

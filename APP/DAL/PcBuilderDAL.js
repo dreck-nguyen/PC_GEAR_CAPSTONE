@@ -1,4 +1,62 @@
-import { SequelizeInstance } from '../utility/DbHelper.js';
+import { BuildPurpose, SequelizeInstance } from '../utility/DbHelper.js';
+
+// getPcBuildPurpose
+export async function getPcBuildPurpose() {
+  const sqlQuery = `
+  SELECT *
+  FROM public.build_purpose;
+  `;
+  const buildPurposeList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return buildPurposeList;
+}
+
+export async function getPcBuildPurposeById(purpose_id) {
+  return await BuildPurpose.findByPk(purpose_id);
+}
+
+export async function genPcBuildPurpose() {
+  const sqlQuery = `
+  SELECT Count(purpose_id) as max_record 
+  FROM public.build_purpose;
+  `;
+  const [buildPurposeList] = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return buildPurposeList.max_record;
+}
+
+export async function upsertPcBuildPurpose(dataObj) {
+  const { purpose_id, ...otherAttributes } = dataObj;
+  console.log(dataObj);
+  const [buildPurpose, created] = await BuildPurpose.findOrCreate({
+    where: { purpose_id },
+    defaults: { ...otherAttributes },
+  });
+
+  if (!created) {
+    await buildPurpose.update({ ...otherAttributes });
+  }
+
+  return buildPurpose;
+}
+
+export async function deletePcBuildPurpose(purposeId) {
+  const buildPurpose = await BuildPurpose.findOne({
+    where: { purpose_id: purposeId },
+  });
+
+  if (!buildPurpose) {
+    throw new Error(`BUILD PURPOSE with ID ${purposeId} not found.`);
+  }
+  await buildPurpose.destroy();
+}
+
 // getCaseCoolerSpecification
 export async function getCaseCoolerSpecification() {
   const sqlQuery = `

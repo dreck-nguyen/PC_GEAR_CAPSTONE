@@ -533,7 +533,21 @@ export async function genGraphicsModelMaxId() {
 }
 
 export async function selectGraphicsModel() {
-  const sqlQuery = `select * from graphics_model order by id`;
+  const sqlQuery = `
+select
+  gm.id
+  , graphics_model
+  , priority
+  , gm.created_at
+  , gc.graphics_chipset as graphics_chipset
+from
+  public.graphics_model gm
+inner join graphics_chipset gc
+on
+  gc.id = gm.graphics_chipset
+order by
+  gm.id
+`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

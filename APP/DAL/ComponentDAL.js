@@ -120,9 +120,12 @@ export async function genProcessorChipsetMaxId() {
 }
 
 export async function selectProcessorChipset() {
-  const sqlQuery = `SELECT id, processor_chipset, created_at, processor_socket
-, processor_chipset || '-' || processor_socket as label 
-FROM public.processor_chipset`;
+  const sqlQuery = `SELECT pc.id, processor_chipset, pc.created_at, pm.model as  processor_socket, pc.processor_socket as processor_socket_id
+, processor_chipset || '-' || pm.model  as label 
+FROM public.processor_chipset pc
+inner join proccessor_model pm
+on pm.id =pc.processor_socket 
+`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
@@ -171,10 +174,21 @@ export async function genRamTypeMaxId() {
 }
 
 export async function selectRamType() {
-  const sqlQuery = `SELECT id, ram_type, created_at, data_rate, data_transfer_rate 
-                    , ram_type || '-' || data_rate || 'Mhz ' || data_rate  || ' ' || data_transfer_rate  as label
-                    FROM public.ram_type
-                    order by id`;
+  const sqlQuery = `
+  select
+  rt.id
+  , rm.model as ram_type
+  , rt.created_at
+  , data_rate
+  , data_transfer_rate
+  , rm.model || '-' || data_rate || 'Mhz ' || data_rate || ' ' || data_transfer_rate as label
+from
+  public.ram_type rt
+inner join ram_model rm
+on
+  rt.ram_type = rm.id
+order by
+  id`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
@@ -366,7 +380,36 @@ export async function deleteMotherboardChipset(id) {
 
 //
 export async function selectMotherboardSupportProcessor() {
-  const sqlQuery = `select * from motherboard_support_processor order by created_at DESC`;
+  const sqlQuery = `
+select
+  motherboard_id
+  , pm.label as support_proccessor_type
+  , msp.created_at
+  , profile_id
+from
+  public.motherboard_support_processor msp
+inner join (
+select
+  pm.id
+  , pm.created_at
+  , pm.model
+  , pm.priority
+  , pm.chipset
+  , pm.cores
+  , pm.threads
+  , pm.model_number
+  , pc.processor_chipset || '-' ||  pm.model || '-' || pm.model as label
+from
+  proccessor_model pm
+inner join processor_chipset pc
+on
+  pm.chipset = pc.id
+inner join processor_socket ps
+on
+  pc.processor_socket = ps.id) pm
+on pm.id = msp.support_proccessor_type 
+order by
+created_at desc`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
@@ -411,7 +454,31 @@ export async function deleteMotherboardSupportProcessor(profileId) {
 
 //
 export async function selectMotherboardSupportRam() {
-  const sqlQuery = `select * from motherboard_support_ram order by created_at DESC`;
+  const sqlQuery = `
+select
+  motherboard_id
+  , rt.label as support_ram_type
+  , msr.created_at
+  , profile_id
+from
+  public.motherboard_support_ram msr
+inner join (
+  select
+    rt.id
+    , rm.model as ram_type
+    , rt.created_at
+    , data_rate
+    , data_transfer_rate
+    , rm.model || '-' || data_rate || 'Mhz ' || data_rate || ' ' || data_transfer_rate as label
+  from
+    public.ram_type rt
+  inner join ram_model rm
+  on
+    rt.ram_type = rm.id
+) rt
+on rt.id = msr.support_ram_type 
+order by
+created_at desc`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
@@ -527,7 +594,23 @@ export async function genProcessorModelMaxId() {
 }
 
 export async function selectProcessorModel() {
-  const sqlQuery = `select * from proccessor_model order by id`;
+  const sqlQuery = `
+select
+  pm.id
+  , pm.created_at
+  , model
+  , pc.processor_chipset  as chipset
+  , cores
+  , threads
+  , model_number
+  , priority
+from
+  proccessor_model pm
+inner join processor_chipset pc
+on
+  pc.id = pm.chipset
+order by
+  priority`;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

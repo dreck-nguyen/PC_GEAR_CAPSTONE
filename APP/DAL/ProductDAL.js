@@ -622,9 +622,11 @@ select
 from
   public.processor_specification ps
 inner join (
-select pc.*, pc.processor_chipset || '-' || ps.socket as label  from processor_chipset pc
-inner join processor_socket ps 
-on pc.processor_socket = ps.id 
+SELECT pc.id, processor_chipset, pc.created_at, pm.model as  processor_socket, pc.processor_socket as processor_socket_id
+, processor_chipset || '-' || pm.model  as label 
+FROM public.processor_chipset pc
+inner join proccessor_model pm
+on pm.id =pc.processor_socket 
 )
 pc 
 on pc.id  = ps.chipset 

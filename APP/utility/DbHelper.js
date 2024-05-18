@@ -1340,6 +1340,11 @@ export const RamType = sequelize.define(
       type: DataTypes.INTEGER,
       typeAttributes: { JSONB: true },
     },
+    priority: {
+      type: DataTypes.INTEGER,
+      typeAttributes: { JSONB: true },
+      defaultValue: 0,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

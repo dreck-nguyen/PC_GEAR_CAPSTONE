@@ -795,7 +795,7 @@ export async function getGraphicsCardSpecification() {
 select
   specification_id
   , product_id
-  , gc.graphics_chipset  || '- ' || gm.graphics_model  as chipset
+  , gc.graphics_chipset  || '-' || gm.graphics_model  as chipset
   , memory
   , max_power_consumption
   , base_clock_speed
@@ -825,7 +825,7 @@ export async function getGraphicsCardById(gpuId) {
 select
   specification_id
   , product_id
-  , gc.graphics_chipset  || '- ' || gm.graphics_model  as chipset
+  , gc.graphics_chipset  || '-' || gm.graphics_model  as chipset
   , memory
   , max_power_consumption
   , base_clock_speed
@@ -858,7 +858,7 @@ select
   specification_id
   , product_id
   , memory
-  , rm.model || '- ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
+  , rm.model || '-' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
   , cas_latency
   , dimm_type
   , voltage
@@ -884,7 +884,7 @@ select
   specification_id
   , product_id
   , memory
-  , rm.model || '- ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
+  , rm.model || ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
   , cas_latency
   , dimm_type
   , voltage

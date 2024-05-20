@@ -78,7 +78,7 @@ export async function deletePcBuildPurpose(req, res, next) {
 export async function getAutoGenByPurpose(req, res, next) {
   try {
     const purposeId = req.params.purposeId;
-    const totalPrice = req.query.total || 0;
+    const totalPrice = req.query.total || null;
     const result = await pcBuilderService.getAutoGenByPurpose(
       purposeId,
       totalPrice,

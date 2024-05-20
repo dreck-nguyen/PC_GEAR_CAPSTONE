@@ -5336,4 +5336,9 @@ router.delete(
  *         '500':
  *           description: Internal server error
  */
+
+router.get(
+  '/api/pc-component/auto-gen-by-purpose/:purposeId',
+  pcBuilderController.getAutoGenByPurpose,
+);
 export default router;

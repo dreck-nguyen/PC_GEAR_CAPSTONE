@@ -75,3 +75,17 @@ export async function deletePcBuildPurpose(req, res, next) {
     res.send(e);
   }
 }
+export async function getAutoGenByPurpose(req, res, next) {
+  try {
+    const purposeId = req.params.purposeId;
+    const totalPrice = req.query.total || 0;
+    const result = await pcBuilderService.getAutoGenByPurpose(
+      purposeId,
+      totalPrice,
+    );
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
+}

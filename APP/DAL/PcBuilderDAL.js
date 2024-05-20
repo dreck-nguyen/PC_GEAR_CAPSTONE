@@ -58,6 +58,199 @@ export async function deletePcBuildPurpose(purposeId) {
 }
 
 // getCaseCoolerSpecification
+export async function getAutoGenByPurpose(purposeId, total) {
+  const sqlQuery = `
+  with base as(
+select
+  *
+from
+  build_purpose bp
+where
+  purpose_id = :purposeId
+)
+, cpu_require as(
+select ps.* from proccessor_model pm 
+inner join base b
+on 1=1
+and ( 
+  1=1
+  and b.cpu_minimum is not null 
+  and b.cpu_minimum <= pm.priority)
+and (
+  1=1
+  and b.cpu_maximum is not null 
+  and b.cpu_maximum >= pm.priority)
+inner join processor_specification ps
+on 1=1
+and ps.model = pm.id
+)
+--select
+--  *
+--from
+--  cpu_require
+, ram_require as(
+select rs.* from ram_type rt
+inner join base b
+on 1=1
+and (
+  1=1
+  and b.ram_minimum is not null 
+  and b.ram_minimum <= rt.priority)
+and (
+  1=1
+  and b.ram_maximum is not null 
+  and b.ram_maximum >= rt.priority)
+inner join ram_specification rs 
+on rs.ram_type = rt.id
+)
+--select * from ram_require 
+, gpu_require as(
+select gs.* from graphics_model gm 
+inner join base b
+on 1=1
+and   (b.graphics_minimum is not null and b.graphics_minimum <= gm.priority)
+and (b.graphics_maximum is not null and b.graphics_maximum >= gm.priority)
+inner join graphics_specification gs 
+on gs.chipset = gm.id
+)
+--select * from gpu_require gr
+, storage_require as(
+select ss.* from storage_type st 
+inner join base b 
+on 1=1
+and (b.storage_type is not null and b.storage_type = st.id)
+inner join storage_specification ss
+on st.id = ss.type
+and (b.storage_capacity_minimum_required is not null and b.storage_capacity_minimum_required <= ss.capacity)
+), combination as(
+--select * from storage_require sr
+select 
+ms.product_id as motherboard_id
+, ps.product_id as cpu_id
+, rr.product_id as ram_id
+, gr.product_id as gpu_id
+, SUM(
+    COALESCE (
+      ms.power
+      ,0
+      )
+    ) 
++ SUM(
+  COALESCE (
+    ps.power
+    ,0
+    )
+  )
++ SUM(
+  COALESCE (
+    gr.max_power_consumption
+    ,0
+    )
+  )
++ SUM(
+  COALESCE (
+    rr.voltage
+    ,0
+  )
+) as minimum_votage_require
+from motherboard_specification ms
+inner join processor_socket ps2 
+on 1=1
+and ps2.id = ms.cpu_socket 
+inner join processor_chipset pc 
+on pc.processor_socket = ps2.id 
+left join cpu_require ps 
+on ps.chipset is not null and ps.chipset = pc.id
+left join motherboard_support_ram msr
+on 1=1
+and msr.motherboard_id is not null and msr.motherboard_id = ms.product_id
+left join ram_require rr
+on 1=1
+and rr.ram_type is not null and rr.ram_type = msr.support_ram_type
+left join gpu_require gr
+on 1=1
+and gr.interface = ms.gpu_interface
+where 1=1
+group by 
+ms.product_id
+, ps.product_id
+, rr.product_id
+, gr.product_id
+), product_basic_info as(
+select
+    p.product_id,
+    p."name",
+    p.description,
+    p.unit_price,
+    TO_CHAR(p.unit_price,
+    'FM999,999,999') as price,
+    p.discount,
+    p.sold,
+    c."name" as category_name,
+    pb.product_brand_name as brand_name,
+    ARRAY_AGG(pg.image) as image_links
+from
+  product p
+left outer join category c on
+  c.category_id = p.category_id
+left outer join product_brand pb on
+  pb.product_brand_id = p.product_brand_id
+inner join product_gallery pg on
+  pg.product_id = p.product_id
+group by
+  p.product_id,
+  c.category_id,
+  pb.product_brand_id
+), result as(
+select 
+cb.motherboard_id as motherboard_id
+, jsonb_agg(main.*) as motherboard_basic_information 
+, cb.cpu_id as processor_id
+, jsonb_agg(cpu.*) as processor_basic_information 
+, cb.ram_id as ram_id
+, jsonb_agg(ram.*) as ram_basic_information 
+, cb.gpu_id as graphics_id
+, jsonb_agg(graphic.*) as graphic_basic_information 
+, cb.minimum_votage_require
+, SUM(COALESCE(main.unit_price, 0)) 
+    + SUM(COALESCE(cpu.unit_price, 0)) 
+    + SUM(COALESCE(ram.unit_price, 0)) 
+    + SUM(COALESCE(graphic.unit_price, 0)) AS total_price
+    , :total is null as check_value
+from combination cb
+inner join product_basic_info main
+on 1=1
+and main.product_id = cb.motherboard_id
+inner join product_basic_info cpu
+on 1=1
+and cpu.product_id = cb.cpu_id
+inner join product_basic_info ram
+on 1=1
+and ram.product_id = cb.ram_id
+inner join product_basic_info graphic
+on 1=1
+and graphic.product_id = cb.gpu_id
+where 1=1
+group by
+cb.motherboard_id
+, cb.cpu_id
+, cb.ram_id
+, cb.gpu_id
+,cb.minimum_votage_require
+) select * from result 
+where 1=1
+and (:total is null or :total >= total_price)
+  `;
+  const caseCoolerSpecification = await SequelizeInstance.query(sqlQuery, {
+    replacements: { purposeId, total },
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return caseCoolerSpecification;
+}
+
+// getCaseCoolerSpecification
 export async function getCaseCoolerSpecification() {
   const sqlQuery = `
   SELECT *

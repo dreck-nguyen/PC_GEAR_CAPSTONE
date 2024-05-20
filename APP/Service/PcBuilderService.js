@@ -13,6 +13,10 @@ export async function deletePcBuildPurpose(purposeId) {
   await pcBuilderDAL.deletePcBuildPurpose(purposeId);
 }
 
+export async function getAutoGenByPurpose(purposeId, total) {
+  return await pcBuilderDAL.getAutoGenByPurpose(purposeId, total);
+}
+
 export async function genPcBuildPurposeId() {
   return (await pcBuilderDAL.genPcBuildPurpose()) + 1;
 }

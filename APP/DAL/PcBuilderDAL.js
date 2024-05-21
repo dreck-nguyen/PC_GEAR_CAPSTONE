@@ -178,7 +178,7 @@ ms.product_id
 , gr.product_id
 ), product_basic_info as(
 select
-    p.product_id,
+    p.product_id as primary_product_id,
     p."name",
     p.description,
     p.unit_price,
@@ -219,16 +219,16 @@ cb.motherboard_id as motherboard_id
 from combination cb
 inner join product_basic_info main
 on 1=1
-and main.product_id = cb.motherboard_id
+and main.primary_product_id= cb.motherboard_id
 inner join product_basic_info cpu
 on 1=1
-and cpu.product_id = cb.cpu_id
+and cpu.primary_product_id= cb.cpu_id
 inner join product_basic_info ram
 on 1=1
-and ram.product_id = cb.ram_id
+and ram.primary_product_id = cb.ram_id
 inner join product_basic_info graphic
 on 1=1
-and graphic.product_id = cb.gpu_id
+and graphic.primary_product_id = cb.gpu_id
 where 1=1
 group by
 cb.motherboard_id
@@ -239,13 +239,13 @@ cb.motherboard_id
 ) 
 select
     rs.motherboard_id as motherboard_id
-  , rs.motherboard_basic_information as motherboard_basic_information
+  , rs.motherboard_basic_information as motherboard_specification
   , rs.processor_id as processor_id
-  , rs.processor_basic_information as processor_basic_information
+  , rs.processor_basic_information as processor_specification
   , rs.ram_id as ram_id
-  , rs.ram_basic_information as ram_basic_information
+  , rs.ram_basic_information as ram_specification
   , rs.graphics_id as graphics_id
-  , rs.graphic_basic_information as graphic_basic_information
+  , rs.graphic_basic_information as graphic_specification
   , rs.minimum_votage_require as minimum_votage_require
   , TO_CHAR(rs.total_price,
     'FM999,999,999,999') as total_price

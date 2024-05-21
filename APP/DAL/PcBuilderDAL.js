@@ -216,7 +216,6 @@ cb.motherboard_id as motherboard_id
     + SUM(COALESCE(cpu.unit_price, 0)) 
     + SUM(COALESCE(ram.unit_price, 0)) 
     + SUM(COALESCE(graphic.unit_price, 0)) AS total_price
-    , :total is null as check_value
 from combination cb
 inner join product_basic_info main
 on 1=1
@@ -237,9 +236,24 @@ cb.motherboard_id
 , cb.ram_id
 , cb.gpu_id
 ,cb.minimum_votage_require
-) select * from result 
+) 
+select
+    rs.motherboard_id as motherboard_id
+  , rs.motherboard_basic_information as motherboard_basic_information
+  , rs.processor_id as processor_id
+  , rs.processor_basic_information as processor_basic_information
+  , rs.ram_id as ram_id
+  , rs.ram_basic_information as ram_basic_information
+  , rs.graphics_id as graphics_id
+  , rs.graphic_basic_information as graphic_basic_information
+  , rs.minimum_votage_require as minimum_votage_require
+  , TO_CHAR(rs.total_price,
+    'FM999,999,999,999') as total_price
+from result rs
 where 1=1
-and (:total is null or :total >= total_price)
+and (:total = 0 or :total >= total_price)
+ORDER BY 
+    ABS(total_price - :total) ASC;
   `;
   const caseCoolerSpecification = await SequelizeInstance.query(sqlQuery, {
     replacements: { purposeId, total },

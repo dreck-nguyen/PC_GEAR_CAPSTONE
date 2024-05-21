@@ -14,7 +14,8 @@ export async function deletePcBuildPurpose(purposeId) {
 }
 
 export async function getAutoGenByPurpose(purposeId, total) {
-  return await pcBuilderDAL.getAutoGenByPurpose(purposeId, total);
+  const [result] = await pcBuilderDAL.getAutoGenByPurpose(purposeId, total);
+  return result;
 }
 
 export async function genPcBuildPurposeId() {

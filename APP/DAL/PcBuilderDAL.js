@@ -244,8 +244,8 @@ select
   , rs.processor_basic_information as processor_specification
   , rs.ram_id as ram_id
   , rs.ram_basic_information as ram_specification
-  , rs.graphics_id as graphics_id
-  , rs.graphic_basic_information as graphic_specification
+  , rs.graphics_id as gpu_id
+  , rs.graphic_basic_information as gpu_specification
   , rs.minimum_votage_require as minimum_votage_require
   , TO_CHAR(rs.total_price,
     'FM999,999,999,999') as total_price

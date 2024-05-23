@@ -894,11 +894,11 @@ inner join ram_type rt
 on rs.ram_type  = rt.id 
 inner join ram_model rm 
 on rt.ram_type = rm.id
-where rs.product_id = :ramId
+where rs.product_id = '${ramId}'
+;
 `;
 
   const ramList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { ramId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

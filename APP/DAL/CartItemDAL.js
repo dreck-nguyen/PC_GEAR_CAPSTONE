@@ -204,7 +204,23 @@ export async function getProductInCartById(cartId) {
 }
 export async function getCartItemByUser(userId, cartItemIds) {
   const sqlQuery = `
-  select 
+with base as(
+SELECT 
+  p.product_id as primary_product_id,
+    p."name",
+    p.unit_price::numeric,
+    TO_CHAR(p.unit_price,
+    'FM999,999,999') as price,
+    ARRAY_AGG(pg.image) as image_links
+FROM 
+  product p
+LEFT OUTER JOIN category c ON c.category_id = p.category_id
+LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
+inner join product_gallery pg ON pg.product_id = p.product_id
+GROUP BY 
+  p.product_id, c.category_id, pb.product_brand_id
+)
+select 
   ci.product_id,
   p.product_brand_id,
   p.unit_price::numeric,
@@ -248,207 +264,35 @@ to_json(ss.*) AS storage_specification
 , upb.storage_quantity
 FROM 
 public.user_pc_build upb
-left join (
-  SELECT 
-  p.product_id as primary_product_id,
-		p."name",
-		p.unit_price::numeric,
-		TO_CHAR(p.unit_price,
-		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id
-  ) psu
+left join base psu
 on 1 = 1
 and psu.primary_product_id = upb.psu_id
-left join (
-  SELECT 
-  p.product_id as primary_product_id,
-		p."name",
-		p.unit_price::numeric,
-		TO_CHAR(p.unit_price,
-		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id
-  ) case_cooler
+left join base case_cooler
 on 1 = 1
 and case_cooler.primary_product_id = upb.case_cooler_id
-left join (
-  SELECT 
-  p.product_id as primary_product_id,
-		p."name",
-		p.unit_price::numeric,
-		TO_CHAR(p.unit_price,
-		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id
-  ) monitor
+left join base monitor
 on 1 = 1
 and monitor.primary_product_id = upb.monitor_id
-left join (
-  SELECT 
-  p.product_id as primary_product_id,
-		p."name",
-		p.unit_price::numeric,
-		TO_CHAR(p.unit_price,
-		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id
-  ) cpu_cooler
+left join base cpu_cooler
 on 1 = 1
 and cpu_cooler.primary_product_id = upb.cpu_cooler_id
 LEFT JOIN 
-(
-SELECT 
-  p.product_id as primary_product_id,
-		p."name",
-		p.unit_price::numeric,
-		TO_CHAR(p.unit_price,
-		'FM999,999,999') as price,
-		ARRAY_AGG(pg.image) as image_links
-FROM 
-  product p
-LEFT OUTER JOIN category c ON c.category_id = p.category_id
-LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-inner join product_gallery pg ON pg.product_id = p.product_id
-GROUP BY 
-  p.product_id, c.category_id, pb.product_brand_id
-)ms 
+base ms 
 ON upb.motherboard_id = ms.primary_product_id 
 LEFT JOIN 
-(
-  SELECT 
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price::numeric,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-    p.discount,
-    p.sold,
-    c."name" AS category_name,
-    pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links
-  FROM 
-    product p
-  LEFT OUTER JOIN category c ON c.category_id = p.category_id
-  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg ON pg.product_id = p.product_id
-  GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id
-) ps 
+base ps 
 ON upb.processor_id = ps.primary_product_id 
 LEFT JOIN 
-(
-  SELECT 
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price::numeric,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-    p.discount,
-    p.sold,
-    c."name" AS category_name,
-    pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links,
-    cs.*
-  FROM 
-    product p
-  LEFT OUTER JOIN category c ON c.category_id = p.category_id
-  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg ON pg.product_id = p.product_id
-  GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id
-) cs 
+base cs 
 ON upb.case_id = cs.primary_product_id 
 LEFT JOIN 
-(
-  SELECT 
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price::numeric,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-    p.discount,
-    p.sold,
-    c."name" AS category_name,
-    pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links
-  FROM 
-    product p
-  LEFT OUTER JOIN category c ON c.category_id = p.category_id
-  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg ON pg.product_id = p.product_id
-  GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id
-) gs 
+ base gs 
 ON upb.gpu_id = gs.primary_product_id 
 LEFT JOIN 
-(
-  SELECT 
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price::numeric,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-    p.discount,
-    p.sold,
-    c."name" AS category_name,
-    pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links,
-    rs.*
-  FROM 
-    product p
-  LEFT OUTER JOIN category c ON c.category_id = p.category_id
-  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg ON pg.product_id = p.product_id
-  GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id
-) rs 
+base rs 
 ON upb.ram_id = rs.primary_product_id 
 LEFT JOIN 
-(
-  SELECT 
-    p.product_id as primary_product_id,
-    p."name",
-    p.description,
-    p.unit_price::numeric,
-    TO_CHAR(p.unit_price, 'FM999,999,999') AS price,
-    p.discount,
-    p.sold,
-    c."name" AS category_name,
-    pb.product_brand_name AS brand_name,
-    ARRAY_AGG(pg.image) AS image_links
-  FROM 
-    product p
-  LEFT OUTER JOIN category c ON c.category_id = p.category_id
-  LEFT OUTER JOIN product_brand pb ON pb.product_brand_id = p.product_brand_id
-  inner join product_gallery pg ON pg.product_id = p.product_id
-  GROUP BY 
-    p.product_id, c.category_id, pb.product_brand_id
-) ss 
+base ss 
 ON upb.storage_id = ss.primary_product_id
 group by upb.user_pc_build_id, ms.*, ps.*, cs.*, gs.*, rs.*,ss.*, case_cooler.*, monitor.*,cpu_cooler.*,psu.*) upb 
   on 1 =1  

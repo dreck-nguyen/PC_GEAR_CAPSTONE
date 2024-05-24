@@ -884,7 +884,7 @@ select
   specification_id
   , product_id
   , memory
-  , rm.model || ' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
+  , rm.model || '-' || rt.data_rate || '-' || rt.data_transfer_rate as ram_type
   , cas_latency
   , dimm_type
   , voltage

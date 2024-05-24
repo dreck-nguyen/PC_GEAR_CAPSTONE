@@ -228,9 +228,6 @@ export async function createOrderByUser(loginUser, cartObject) {
   cartObject.quantity = quantity;
   total += cartObject.shipping_fee;
   await orderDAL.createOrderByUser(cartObject);
-  for (const cartItem of cartObject.cartItemList) {
-    // await cartItemDAL.deleteCartItem(cartItem.cart_item_id);
-  }
   const message = mailHelper.orderPlaceMessage
     .replace('[Customer Name]', user.user_name)
     .replace('[Order Number]', orderId)
@@ -242,7 +239,6 @@ export async function createOrderByUser(loginUser, cartObject) {
     to: user.email || 'hduy01012000@gmail.com',
     html: message,
   };
-
   await mailHelper.sendMail(mailOptions);
   return orderId;
 }

@@ -1103,7 +1103,9 @@ inner join case_support_form_factor csff
 on csff.case_id = cs.product_id
 inner join motherboard_specification ms 
 on ms.form_factor = csff.form_factor
-and (:motherboardId is null or ms.product_id = :motherboardId)
+and (${
+    motherboardId ? `'${motherboardId}'` : null
+  } is null or ms.product_id = ${motherboardId ? `'${motherboardId}'` : null})
 )
 SELECT 
     p.product_id,
@@ -1126,7 +1128,9 @@ LEFT OUTER JOIN
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 where p.product_id in (select product_id from base)
-AND (:caseBrandId is null or pb.product_brand_id = :caseBrandId)
+AND (${
+    caseBrandId ? `'${caseBrandId}'` : null
+  } is null or pb.product_brand_id = ${caseBrandId ? `'${caseBrandId}'` : null})
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
 
@@ -1145,7 +1149,9 @@ export async function getGraphicsCard(motherBoardId, gpuBrandId) {
 select gs.* from graphics_specification gs 
 inner join motherboard_specification ms 
 on ms.gpu_interface = gs.interface
-and (:motherBoardId is null or gs.product_id = :motherBoardId)
+and (${
+    motherboardId ? `'${motherboardId}'` : null
+  } is null or gs.product_id = ${motherboardId ? `'${motherboardId}'` : null})
 )
 SELECT 
     p.product_id,
@@ -1168,7 +1174,9 @@ LEFT OUTER JOIN
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 where p.product_id in (select product_id from base)
-AND (:gpuBrandId is null or pb.product_brand_id = :gpuBrandId)
+AND (${
+    gpuBrandId ? `'${gpuBrandId}'` : null
+  } is null or pb.product_brand_id = ${gpuBrandId ? `'${gpuBrandId}'` : null})
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
 `;

@@ -977,13 +977,8 @@ and pc.id = ps.chipset
 inner join  processor_socket ps2
 on 1=1
 and ps2.id = pc.processor_socket
-),cpu_ram as(
-select cs.* from cpu_spec cs
-inner join ram_specification rs 
-on 1=1
-and rs.ram_type = cs.memory_support
 ), cpu_main as(
-select cr.* from cpu_ram cr
+select cr.* from cpu_spec cr
 inner join (
 select pm.*  from motherboard_support_processor msp 
 inner join proccessor_model pm 

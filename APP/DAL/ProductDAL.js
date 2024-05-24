@@ -1088,7 +1088,6 @@ GROUP BY
 `;
 
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
-    replacements: { storageId, ramId, caseId, processorId, motherboardBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });

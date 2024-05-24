@@ -1078,16 +1078,13 @@ LEFT OUTER JOIN
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 where p.product_id in (select product_id from base)
-AND (${
-    motherboardBrandId ? `'${motherboardBrandId}'` : null
-  } is null or pb.product_brand_id = ${
-    motherboardBrandId ? `'${motherboardBrandId}'` : null
-  })
+AND (:motherboardBrandId is null or pb.product_brand_id = :motherboardBrandId)
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const motherboardList = await SequelizeInstance.query(sqlQuery, {
+    replacements: { motherboardBrandId },
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,
   });
@@ -1096,16 +1093,14 @@ GROUP BY
 }
 
 export async function getCase(motherboardId, caseBrandId) {
-  let sqlQuery = `
-  with base as(
-select cs.* from case_specification cs 
-inner join case_support_form_factor csff 
-on csff.case_id = cs.product_id
-inner join motherboard_specification ms 
-on ms.form_factor = csff.form_factor
-and (${
-    motherboardId ? `'${motherboardId}'` : null
-  } is null or ms.product_id = ${motherboardId ? `'${motherboardId}'` : null})
+  const sqlQuery = `
+with base as(
+  select cs.* from case_specification cs 
+  inner join case_support_form_factor csff 
+  on csff.case_id = cs.product_id
+  inner join motherboard_specification ms 
+  on ms.form_factor = csff.form_factor
+  and (:motherboardId is null or ms.product_id = :motherboardId)
 )
 SELECT 
     p.product_id,
@@ -1128,12 +1123,10 @@ LEFT OUTER JOIN
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 where p.product_id in (select product_id from base)
-AND (${
-    caseBrandId ? `'${caseBrandId}'` : null
-  } is null or pb.product_brand_id = ${caseBrandId ? `'${caseBrandId}'` : null})
+AND (:caseBrandId is null or pb.product_brand_id = :caseBrandId )
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
-
+    ;
 `;
   const caseList = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherboardId, caseBrandId },
@@ -1144,16 +1137,15 @@ GROUP BY
   return caseList;
 }
 export async function getGraphicsCard(motherBoardId, gpuBrandId) {
-  let sqlQuery = `
-  with base as(
-select gs.* from graphics_specification gs 
-inner join motherboard_specification ms 
-on ms.gpu_interface = gs.interface
-and (${
-    motherboardId ? `'${motherboardId}'` : null
-  } is null or gs.product_id = ${motherboardId ? `'${motherboardId}'` : null})
-)
-SELECT 
+  const sqlQuery = `
+  WITH base AS (
+    SELECT gs.*
+    FROM graphics_specification gs 
+    INNER JOIN motherboard_specification ms 
+    ON ms.gpu_interface = gs.interface
+    AND (:motherBoardId IS NULL OR ms.product_id = :motherBoardId)
+  )
+  SELECT 
     p.product_id,
     p."name",
     p.description,
@@ -1165,21 +1157,20 @@ SELECT
     c."name" AS category_name,
     pb.product_brand_name AS brand_name,
     ARRAY_AGG(pg.image) AS image_links
-FROM 
+  FROM 
     product p
-LEFT OUTER JOIN 
+  LEFT OUTER JOIN 
     category c ON c.category_id = p.category_id
-LEFT OUTER JOIN 
+  LEFT OUTER JOIN 
     product_brand pb ON pb.product_brand_id = p.product_brand_id
-INNER JOIN 
+  INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
-where p.product_id in (select product_id from base)
-AND (${
-    gpuBrandId ? `'${gpuBrandId}'` : null
-  } is null or pb.product_brand_id = ${gpuBrandId ? `'${gpuBrandId}'` : null})
-GROUP BY 
+  WHERE 
+    p.product_id IN (SELECT product_id FROM base)
+    AND (:gpuBrandId IS NULL OR pb.product_brand_id = :gpuBrandId)
+  GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
-`;
+  `;
 
   const gpuList = await SequelizeInstance.query(sqlQuery, {
     replacements: { motherBoardId, gpuBrandId },

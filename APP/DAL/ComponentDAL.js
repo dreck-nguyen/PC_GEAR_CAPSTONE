@@ -120,11 +120,11 @@ export async function genProcessorChipsetMaxId() {
 }
 
 export async function selectProcessorChipset() {
-  const sqlQuery = `SELECT pc.id, processor_chipset, pc.created_at, pm.model as  processor_socket, pc.processor_socket as processor_socket_id
-, processor_chipset || '-' || pm.model  as label 
+  const sqlQuery = `SELECT pc.id, processor_chipset, pc.created_at, ps.socket as  processor_socket, pc.processor_socket as processor_socket_id
+, processor_chipset || '-' || ps.socket  as label 
 FROM public.processor_chipset pc
-inner join proccessor_model pm
-on pm.id =pc.processor_socket 
+inner join processor_socket ps
+on ps.id =pc.processor_socket 
 `;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

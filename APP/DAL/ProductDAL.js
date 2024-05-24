@@ -1034,20 +1034,28 @@ export async function getMotherboard(
     select distinct ms.* from motherboard_specification ms
     inner join storage_specification ss
     on ms.storage_interface = ss.interface
-    and (:storageId is null or ss.product_id = :storageId) 
+    and (${storageId ? `'${storageId}'` : null} is null or ss.product_id = ${
+    storageId ? `'${storageId}'` : null
+  }) 
     inner join case_support_form_factor csff 
     on csff.form_factor = ms.form_factor
-    and (:caseId is null or csff.case_id = :caseId) 
+    and (${caseId ? `'${caseId}'` : null} is null or csff.case_id = ${
+    caseId ? `'${caseId}'` : null
+  }) 
     inner join motherboard_support_ram msr
     on msr.motherboard_id = ms.product_id 
     inner join ram_specification rs 
     on rs.ram_type = msr.support_ram_type
-    and (:ramId is null or rs.product_id = :ramId) 
+    and (${ramId ? `'${ramId}'` : null} is null or rs.product_id = ${
+    ramId ? `'${ramId}'` : null
+  }) 
     inner join motherboard_support_processor msp 
     on msp.motherboard_id = ms.product_id 
     inner join processor_specification ps 
     on ps.model = msp.support_proccessor_type 
-    and (:processorId is null or ps.product_id = :processorId) 
+    and (${
+      processorId ? `'${processorId}'` : null
+    } is null or ps.product_id = ${processorId ? `'${processorId}'` : null}) 
 )
 SELECT 
     p.product_id,
@@ -1070,7 +1078,11 @@ LEFT OUTER JOIN
 INNER JOIN 
     product_gallery pg ON pg.product_id = p.product_id
 where p.product_id in (select product_id from base)
-AND (:motherboardBrandId is null or pb.product_brand_id = :motherboardBrandId)
+AND (${
+    motherboardBrandId ? `'${motherboardBrandId}'` : null
+  } is null or pb.product_brand_id = ${
+    motherboardBrandId ? `'${motherboardBrandId}'` : null
+  })
 GROUP BY 
     p.product_id, c.category_id, pb.product_brand_id
 `;

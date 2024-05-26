@@ -51,7 +51,7 @@ group by o.order_id,os.status_id,p.payment_id
 
 export async function getDashboard() {
   const sqlQuery = `
- SELECT 'Product' AS entity_type, COUNT(*) AS entity_count
+SELECT 'Product' AS entity_type, COUNT(*) AS entity_count
 FROM public.product
 UNION
 SELECT 'User' AS entity_type, COUNT(*) AS entity_count
@@ -71,24 +71,22 @@ FROM public."order" o
 export async function generateChart() {
   const sqlQuery = `
 SELECT 
-    month,
-    TO_CHAR(SUM(monthly_total), 'FM999,999,999,999,999') AS monthly_total,
-    SUM(monthly_total) AS total
-FROM (
-    SELECT 
-        EXTRACT(MONTH FROM o.created_at) AS month,
-        SUM(od.quantity * od.unit_price) AS monthly_total
-    FROM 
-        public."order" o
-    JOIN 
-        public.order_detail od ON o.order_id = od.order_id
-    GROUP BY 
-        EXTRACT(MONTH FROM o.created_at)
-) AS monthly_totals
+    EXTRACT(YEAR FROM o.created_at) AS year,
+    EXTRACT(MONTH FROM o.created_at) AS month,
+    COUNT(DISTINCT o.order_id) AS order_count,
+    TO_CHAR(SUM(od.quantity * od.unit_price), 'FM999,999,999,999,999') AS formatted_monthly_total,
+    SUM(od.quantity * od.unit_price) AS monthly_total
+FROM 
+    public."order" o
+JOIN 
+    public.order_detail od ON o.order_id = od.order_id
 GROUP BY 
-    month
+    EXTRACT(YEAR FROM o.created_at), 
+    EXTRACT(MONTH FROM o.created_at)
 ORDER BY 
+    year, 
     month;
+
 `;
 
   const chart = await SequelizeInstance.query(sqlQuery, {

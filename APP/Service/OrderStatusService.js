@@ -7,17 +7,12 @@ export async function getDashboard() {
   const result = await orderStatusDAL.getDashboard();
   const chart = await orderStatusDAL.generateChart();
 
-  const chartMapped = chart.map(({ month, monthly_total }) => ({
-    month,
-    monthly_total,
-  }));
-
   const total = chart.reduce((acc, curr) => {
     acc += Number(curr.total);
     return acc;
   }, 0);
 
-  return { result, chart: chartMapped, total };
+  return { result, chart, total };
 }
 
 export async function getOrderStatusByStatusId(userId, orderStatusId) {

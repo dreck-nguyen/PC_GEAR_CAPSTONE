@@ -8,7 +8,7 @@ export async function getDashboard() {
   const chart = await orderStatusDAL.generateChart();
 
   const total = chart.reduce((acc, curr) => {
-    acc += Number(curr.total);
+    acc += Number(curr.monthly_total);
     return acc;
   }, 0);
 

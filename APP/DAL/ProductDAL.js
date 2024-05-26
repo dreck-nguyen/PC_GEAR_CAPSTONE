@@ -514,7 +514,29 @@ select * from monitor_specification ms where product_id = :monitorId
 }
 export async function getMonitorSpecification() {
   const sqlQuery = `
-select * from monitor_specification ms 
+    SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from monitor_specification)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const monitorList = await SequelizeInstance.query(sqlQuery, {
@@ -541,7 +563,29 @@ export async function getPowerSupplyById(psuId) {
 
 export async function getPowerSupplySpecification() {
   const sqlQuery = `
-  select * from power_supply_specification pss 
+    SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from power_supply_specification)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const powerSupplyList = await SequelizeInstance.query(sqlQuery, {
@@ -568,7 +612,29 @@ select * from cooler_specification cs where cs.product_id = :cpuCoolerId
 
 export async function getCpuCoolerSpecification() {
   const sqlQuery = `
-select * from cooler_specification cs 
+  SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from cooler_specification)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
 `;
 
   const cpuCoolerList = await SequelizeInstance.query(sqlQuery, {
@@ -595,7 +661,30 @@ select * from case_cooler_specification ccs where product_id =:caseCoolerId
 
 export async function getCaseCoolerSpecification() {
   const sqlQuery = `
-  select * from case_cooler_specification ccs 
+SELECT 
+    p.product_id,
+    p."name",
+    p.description,
+    pb.product_brand_id,
+    TO_CHAR(p.unit_price, 'FM999,999,999') AS unit_price,
+    p.discount,
+    p.quantity,
+    p.sold,
+    c."name" AS category_name,
+    pb.product_brand_name AS brand_name,
+    ARRAY_AGG(pg.image) AS image_links
+FROM 
+    product p
+LEFT OUTER JOIN 
+    category c ON c.category_id = p.category_id
+LEFT OUTER JOIN 
+    product_brand pb ON pb.product_brand_id = p.product_brand_id
+INNER JOIN 
+    product_gallery pg ON pg.product_id = p.product_id
+where p.product_id in (select product_id from case_cooler_specification)
+GROUP BY 
+    p.product_id, c.category_id, pb.product_brand_id
+  
 `;
 
   const caseCoolerList = await SequelizeInstance.query(sqlQuery, {

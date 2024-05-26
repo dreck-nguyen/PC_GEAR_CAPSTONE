@@ -723,34 +723,46 @@ on mc.id = ms.chipset
 
 export async function getMotherboardById(motherBoardId) {
   const sqlQuery = `
-select
-  specification_id
-  , product_id
-  , ps.socket as cpu_socket
-  , usb_details
-  , audio
-  , memory_slots
-  , sata
-  , m2
-  , power_connectors
-  , wifi
-  , ff.form_factor
-  , gi.interface_type  as gpu_interface
-  , si.storage_interface as storage_interface
-  , mc.chipset
-from
+SELECT
+  ms.specification_id,
+  ms.product_id,
+  ps.socket AS cpu_socket,
+  -- Aggregate functions or group by for non-aggregated columns
+  -- Assuming you want the first occurrence of these values
+  MAX(ms.usb_details) AS usb_details,
+  MAX(ms.audio) AS audio,
+  MAX(ms.memory_slots) AS memory_slots,
+  MAX(ms.sata) AS sata,
+  MAX(ms.m2) AS m2,
+  MAX(ms.power_connectors) AS power_connectors,
+  MAX(ms.wifi) AS wifi,
+  ff.form_factor,
+  gi.interface_type AS gpu_interface,
+  si.storage_interface AS storage_interface,
+  mc.chipset,
+  -- Concatenation based on the database, assuming PostgreSQL
+  STRING_AGG(rm.model  || '-' || rt.data_rate, ', ') AS motherboard_support_ram
+FROM
   public.motherboard_specification ms
-inner join processor_socket ps
-on ms.cpu_socket = ps.id
-inner join form_factor ff 
-on ff.id = ms.form_factor
-inner join graphics_interface gi
-on gi.id = ms.gpu_interface
-inner join storage_interface si 
-on si.id = ms.storage_interface
-inner join motherboard_chipset mc 
-on mc.id = ms.chipset
-where ms.product_id = :motherBoardId
+INNER JOIN processor_socket ps ON ms.cpu_socket = ps.id
+INNER JOIN form_factor ff ON ff.id = ms.form_factor
+INNER JOIN graphics_interface gi ON gi.id = ms.gpu_interface
+INNER JOIN storage_interface si ON si.id = ms.storage_interface
+INNER JOIN motherboard_chipset mc ON mc.id = ms.chipset
+INNER JOIN motherboard_support_ram msr ON msr.motherboard_id = ms.product_id
+INNER JOIN ram_type rt ON rt.id = msr.support_ram_type
+inner join ram_model rm on rm.id  = rt.ram_type 
+where 1=1
+and ms.product_id = :motherBoardId
+GROUP BY
+  ms.specification_id,
+  ms.product_id,
+  ps.socket,
+  ff.form_factor,
+  gi.interface_type,
+  si.storage_interface,
+  mc.chipset;
+
 `;
 
   const motherBoardList = await SequelizeInstance.query(sqlQuery, {

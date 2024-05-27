@@ -776,10 +776,12 @@ export async function deleteCaseSupportFormFactor(id) {
 //
 export async function selectProcessorSupportRam() {
   const sqlQuery = `
-  select psr.*, rt.ram_type || '-' || rt.data_rate as label
+   select psr.processor_id,psr.created_at , psr.created_at  , rm.model as ram_type , rm.model  || '-' || rt.data_rate as label
   from proccessor_support_ram psr
   inner join ram_type rt
-  on rt.id = psr.ram_type`;
+  on rt.id = psr.ram_type
+  inner join ram_model rm 
+  on rm.id = rt.ram_type `;
   const result = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,
     raw: true,

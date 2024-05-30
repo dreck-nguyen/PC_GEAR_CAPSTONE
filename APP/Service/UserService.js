@@ -110,6 +110,10 @@ export async function getPersonalBuildPc(userId) {
   return await pcBuildDAL.getPersonalBuildPc(userId);
 }
 
+export async function getPersonalBuildPcFe(userId) {
+  return await pcBuildDAL.getPersonalBuildPcFe(userId);
+}
+
 export async function deletePersonalBuildPc(loginUser, userPcBuildId) {
   await cartItemDAL.deleteByBuildPc(userPcBuildId);
   return await pcBuildDAL.deletePersonalBuildPc(

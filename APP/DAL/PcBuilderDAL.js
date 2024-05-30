@@ -664,6 +664,258 @@ export async function deletePersonalBuildPc(userId, userPcBuildId) {
   });
   return updateResult;
 }
+
+export async function getPersonalBuildPcFe(userId) {
+  const sqlQuery = `
+with
+  base as (
+    select
+      p.product_id as primary_product_id,
+      p."name",
+      p.description,
+      p.unit_price,
+      TO_CHAR(p.unit_price, 'FM999,999,999') as price,
+      p.discount,
+      p.sold,
+      c."name" as category_name,
+      pb.product_brand_name as brand_name,
+      ARRAY_AGG(pg.image) as image_links
+    from
+      product p
+      left outer join category c on c.category_id = p.category_id
+      left outer join product_brand pb on pb.product_brand_id = p.product_brand_id
+      inner join product_gallery pg on pg.product_id = p.product_id
+    group by
+      p.product_id,
+      c.category_id,
+      pb.product_brand_id
+  )
+select
+  upb.user_pc_build_id,
+  upb.user_id,
+  upb.profile_name,
+  upb.motherboard_id,
+  to_json(
+    json_build_object(
+      'primary_product_id',
+      ms.primary_product_id,
+      'name',
+      ms.name,
+      'description',
+      ms.description,
+      'unit_price',
+      ms.unit_price,
+      'price',
+      ms.price,
+      'discount',
+      ms.discount,
+      'sold',
+      ms.sold,
+      'category_name',
+      ms.category_name,
+      'brand_name',
+      ms.brand_name,
+      'image_links',
+      ms.image_links,
+      'satmemory_slots',
+      main_spec.memory_slots,
+      'sata',
+      main_spec.sata,
+      'm2',
+      main_spec.m2
+    )
+  ) as motherboard_specification,
+  upb.processor_id,
+   to_json(
+    json_build_object(
+      'primary_product_id',
+      ps.primary_product_id,
+      'name',
+      ps.name,
+      'description',
+      ps.description,
+      'unit_price',
+      ps.unit_price,
+      'price',
+      ps.price,
+      'discount',
+      ps.discount,
+      'sold',
+      ps.sold,
+      'category_name',
+      ps.category_name,
+      'brand_name',
+      ps.brand_name,
+      'image_links',
+      ps.image_links,
+      'power',
+      cpu_spec.power
+    )
+  ) as processor_specification,
+  upb.case_id,
+  to_json(cs.*) as case_specification,
+  upb.gpu_id,
+  to_json(
+    json_build_object(
+      'primary_product_id',
+      gs.primary_product_id,
+      'name',
+      gs.name,
+      'description',
+      gs.description,
+      'unit_price',
+      gs.unit_price,
+      'price',
+      gs.price,
+      'discount',
+      gs.discount,
+      'sold',
+      gs.sold,
+      'category_name',
+      gs.category_name,
+      'brand_name',
+      gs.brand_name,
+      'image_links',
+      gs.image_links,
+      'max_power_consumption',
+      gpu_spec.max_power_consumption
+    )
+  ) as gpu_specification,
+  upb.ram_id,
+  to_json(rs.*) as ram_specification,
+  upb.storage_id,
+  to_json(ss.*) as storage_specification,
+  upb.case_cooler_id,
+  to_json(case_cooler.*) as case_cooler,
+  upb.monitor_id,
+  to_json(monitor.*) as monitor,
+  upb.cpu_cooler_id,
+  to_json(cpu_cooler.*) as cpu_cooler,
+  upb.psu_id,
+  to_json(
+    json_build_object(
+      'primary_product_id',
+      psu.primary_product_id,
+      'name',
+      psu.name,
+      'description',
+      psu.description,
+      'unit_price',
+      psu.unit_price,
+      'price',
+      psu.price,
+      'discount',
+      psu.discount,
+      'sold',
+      psu.sold,
+      'category_name',
+      psu.category_name,
+      'brand_name',
+      psu.brand_name,
+      'image_links',
+      psu.image_links,
+      'power',
+      psu_spec.power
+    )
+  ) as psu,
+  upb.ram_quantity,
+  upb.storage_quantity,
+  build_purpose.purpose_name
+from
+  public.user_pc_build upb
+  left join base AS psu on 1 = 1
+  and psu.primary_product_id = upb.psu_id
+  inner join power_supply_specification as psu_spec
+  on psu_spec.product_id = upb.psu_id
+  left join base as case_cooler on 1 = 1
+  and case_cooler.primary_product_id = upb.case_cooler_id
+  left join base as monitor on 1 = 1
+  and monitor.primary_product_id = upb.monitor_id
+  left join base as cpu_cooler on 1 = 1
+  and cpu_cooler.primary_product_id = upb.cpu_cooler_id
+  left join base as ms on upb.motherboard_id = ms.primary_product_id
+  inner join motherboard_specification AS main_spec on upb.motherboard_id = main_spec.product_id
+  left join base as ps on upb.processor_id = ps.primary_product_id
+  inner join processor_specification cpu_spec on cpu_spec.product_id = upb.processor_id
+  left join base as cs on upb.case_id = cs.primary_product_id
+  left join base as gs on upb.gpu_id = gs.primary_product_id
+  inner join graphics_specification as gpu_spec on gpu_spec.product_id = upb.gpu_id
+  left join base as rs on upb.ram_id = rs.primary_product_id
+  left join base as ss on upb.storage_id = ss.primary_product_id
+  inner join build_purpose on build_purpose.purpose_id = upb.purpose_id
+where
+  1 = 1
+  AND upb.user_id = '${userId}'
+group by
+  upb.user_pc_build_id,
+  ms.*,
+  ps.*,
+  cs.*,
+  gs.*,
+  rs.*,
+  ss.*,
+  case_cooler.*,
+  monitor.*,
+  cpu_cooler.*,
+  psu.*,
+  upb.purpose_id,
+  build_purpose.purpose_name,
+  main_spec.memory_slots,
+  main_spec.sata,
+  main_spec.m2,
+  ms.primary_product_id,
+  ms.name,
+  ms.description,
+  ms.unit_price,
+  ms.price,
+  ms.discount,
+  ms.sold,
+  ms.category_name,
+  ms.brand_name,
+  ms.image_links,
+  cpu_spec.power,
+  ps.primary_product_id,
+  ps.name,
+  ps.description,
+  ps.unit_price,
+  ps.price,
+  ps.discount,
+  ps.sold,
+  ps.category_name,
+  ps.brand_name,
+  ps.image_links,
+  gpu_spec.max_power_consumption,
+  gs.primary_product_id,
+  gs.name,
+  gs.description,
+  gs.unit_price,
+  gs.price,
+  gs.discount,
+  gs.sold,
+  gs.category_name,
+  gs.brand_name,
+  gs.image_links,
+  psu_spec.power,
+  psu.primary_product_id,
+  psu.name,
+  psu.description,
+  psu.unit_price,
+  psu.price,
+  psu.discount,
+  psu.sold,
+  psu.category_name,
+  psu.brand_name,
+  psu.image_links
+
+`;
+  const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
+    type: SequelizeInstance.QueryTypes.SELECT,
+    raw: true,
+  });
+
+  return personalBuildPcList;
+}
+
 export async function getPersonalBuildPc(userId) {
   const sqlQuery = `
 with base as (
@@ -828,7 +1080,6 @@ group by
   upb.purpose_id
   ,
   build_purpose.purpose_name
-
 `;
   const personalBuildPcList = await SequelizeInstance.query(sqlQuery, {
     type: SequelizeInstance.QueryTypes.SELECT,

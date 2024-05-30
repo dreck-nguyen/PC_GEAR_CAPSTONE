@@ -1575,6 +1575,10 @@ router.get(
   userController.getPersonalBuildPc,
 );
 router.get(
+  '/api/auth/user/pc-component/personal-build-fe',
+  userController.getPersonalBuildPcFe,
+);
+router.get(
   '/api/product/pc-component/get-pre-build',
   userController.getStaffPreBuildPc,
 );

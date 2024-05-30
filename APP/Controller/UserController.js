@@ -135,6 +135,16 @@ export async function getPersonalBuildPc(req, res, next) {
     res.status(404).send({ error: error.message });
   }
 }
+export async function getPersonalBuildPcFe(req, res, next) {
+  try {
+    const loginUser = req.loginUser;
+    const result = await userService.getPersonalBuildPcFe(loginUser.user_id);
+    res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(404).send({ error: error.message });
+  }
+}
 export async function updateUserAvatar(req, res, next) {
   const t = await SequelizeInstance.transaction();
 

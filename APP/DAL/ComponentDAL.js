@@ -398,7 +398,7 @@ select
   , pm.cores
   , pm.threads
   , pm.model_number
-  , pc.processor_chipset || '-' ||  pm.model || '-' || pm.model as label
+  , pc.processor_chipset || '-' ||  pm.model || '-' || pm.model_number as label
 from
   proccessor_model pm
 inner join processor_chipset pc

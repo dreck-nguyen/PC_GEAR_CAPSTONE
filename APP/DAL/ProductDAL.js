@@ -788,6 +788,7 @@ select
   , gi.interface_type  as gpu_interface
   , si.storage_interface as storage_interface
   , mc.chipset
+  , ms.power
 from
   public.motherboard_specification ms
 inner join processor_socket ps
@@ -829,6 +830,7 @@ SELECT
   gi.interface_type AS gpu_interface,
   si.storage_interface AS storage_interface,
   mc.chipset,
+  ms.power,
   -- Concatenation based on the database, assuming PostgreSQL
   STRING_AGG(rm.model  || '-' || rt.data_rate, ', ') AS motherboard_support_ram
 FROM
@@ -850,7 +852,8 @@ GROUP BY
   ff.form_factor,
   gi.interface_type,
   si.storage_interface,
-  mc.chipset;
+  mc.chipset,
+  ms.power;
 
 `;
 

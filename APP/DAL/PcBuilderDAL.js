@@ -251,7 +251,7 @@ select
     'FM999,999,999,999') as total_price
 from result rs
 where 1=1
-and (:total > 0 or :total >= total_price)
+and (:total > 0 and :total >= total_price)
 ORDER BY 
     ABS(total_price - :total) ASC;
   `;

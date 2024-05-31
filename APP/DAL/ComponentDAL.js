@@ -614,6 +614,7 @@ select
   , pm.created_at
   , model
   , pc.processor_chipset  as chipset
+  , pc.id as chipset_id
   , cores
   , threads
   , model_number

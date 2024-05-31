@@ -825,7 +825,7 @@ from
   public.user_pc_build upb
   left join base AS psu on 1 = 1
   and psu.primary_product_id = upb.psu_id
-  inner join power_supply_specification as psu_spec
+  left join power_supply_specification as psu_spec
   on psu_spec.product_id = upb.psu_id
   left join base as case_cooler on 1 = 1
   and case_cooler.primary_product_id = upb.case_cooler_id
@@ -834,12 +834,12 @@ from
   left join base as cpu_cooler on 1 = 1
   and cpu_cooler.primary_product_id = upb.cpu_cooler_id
   left join base as ms on upb.motherboard_id = ms.primary_product_id
-  inner join motherboard_specification AS main_spec on upb.motherboard_id = main_spec.product_id
+  left join motherboard_specification AS main_spec on upb.motherboard_id = main_spec.product_id
   left join base as ps on upb.processor_id = ps.primary_product_id
-  inner join processor_specification cpu_spec on cpu_spec.product_id = upb.processor_id
+  left join processor_specification cpu_spec on cpu_spec.product_id = upb.processor_id
   left join base as cs on upb.case_id = cs.primary_product_id
   left join base as gs on upb.gpu_id = gs.primary_product_id
-  inner join graphics_specification as gpu_spec on gpu_spec.product_id = upb.gpu_id
+  left join graphics_specification as gpu_spec on gpu_spec.product_id = upb.gpu_id
   left join base as rs on upb.ram_id = rs.primary_product_id
   left join base as ss on upb.storage_id = ss.primary_product_id
   inner join build_purpose on build_purpose.purpose_id = upb.purpose_id
